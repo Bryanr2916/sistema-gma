@@ -14,6 +14,7 @@ import { NormativasModule } from './normativas/normativas.module';
 import { AreaLegalModule } from './area-legal/area-legal.module';
 import { BuscarModule } from './buscar/buscar.module';
 import { UsuarioModule } from './usuario/usuario.module';
+import { HeaderComponent } from './share/header/header.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { UsuarioModule } from './usuario/usuario.module';
     AreaLegalModule,
     BuscarModule,
     UsuarioModule,
-    FormsModule
+    FormsModule,
+    ShareModule
   ],
   providers: [],
   bootstrap: [AppComponent]
