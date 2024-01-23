@@ -1,1 +1,27 @@
-<h1>Empresas</h1>
+<div class="m-2">
+    <h2><img src="../assets/images/GMA-logo.png" alt="Logo" width="30" height="24" class="mx-2">Empresas</h2>
+    <hr>
+
+    <div class="table-responsive my-4">
+        <table class="table table-light table-striped table-hover shadow">
+            <thead>
+              <tr class="table-success">
+                <th scope="col" *ngFor="let th of ths">{{th}}</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let tr of trs; index as i">
+                    <th scope="row">{{i + 1}}</th>
+                    <td>{{tr.nombre}}</td>
+                    <td>{{tr.admin}}</td>
+                    <td>{{tr.correo}}</td>
+                    <td>
+                        <a *ngFor="let accion of acciones">
+                            {{accion}}
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
