@@ -1,4 +1,25 @@
 <div class="mt-4 mb-2 mx-2">
     <h2><i class="g-icon fa-regular fa-rectangle-list me-1"></i>Tipos de Normativas</h2>
     <hr class="border border-success border-1 opacity-75">
+
+    <div class="table-responsive my-4">
+        <table class="table table-light table-striped table-hover shadow">
+            <thead>
+              <tr class="table-success">
+                <th scope="col" *ngFor="let th of ths">{{th}}</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let tr of trs; index as i">
+                    <th scope="row">{{i + 1}}</th>
+                    <td>{{tr.nombre}}</td>
+                    <td>
+                        <a *ngFor="let accion of acciones">
+                            {{accion}}
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

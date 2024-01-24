@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { IndexComponent } from './inicio/index/index.component';
+import { PaginaNoEncontradaComponent } from './share/pagina-no-encontrada/pagina-no-encontrada.component';
 
 const routes: Routes = [
   {path:'',component:IndexComponent,pathMatch:'full'},
@@ -31,6 +32,7 @@ const routes: Routes = [
   { path:'usuario',
     loadChildren: () => import ('./usuario/usuario.module').then( m => m.UsuarioModule)
   },
+  {path:'**',component:PaginaNoEncontradaComponent}
 ];
 
 @NgModule({
