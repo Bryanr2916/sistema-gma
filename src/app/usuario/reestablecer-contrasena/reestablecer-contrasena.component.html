@@ -1,10 +1,13 @@
 <div class="d-flex justify-content-center align-items-center">
     <div class="card shadow my-5 text-center bg-gray-600">
         <div class="card-header">
-            <h2><img src="../assets/images/GMA-logo.png" alt="Logo" width="30" height="24" class="mx-2">Ingresar a GMA Sistema</h2>
+            <h2><i class="fa-solid fa-key g-icon me-2"></i>Reestablecer contraseña</h2>
         </div>
         <div class="card-body">
             <form id="form" class="my-4">
+                <div class="mb-3 me-5 row">
+                    <p class="col-form-label col-10 text-muted">Ingrese su correo electrónico para reestablecer su contraseña.</p>
+                </div>
                 <!--Usuario-->
                 <div class="mb-3 me-5 row">
                     <label for="staticEmail" class="col-sm-4 col-form-label">Correo electrónico</label>
@@ -12,17 +15,10 @@
                       <input type="text" class="form-control border border-dark" id="staticEmail" placeholder="correo@ejemeplo.com">
                     </div>
                 </div>
-                <!--Contraseña-->
-                <div class="mb-3 me-5 row">
-                    <label for="inputPassword" class="col-sm-4 col-form-label">Contraseña</label>
-                    <div class="col-sm-8">
-                      <input type="password" class="form-control border border-dark" id="inputPassword">
-                    </div>
-                </div>
                 <!--Acciones-->
                 <div class="mb-3 mx-5 row align-items-center">
-                    <button class="btn btn-primary col-sm-4" type="submit">Ingresar<i class="fa-solid fa-right-to-bracket ms-1"></i></button>
-                    <a routerLink="../reestablecer-contrasena" class="col-sm-8">Reestablecer contraseña</a>
+                    <button class="btn btn-primary col-sm-4" type="submit">Reestablecer</button>
+                    <a routerLink="../inicio-sesion" class="col-sm-8">Volver a inicio de sesión</a>
                 </div>
             </form>
         </div>

@@ -4,14 +4,14 @@ import { CommonModule } from '@angular/common';
 import { UsuarioRoutingModule } from './usuario-routing.module';
 import { PerfilComponent } from './perfil/perfil.component';
 import { InicioSesionComponent } from './inicio-sesion/inicio-sesion.component';
-import { CambiarContrasenaComponent } from './cambiar-contrasena/cambiar-contrasena.component';
+import { ReestablecerContrasenaComponent } from './reestablecer-contrasena/reestablecer-contrasena.component';
 
 
 @NgModule({
   declarations: [
     PerfilComponent,
     InicioSesionComponent,
-    CambiarContrasenaComponent
+    ReestablecerContrasenaComponent
   ],
   imports: [
     CommonModule,
