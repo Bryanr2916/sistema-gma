@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-pagina-no-encontrada',
@@ -7,9 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PaginaNoEncontradaComponent implements OnInit {
 
-  constructor() { }
+  constructor(private titleService: Title) { }
 
   ngOnInit(): void {
+    this.titleService.setTitle("GMA Sistema - Página no encontrada");
   }
 
 }

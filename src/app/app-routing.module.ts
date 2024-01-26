@@ -29,6 +29,10 @@ const routes: Routes = [
   { path:'tipos-normativas',
     loadChildren: () => import ('./tipos-normativas/tipos-normativas.module').then( m => m.TiposNormativasModule)
   },
+  {
+    path:'buscar',
+    loadChildren: () => import ('./buscar/buscar.module').then( m => m.BuscarModule)
+  },
   { path:'usuario',
     loadChildren: () => import ('./usuario/usuario.module').then( m => m.UsuarioModule)
   },

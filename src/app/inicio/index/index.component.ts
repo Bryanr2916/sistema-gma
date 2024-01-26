@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-index',
@@ -17,9 +18,10 @@ export class IndexComponent implements OnInit {
     {logo:"user", nombre: "Perfil de Usuario", enlace: "usuario/bryanr2916@gmail.com"}
   ];
 
-  constructor() { }
+  constructor(private titleService: Title) { }
 
   ngOnInit(): void {
+    this.titleService.setTitle("GMA Sistema - Inicio");
   }
 
 }
