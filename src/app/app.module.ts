@@ -15,6 +15,12 @@ import { AreaLegalModule } from './area-legal/area-legal.module';
 import { BuscarModule } from './buscar/buscar.module';
 import { UsuarioModule } from './usuario/usuario.module';
 import { HeaderComponent } from './share/header/header.component';
+import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideDatabase, getDatabase } from '@angular/fire/database';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { provideStorage, getStorage } from '@angular/fire/storage';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
@@ -35,7 +41,13 @@ import { HeaderComponent } from './share/header/header.component';
     BuscarModule,
     UsuarioModule,
     FormsModule,
-    ShareModule
+    ShareModule,
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => getAuth()),
+    provideDatabase(() => getDatabase()),
+    provideFirestore(() => getFirestore()),
+    provideStorage(() => getStorage()),
+    provideStorage(() => getStorage()),
   ],
   providers: [],
   bootstrap: [AppComponent]
