@@ -34,4 +34,8 @@
             </tbody>
         </table>
     </div>
+
+    <div *ngIf="areasFiltradas['length'] === 0 && areasTodas.length > 0" class="my-4">
+        <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No se encontraron resultados</h4>
+    </div>
 </div>
