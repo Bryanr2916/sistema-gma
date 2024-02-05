@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-index',
@@ -18,10 +19,11 @@ export class IndexComponent implements OnInit {
     {logo:"user", nombre: "Perfil de Usuario", enlace: "usuario/bryanr2916@gmail.com"}
   ];
 
-  constructor(private titleService: Title) { }
+  constructor(private titleService: Title, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Inicio");
+    this.toastr.success("hey I´m doing good!!");
   }
 
 }

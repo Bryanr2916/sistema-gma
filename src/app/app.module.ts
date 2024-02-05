@@ -14,13 +14,14 @@ import { NormativasModule } from './normativas/normativas.module';
 import { AreaLegalModule } from './area-legal/area-legal.module';
 import { BuscarModule } from './buscar/buscar.module';
 import { UsuarioModule } from './usuario/usuario.module';
-import { HeaderComponent } from './share/header/header.component';
 import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideDatabase, getDatabase } from '@angular/fire/database';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideStorage, getStorage } from '@angular/fire/storage';
 import { environment } from 'src/environments/environment';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,8 @@ import { environment } from 'src/environments/environment';
     provideFirestore(() => getFirestore()),
     provideStorage(() => getStorage()),
     provideStorage(() => getStorage()),
+    BrowserAnimationsModule,
+    ToastrModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
