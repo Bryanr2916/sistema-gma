@@ -23,7 +23,7 @@
         <div class="card-footer">
             <!--Acciones-->
             <div class="mb-3 mx-5 row align-items-center">
-                <button (click)="crearArea()" class="btn btn-primary col-sm-3" type="submit">Crear área legal</button>
+                <button [disabled]="!formularioEsValido()" (click)="crearArea()" class="btn btn-primary col-sm-3" type="submit">Crear área legal</button>
             </div>
         </div>
       </div>
