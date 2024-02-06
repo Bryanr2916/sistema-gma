@@ -1,10 +1,103 @@
-<div class="mt-4 mb-2 mx-2">
-    <h2><i class="g-icon fa-solid fa-briefcase me-1"></i>Crear una empresa</h2>
-    <hr class="border border-success border-1 opacity-75">
-    <!--Nav-->
-    <ul class="nav nav-pills">
-        <li class="nav-item mx-2">
-          <a class="nav-link active" routerLink="/empresas"><i class="fa-solid fa-chevron-left"></i> Regresar</a>
-        </li>
-    </ul>
+<div class="d-flex justify-content-center align-items-center">
+  <div class="card shadow my-5 text-center border border-dark">
+      <div class="card-header d-flex justify-content-around">
+          <h2><i class="g-icon fa-solid fa-briefcase me-1"></i>Crear Empresa</h2>
+           <!--Nav-->
+          <ul class="nav nav-pills mx-5">
+              <li class="nav-item mx-2">
+                  <a class="nav-link active" routerLink="/empresas"><i class="fa-solid fa-chevron-left"></i> Regresar</a>
+              </li>
+          </ul>
+      </div>
+      <div class="card-body">
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a [ngClass]="tabEmpresa ? 'active' : '' " (click)="cambiarTabEmpresa(true)" class="nav-link" aria-current="page">Empresa</a>
+          </li>
+          <li class="nav-item">
+            <a [ngClass]="tabEmpresa ? '' : 'active' " (click)="cambiarTabEmpresa(false)" class="nav-link">Administrador</a>
+          </li>
+        </ul>
+
+        <!--FORM Empresa-->
+          <form *ngIf="tabEmpresa" id="form" class="my-5">
+              <!--Nombre-->
+              <div class="mb-3 me-5 row">
+                  <label for="inputNombre" class="col-sm-4 col-form-label">Nombre</label>
+                  <div class="col-sm-8">
+                    <input [(ngModel)]="empresa.nombre" [ngModelOptions]="{standalone:true}" type="text" class="form-control border border-dark" id="inputNombre">
+                  </div>
+              </div>
+              <!--Correo-->
+              <div class="mb-3 me-5 row">
+                <label for="inputCorreo" class="col-sm-4 col-form-label">Correo Electrónico</label>
+                <div class="col-sm-8">
+                  <input [(ngModel)]="empresa.correo" [ngModelOptions]="{standalone:true}" type="email" class="form-control border border-dark" id="inputCorreo">
+                </div>
+              </div>
+              <!--Telefono-->
+              <div class="mb-3 me-5 row">
+                <label for="inputTelefono" class="col-sm-4 col-form-label">Número de teléfono</label>
+                <div class="col-sm-8">
+                  <input [(ngModel)]="empresa.telefono" [ngModelOptions]="{standalone:true}" type="number" class="form-control border border-dark" id="inputTelefono">
+                </div>
+              </div>
+              <!--Logo-->
+              <div class="mb-3 me-5 row">
+                <label for="inputLogo" class="col-sm-4 col-form-label">Logo de la empresa</label>
+                <div class="col-sm-8">
+                  <input (change)="mostrarImagen($event)" type="file" class="form-control border border-dark" id="inputLogo">
+                </div>
+                <div class="col-6 mt-2">
+                  <img *ngIf="empresa.urlLogo" class="img-thumbnail" id="imagePreview" [src]="empresa.urlLogo" alt="logo">
+                  <h1 *ngIf="empresa.urlLogo.length == 0"><i class="g-icon fa-solid fa-image"></i></h1>
+                </div>
+              </div>
+              <!--Notas-->
+              <div class="mb-3 me-5 row">
+                <label for="inputNotas" class="col-sm-12 col-form-label">Notas</label>
+                <div class="col-sm-12">
+                    <textarea [(ngModel)]="empresa.notas" [ngModelOptions]="{standalone:true}" class="form-control border border-dark" name="Notas" id="inputNotas" cols="30" rows="10"></textarea>
+                </div>
+              </div>
+          </form>
+        <!--FORM Administrador-->
+        <form *ngIf="!tabEmpresa" id="form" class="my-5">
+          <!--Nombre-->
+          <div class="mb-3 me-5 row">
+              <label for="inputNombre" class="col-sm-4 col-form-label">Nombre de usuario</label>
+              <div class="col-sm-8">
+                <input [(ngModel)]="admin.nombre" [ngModelOptions]="{standalone:true}" type="text" class="form-control border border-dark" id="inputNombre">
+              </div>
+          </div>
+          <!--Correo-->
+          <div class="mb-3 me-5 row">
+            <label for="inputCorreo" class="col-sm-4 col-form-label">Correo Electrónico</label>
+            <div class="col-sm-8">
+              <input [(ngModel)]="admin.correo" [ngModelOptions]="{standalone:true}" type="email" class="form-control border border-dark" id="inputCorreo">
+            </div>
+          </div>
+          <!--Contraseña-->
+          <div class="mb-3 me-5 row">
+            <label for="inputPassword" class="col-sm-4 col-form-label">Contraseña</label>
+            <div class="col-sm-8">
+              <input [(ngModel)]="admin.contrasena" [ngModelOptions]="{standalone:true}" type="password" class="form-control border border-dark" id="inputPassword">
+            </div>
+          </div>
+          <!--RepetirContraseña-->
+          <div class="mb-3 me-5 row">
+            <label for="inputRepeatPassword" class="col-sm-4 col-form-label">Repetir Contraseña</label>
+            <div class="col-sm-8">
+              <input [(ngModel)]="admin.repContrasena" [ngModelOptions]="{standalone:true}" type="password" class="form-control border border-dark" id="inputRepeatPassword">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="card-footer">
+          <!--Acciones-->
+          <div class="mb-3 mx-5 row align-items-center">
+              <button [disabled]="!formularioEsValido()" (click)="crearEmpresa()" class="btn btn-primary col-sm-3" type="submit">Crear Empresa</button>
+          </div>
+      </div>
+    </div>
 </div>

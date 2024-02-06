@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { EmpresasRoutingModule } from './empresas-routing.module';
 import { IndexComponent } from './index/index.component';
 import { CreateComponent } from './create/create.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -13,7 +13,8 @@ import { CreateComponent } from './create/create.component';
   ],
   imports: [
     CommonModule,
-    EmpresasRoutingModule
+    EmpresasRoutingModule,
+    FormsModule
   ]
 })
 export class EmpresasModule { }
