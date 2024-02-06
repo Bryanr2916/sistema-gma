@@ -9,6 +9,7 @@ import { AreaLegalService } from 'src/app/core/services/area-legal.service';
 })
 export class IndexComponent implements OnInit {
 
+  cargando = true;
   busqueda = "";
   areasTodas:any[] = [];
   areasFiltradas:any[] = [];
@@ -22,7 +23,8 @@ export class IndexComponent implements OnInit {
     this.areaLegalService.obtenerAreas().subscribe(datos => {
       this.areasTodas = datos;
       this.areasFiltradas = this.areasTodas;
-    })
+      this.cargando = false;
+    });
   }
 
    buscar(event: any) {

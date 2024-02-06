@@ -23,7 +23,6 @@ export class IndexComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Inicio");
-    this.toastr.success("hey I´m doing good!!");
   }
 
 }
