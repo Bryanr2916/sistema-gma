@@ -31,7 +31,6 @@ export class IndexComponent implements OnInit {
 
   buscar(event: any) {
     const busquedaMinuscuala = event.toLowerCase();
-    console.log(busquedaMinuscuala);
     this.normativasFiltradas = this.normativasTodas.filter(normativa => 
       normativa.titulo.toLowerCase().includes(busquedaMinuscuala) ||
       String(normativa.numero).includes(busquedaMinuscuala));
