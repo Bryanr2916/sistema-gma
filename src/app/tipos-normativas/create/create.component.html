@@ -15,7 +15,7 @@
                 <div class="mb-3 me-5 row">
                     <label for="inputNombre" class="col-sm-4 col-form-label">Nombre</label>
                     <div class="col-sm-8">
-                      <input type="text" class="form-control border border-dark" id="inputNombre">
+                      <input [(ngModel)]="tipoNormativas.nombre" [ngModelOptions]="{standalone:true}" type="text" class="form-control border border-dark" id="inputNombre">
                     </div>
                 </div>
             </form>
@@ -23,7 +23,7 @@
         <div class="card-footer">
             <!--Acciones-->
             <div class="mb-3 mx-5 row align-items-center">
-                <button class="btn btn-primary col-sm-3" type="submit">Crear tipo</button>
+                <button [disabled]="!formularioEsValido()" (click)="crearTipo()" class="btn btn-primary col-sm-3" type="submit">Crear tipo</button>
             </div>
         </div>
       </div>
