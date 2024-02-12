@@ -3,11 +3,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { PerfilComponent } from './perfil/perfil.component';
 import { InicioSesionComponent } from './inicio-sesion/inicio-sesion.component';
 import { ReestablecerContrasenaComponent } from './reestablecer-contrasena/reestablecer-contrasena.component';
+import { canActivate, redirectLoggedInTo, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 
 const routes: Routes = [
-  {path:'inicio-sesion',component:InicioSesionComponent},
-  {path:'reestablecer-contrasena',component:ReestablecerContrasenaComponent},
-  {path:':nombre',component:PerfilComponent}
+  {path:'inicio-sesion',component:InicioSesionComponent, ...canActivate(() => redirectLoggedInTo([""]))},
+  {path:'reestablecer-contrasena',component:ReestablecerContrasenaComponent, ...canActivate(() => redirectLoggedInTo([""]))},
+  {path:':nombre',component:PerfilComponent, ...canActivate(() => redirectUnauthorizedTo(["usuario/inicio-sesion"]))}
 ];
 
 @NgModule({

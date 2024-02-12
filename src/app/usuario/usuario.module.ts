@@ -5,6 +5,7 @@ import { UsuarioRoutingModule } from './usuario-routing.module';
 import { PerfilComponent } from './perfil/perfil.component';
 import { InicioSesionComponent } from './inicio-sesion/inicio-sesion.component';
 import { ReestablecerContrasenaComponent } from './reestablecer-contrasena/reestablecer-contrasena.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { ReestablecerContrasenaComponent } from './reestablecer-contrasena/reest
   ],
   imports: [
     CommonModule,
-    UsuarioRoutingModule
+    UsuarioRoutingModule,
+    FormsModule
   ]
 })
 export class UsuarioModule { }

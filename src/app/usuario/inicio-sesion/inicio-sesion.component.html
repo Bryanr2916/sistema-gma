@@ -9,19 +9,19 @@
                 <div class="mb-3 me-5 row">
                     <label for="staticEmail" class="col-sm-4 col-form-label">Correo electrónico</label>
                     <div class="col-sm-8">
-                      <input type="text" class="form-control border border-dark" id="staticEmail" placeholder="correo@ejemeplo.com">
+                      <input [(ngModel)]="usuario.correo" [ngModelOptions]="{standalone:true}" type="text" class="form-control border border-dark" id="staticEmail" placeholder="correo@ejemeplo.com">
                     </div>
                 </div>
                 <!--Contraseña-->
                 <div class="mb-3 me-5 row">
                     <label for="inputPassword" class="col-sm-4 col-form-label">Contraseña</label>
                     <div class="col-sm-8">
-                      <input type="password" class="form-control border border-dark" id="inputPassword">
+                      <input [(ngModel)]="usuario.contrasena" [ngModelOptions]="{standalone:true}" type="password" class="form-control border border-dark" id="inputPassword">
                     </div>
                 </div>
                 <!--Acciones-->
                 <div class="mb-3 mx-5 row align-items-center">
-                    <button class="btn btn-primary col-sm-4" type="submit">Ingresar<i class="fa-solid fa-right-to-bracket ms-1"></i></button>
+                    <button (click)="iniciarSesion($event)" class="btn btn-primary col-sm-4" type="submit">Ingresar<i class="fa-solid fa-right-to-bracket ms-1"></i></button>
                     <a routerLink="../reestablecer-contrasena" class="col-sm-8">Reestablecer contraseña</a>
                 </div>
             </form>
