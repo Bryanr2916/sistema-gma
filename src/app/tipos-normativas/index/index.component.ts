@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { TiposNormativasService } from 'src/app/core/services/tipos-normativas.service';
 
 @Component({
   selector: 'app-index',
@@ -7,27 +8,28 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./index.component.scss']
 })
 export class IndexComponent implements OnInit {
-
-  acciones= ["Editar |", "Borrar"]
+  
+  cargando = true;
+  busqueda = "";
+  tiposTodos:any[] = [];
+  tiposFiltrados:any[] = [];
+  acciones= ["Editar |", "Borrar"];
   ths = ["#","Tipos de Normativas", "Acciones"];
-  trs = [
-    { nombre: "Acuerdo"},
-    { nombre: "Codex"},
-    { nombre: "Decretos"},
-    { nombre: "Directriz"},
-    { nombre: "Leyes"},
-    { nombre: "Normas INTE"},
-    { nombre: "Orden de Inicio"},
-    { nombre: "Permisos"},
-    { nombre: "Reglamentos"},
-    { nombre: "Resoluciones"},
-    { nombre: "Resolución Ministerial"},
-  ];
 
-  constructor(private titleService: Title) { }
+  constructor(private titleService: Title, private tiposService: TiposNormativasService) { }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Tipos de normativas");
+    this.tiposService.obtenerTipos().subscribe(datos => {
+      this.tiposTodos = datos;
+      this.tiposFiltrados = this.tiposTodos;
+      this.cargando = false;
+    });
   }
 
+  buscar(event: any) {
+    const busquedaMinuscuala = event.toLowerCase();
+    this.tiposFiltrados = this.tiposTodos.filter(tipo => 
+      tipo.nombre.toLowerCase().includes(busquedaMinuscuala));
+   }
 }
