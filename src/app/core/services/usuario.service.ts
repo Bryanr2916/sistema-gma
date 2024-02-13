@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, user } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -18,5 +18,9 @@ export class UsuarioService {
 
   cerrarSesion() {
     return signOut(this.auth);
+  }
+
+  usuarioActual() {
+    return user(this.auth);
   }
 }

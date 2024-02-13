@@ -4,10 +4,10 @@
         <img src="../assets/images/GMA-logo.png" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
         GMA Sistema
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button *ngIf="usuario.correo !== ''" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div *ngIf="usuario.correo !== ''" class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <!--Empresas-->
           <li class="nav-item dropdown">
@@ -43,7 +43,7 @@
           <!--Usuarios-->
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fa-solid fa-circle-user me-1"></i>Usuario
+              <i class="fa-solid fa-circle-user me-1"></i>{{this.usuario.correo !== "" ? this.usuario.correo : "Usuario"}}
             </a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" routerLink="usuario/bryanr2916@gmail.com"><i class="g-icon fa-solid fa-user me-1"></i>Perfil</a></li>

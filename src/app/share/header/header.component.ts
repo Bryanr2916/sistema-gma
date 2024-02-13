@@ -10,9 +10,22 @@ import { UsuarioService } from 'src/app/core/services/usuario.service';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor(private usuarioService: UsuarioService, private toastr: ToastrService, private router: Router) { }
+  usuario: any = {
+    correo: ""
+  };
+  constructor(
+    private usuarioService: UsuarioService, private toastr: ToastrService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
+    this.usuarioService.usuarioActual().subscribe( usuarioActivo => {
+      if (usuarioActivo) { 
+        this.usuario.correo = usuarioActivo?.email
+      } else {
+        this.usuario.correo = "";
+      }
+    })
   }
 
   cerrarSesion() {
