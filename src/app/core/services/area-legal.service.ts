@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, doc, deleteDoc } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -18,6 +18,16 @@ export class AreaLegalService {
   obtenerAreas() {
     const areaRef = collection(this.firestore, this.path);
     return collectionData(areaRef, {idField: 'id'}) as Observable<any[]>;
+  }
+
+  obtenerArea(id: any) {
+    const areaRef = doc(this.firestore, `${this.path}/${id}`);
+    return getDoc(areaRef);
+  }
+
+  editarArea(area: any) {
+    const areaRef = doc(this.firestore, `${this.path}/${area.id}`);
+    return updateDoc(areaRef, area);
   }
 
   borrarArea(id: any) {

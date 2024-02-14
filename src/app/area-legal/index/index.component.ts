@@ -10,7 +10,6 @@ import { AreaLegalService } from 'src/app/core/services/area-legal.service';
 })
 export class IndexComponent implements OnInit {
 
-  tooltip: any;
   cargando = true;
   busqueda = "";
   areasTodas:any[] = [];

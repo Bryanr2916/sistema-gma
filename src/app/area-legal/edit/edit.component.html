@@ -1,1 +1,30 @@
-<p>edit works!</p>
+<div class="d-flex justify-content-center align-items-center">
+    <div class="card shadow my-5 text-center border border-dark">
+        <div class="card-header d-flex justify-content-around">
+            <h2><i class="g-icon fa-solid fa-bookmark me-1"></i>Editar Área Legal</h2>
+             <!--Nav-->
+            <ul class="nav nav-pills mx-5">
+                <li class="nav-item mx-2">
+                    <a class="nav-link active" routerLink="/area-legal"><i class="fa-solid fa-chevron-left"></i> Regresar</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <form id="form" class="my-4">
+                <!--Nombre-->
+                <div class="mb-3 me-5 row">
+                    <label for="inputNombre" class="col-sm-4 col-form-label">Nombre</label>
+                    <div class="col-sm-8">
+                      <input [(ngModel)]="areaLegal.nombre" [ngModelOptions]="{standalone:true}" type="text" class="form-control border border-dark" id="inputNombre">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer">
+            <!--Acciones-->
+            <div class="mb-3 mx-5 row align-items-center">
+                <button [disabled]="!formularioEsValido()" (click)="editarArea()" class="btn btn-primary col-sm-3" type="submit">Editar área legal</button>
+            </div>
+        </div>
+      </div>
+</div>
