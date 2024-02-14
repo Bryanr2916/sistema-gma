@@ -42,6 +42,16 @@
                   <input [(ngModel)]="empresa.telefono" [ngModelOptions]="{standalone:true}" type="number" class="form-control border border-dark" id="inputTelefono">
                 </div>
               </div>
+              <!--Pais-->
+              <div class="mb-3 me-5 row">
+                <label for="inputPais" class="col-sm-4 col-form-label">País</label>
+                <div class="col-sm-8">
+                  <select id="inputPais" class="form-select border border-dark">
+                    <option selected>Seleccione el país</option>
+                    <option value={{i}} *ngFor="let pais of paises; index as i">{{pais}}</option>
+                  </select>
+                </div>
+              </div>
               <!--Logo-->
               <div class="mb-3 me-5 row">
                 <label for="inputLogo" class="col-sm-4 col-form-label">Logo de la empresa</label>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { PaisesService } from 'src/app/core/services/paises.service';
 
 @Component({
   selector: 'app-create',
@@ -8,7 +9,9 @@ import { Title } from '@angular/platform-browser';
 })
 export class CreateComponent implements OnInit {
 
-  constructor(private titleService: Title) { }
+  paises = this.paisesService.paises;
+
+  constructor(private titleService: Title, private paisesService: PaisesService) { }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Normativas");

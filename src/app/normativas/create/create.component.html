@@ -44,6 +44,16 @@
                       <input type="date" class="form-control border border-dark" id="inputFecha">
                     </div>
                 </div>
+                <!--Pais-->
+              <div class="mb-3 me-5 row">
+                <label for="inputPais" class="col-sm-4 col-form-label">País</label>
+                <div class="col-sm-8">
+                  <select id="inputPais" class="form-select border border-dark">
+                    <option selected>Seleccione el país</option>
+                    <option value={{i}} *ngFor="let pais of paises; index as i">{{pais}}</option>
+                  </select>
+                </div>
+              </div>
                 <!--Modificacion-->
                 <div class="mb-3 me-5 row">
                     <label for="inputModificacion" class="col-sm-4 col-form-label">Modificación</label>
