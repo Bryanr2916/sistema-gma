@@ -16,7 +16,7 @@ export class IndexComponent implements OnInit {
     {logo:"book", nombre: "Normativas", enlace: "normativas"},
     {logo:"rectangle-list", nombre: "Tipos de Normativas", enlace: "tipos-normativas"},
     {logo:"bookmark", nombre: "Área Legal", enlace: "area-legal"},
-    {logo:"user", nombre: "Perfil de Usuario", enlace: "usuario/bryanr2916@gmail.com"}
+    {logo:"user", nombre: "Perfil de Usuario", enlace: "usuario/perfil"}
   ];
 
   constructor(private titleService: Title, private toastr: ToastrService) { }

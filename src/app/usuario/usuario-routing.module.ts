@@ -8,7 +8,7 @@ import { canActivate, redirectLoggedInTo, redirectUnauthorizedTo } from '@angula
 const routes: Routes = [
   {path:'inicio-sesion',component:InicioSesionComponent, ...canActivate(() => redirectLoggedInTo([""]))},
   {path:'reestablecer-contrasena',component:ReestablecerContrasenaComponent, ...canActivate(() => redirectLoggedInTo([""]))},
-  {path:':nombre',component:PerfilComponent, ...canActivate(() => redirectUnauthorizedTo(["usuario/inicio-sesion"]))}
+  {path:'perfil',component:PerfilComponent, ...canActivate(() => redirectUnauthorizedTo(["usuario/inicio-sesion"]))}
 ];
 
 @NgModule({

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { ToastrService } from 'ngx-toastr';
 import { AreaLegalService } from 'src/app/core/services/area-legal.service';
 
 @Component({
@@ -9,14 +10,15 @@ import { AreaLegalService } from 'src/app/core/services/area-legal.service';
 })
 export class IndexComponent implements OnInit {
 
+  tooltip: any;
   cargando = true;
   busqueda = "";
   areasTodas:any[] = [];
   areasFiltradas:any[] = [];
-  acciones= ["Editar |", "Borrar"]
   ths = ["#","Nombre", "Acciones"];
 
-  constructor(private titleService: Title, private areaLegalService: AreaLegalService) { }
+  constructor(private titleService: Title, private areaLegalService: AreaLegalService,
+    private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Área legal");
@@ -31,6 +33,19 @@ export class IndexComponent implements OnInit {
     const busquedaMinuscuala = event.toLowerCase();
     this.areasFiltradas = this.areasTodas.filter(area => 
       area.nombre.toLowerCase().includes(busquedaMinuscuala));
+   }
+
+   borrar(area: any) {
+    if (confirm(`¿Desea eliminar el área "${area.nombre}"?`)) {
+      console.log("borrando" + area);
+      this.areaLegalService.borrarArea(area.id).then(_ => {
+        this.toastr.success("Área borrada con éxito", undefined, {
+          closeButton: true,
+          timeOut: 4000,
+          progressBar: true
+        });
+      });
+    }
    }
 
 }
