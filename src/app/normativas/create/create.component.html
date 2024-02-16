@@ -24,9 +24,8 @@
                     <div class="col-sm-8">
                         <select id="inputTipo" class="form-select border border-dark">
                             <option selected>Seleccione el tipo</option>
-                            <option value="1">Tipo 1</option>
-                            <option value="2">Tipo 2</option>
-                            <option value="3">Tipo 3</option>
+                            <option *ngFor="let tipo of tipos" value="">{{tipo.nombre}}</option>
+                            
                         </select>
                     </div>
                 </div>
