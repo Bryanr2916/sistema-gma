@@ -24,9 +24,9 @@ export class IndexComponent implements OnInit {
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Empresas");
     this.empresasTodas = [
-      { nombre: "Equifax", admin: "admin 1", correo: "correo1@empresa.com"},
-      { nombre: "Toys", admin: "admin 2", correo: "correo2@empresa.com"},
-      { nombre: "Dos Pinos", admin: "admin 3", correo: "correo3@empresa.com"},
+      { nombre: "empresa uno", admin: "admin 1", correo: "correo1@empresa.com"},
+      { nombre: "empresa dos", admin: "admin 2", correo: "correo2@empresa.com"},
+      { nombre: "empresa tres", admin: "admin 3", correo: "correo3@empresa.com"},
     ];
     this.empresasFiltradas = this.empresasTodas;
     this.cargando = false;

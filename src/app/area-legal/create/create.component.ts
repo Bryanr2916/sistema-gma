@@ -28,8 +28,6 @@ export class CreateComponent implements OnInit {
       this.areaService.crearArea(
         this.areaLegal
       ).then(data => {
-
-        console.log(data);
         this.toastr.success("Área creada con éxito", undefined, {
           closeButton: true,
           timeOut: 4000,

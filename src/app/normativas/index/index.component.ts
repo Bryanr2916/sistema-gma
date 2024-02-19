@@ -19,12 +19,14 @@ export class IndexComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Normativas");
-    this.normativasTodas = [{ numero: 321, titulo: "loremadfad adfasdf asdfasd", tipo: "Resolución Ministerial"},
-    { numero: 675, titulo: "ljaldfjal aldsjlasdjfajds flajfaldskjf", tipo: "Reglamentos"},
-    { numero: 901, titulo: "este es ", tipo: "Resolución Ministerial"},
-    { numero: 12105, titulo: "adfadsfasf", tipo: "Reglamentos"},
-    { numero: 873, titulo: "zczva", tipo: "Reglamentos"},
-    { numero: 4100, titulo: "Normas adsfa", tipo: "Leyes"},];
+    this.normativasTodas = [
+    { numero: 675, titulo: "normativa uno", tipo: "Reglamentos"},
+    { numero: 901, titulo: "normativa dos", tipo: "Resolución Ministerial"},
+    { numero: 12105, titulo: "normativa tres", tipo: "Reglamentos"},
+    { numero: 873, titulo: "normativa cuatro", tipo: "Reglamentos"},
+    { numero: 4100, titulo: "normativa cinco", tipo: "Leyes"},
+    { numero: 321, titulo: "normativa seis", tipo: "Resolución Ministerial"}
+  ];
     this.normativasFiltradas = this.normativasTodas;
     this.cargando = false;
   }
