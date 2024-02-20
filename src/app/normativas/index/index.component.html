@@ -28,14 +28,15 @@
               </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let tr of normativasFiltradas; index as i">
-                    <th scope="row">{{tr.numero}}</th>
-                    <td>{{tr.titulo}}</td>
-                    <td>{{tr.tipo}}</td>
+                <tr *ngFor="let normativa of normativasFiltradas; index as i">
+                    <th scope="row">{{normativa.numero}}</th>
+                    <td>{{normativa.titulo}}</td>
                     <td>
-                        <a *ngFor="let accion of acciones">
-                            {{accion}}
-                        </a>
+                        <p class="badge bg-secondary">{{nombreTipo(normativa.tipoId)}}</p>
+                    </td>
+                    <td>
+                        <a routerLink="editar/{{normativa.id}}"><i class="fa-solid fa-pen-to-square fa-lg me-2"></i></a>
+                        <a (click)="borrar(normativa)"><i class="r-icon fa-solid fa-trash fa-lg"></i></a>
                     </td>
                 </tr>
             </tbody>

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage, ref, getDownloadURL, uploadBytesResumable } from '@angular/fire/storage';
 import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,26 @@ export class NormativaService {
   crearNormativa(normativa: any) {
     const normativaRef = collection(this.firestore, this.path);
     return addDoc(normativaRef, normativa);
+  }
+
+  obtenerNormativas() {
+    const normativasRef = collection(this.firestore, this.path);
+    return collectionData(normativasRef, {idField: 'id'}) as Observable<any[]>;
+  }
+
+  obtenerNormativa(id: any) {
+    const normativaRef = doc(this.firestore, `${this.path}/${id}`);
+    return getDoc(normativaRef);
+  }
+
+  editarNormativa(area: any) {
+    const normativaRef = doc(this.firestore, `${this.path}/${area.id}`);
+    return updateDoc(normativaRef, area);
+  }
+
+  borrarNormativa(id: any) {
+    const normativaRef = doc(this.firestore, `${this.path}/${id}`);
+    return deleteDoc(normativaRef);
   }
 
   subirArchivo(archivo: any) {

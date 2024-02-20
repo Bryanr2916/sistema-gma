@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { ToastrService } from 'ngx-toastr';
+import { NormativaService } from 'src/app/core/services/normativa.service';
+import { TiposNormativasService } from 'src/app/core/services/tipos-normativas.service';
 
 @Component({
   selector: 'app-index',
@@ -10,25 +13,25 @@ export class IndexComponent implements OnInit {
 
   cargando = true;
   busqueda = "";
+  tipos: any[] = [];
   acciones= ["Editar |", "Borrar"]
   ths = ["Número","Título","Tipo de Normativa", "Acciones"];
   normativasTodas:any[] = [];
   normativasFiltradas:any[] = [];
 
-  constructor(private titleService: Title) { }
+  constructor(private titleService: Title, private toastr: ToastrService,
+    private normativaService:NormativaService, private tiposService: TiposNormativasService) { }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Normativas");
-    this.normativasTodas = [
-    { numero: 675, titulo: "normativa uno", tipo: "Reglamentos"},
-    { numero: 901, titulo: "normativa dos", tipo: "Resolución Ministerial"},
-    { numero: 12105, titulo: "normativa tres", tipo: "Reglamentos"},
-    { numero: 873, titulo: "normativa cuatro", tipo: "Reglamentos"},
-    { numero: 4100, titulo: "normativa cinco", tipo: "Leyes"},
-    { numero: 321, titulo: "normativa seis", tipo: "Resolución Ministerial"}
-  ];
-    this.normativasFiltradas = this.normativasTodas;
-    this.cargando = false;
+    this.tiposService.obtenerTipos().subscribe(datos => {
+      this.tipos = datos;
+      this.normativaService.obtenerNormativas().subscribe(datos => {
+        this.normativasTodas = datos;
+        this.normativasFiltradas = this.normativasTodas;
+        this.cargando = false;
+      });
+    });
   }
 
   buscar(event: any) {
@@ -36,6 +39,22 @@ export class IndexComponent implements OnInit {
     this.normativasFiltradas = this.normativasTodas.filter(normativa => 
       normativa.titulo.toLowerCase().includes(busquedaMinuscuala) ||
       String(normativa.numero).includes(busquedaMinuscuala));
+  }
+
+  borrar(normativa: any) {
+    if (confirm(`¿Desea eliminar la normativa "${normativa.titulo}"?`)) {
+      this.normativaService.borrarNormativa(normativa.id).then(_ => {
+        this.toastr.success("Normativa borrada con éxito", undefined, {
+          closeButton: true,
+          timeOut: 4000,
+          progressBar: true
+        });
+      });
+    }
+  }
+
+  nombreTipo(id: any) {
+    return this.tipos.find(tipo => tipo.id === id).nombre;
   }
 
 }
