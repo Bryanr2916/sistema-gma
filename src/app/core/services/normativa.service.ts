@@ -27,9 +27,9 @@ export class NormativaService {
     return getDoc(normativaRef);
   }
 
-  editarNormativa(area: any) {
-    const normativaRef = doc(this.firestore, `${this.path}/${area.id}`);
-    return updateDoc(normativaRef, area);
+  editarNormativa(normativa: any) {
+    const normativaRef = doc(this.firestore, `${this.path}/${normativa.id}`);
+    return updateDoc(normativaRef, normativa);
   }
 
   borrarNormativa(id: any) {

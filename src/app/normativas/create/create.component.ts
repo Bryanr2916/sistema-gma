@@ -74,8 +74,6 @@ export class CreateComponent implements OnInit {
 
   cargarArchivo(event: any) {
     this.archivo = event.target.files[0];
-
-    return "";
   }
 
 }
