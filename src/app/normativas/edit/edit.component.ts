@@ -78,7 +78,7 @@ export class EditComponent implements OnInit {
 
   editarNormativaFB() {
     this.normativaService.editarNormativa(this.normativa).then(_ => {
-      this.toastr.success("Normativa creada con éxito", undefined, {
+      this.toastr.success("Normativa editada con éxito", undefined, {
         closeButton: true,
         timeOut: 4000,
         progressBar: true

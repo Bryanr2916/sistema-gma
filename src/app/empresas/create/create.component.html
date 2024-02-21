@@ -46,9 +46,9 @@
               <div class="mb-3 me-5 row">
                 <label for="inputPais" class="col-sm-4 col-form-label">País</label>
                 <div class="col-sm-8">
-                  <select id="inputPais" class="form-select border border-dark">
+                  <select [(ngModel)]="empresa.pais" [ngModelOptions]="{standalone:true}" id="inputPais" class="form-select border border-dark">
                     <option selected>Seleccione el país</option>
-                    <option value={{i}} *ngFor="let pais of paises; index as i">{{pais}}</option>
+                    <option value={{pais}} *ngFor="let pais of paises; index as i">{{pais}}</option>
                   </select>
                 </div>
               </div>
@@ -59,8 +59,8 @@
                   <input (change)="mostrarImagen($event)" type="file" class="form-control border border-dark" id="inputLogo">
                 </div>
                 <div class="col-6 mt-2">
-                  <img *ngIf="empresa.urlLogo" class="img-thumbnail" id="imagePreview" [src]="empresa.urlLogo" alt="logo">
-                  <h1 *ngIf="empresa.urlLogo.length == 0"><i class="g-icon fa-solid fa-image"></i></h1>
+                  <img *ngIf="displayLogo" class="img-thumbnail" id="imagePreview" [src]="displayLogo" alt="logo">
+                  <h1 *ngIf="displayLogo.length == 0"><i class="g-icon fa-solid fa-image"></i></h1>
                 </div>
               </div>
               <!--Notas-->

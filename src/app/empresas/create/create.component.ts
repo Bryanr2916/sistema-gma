@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { PaisesService } from 'src/app/core/services/paises.service';
+import { UsuarioService } from 'src/app/core/services/usuario.service';
 
 @Component({
   selector: 'app-create',
@@ -11,26 +12,35 @@ import { PaisesService } from 'src/app/core/services/paises.service';
 export class CreateComponent implements OnInit {
 
   tabEmpresa = true;
+  displayLogo = "";
+  archivoLogo:any = null;
  
   paises = this.paisesService.paises;
   
   empresa = {
-    nombre: "nombre",
-    correo: "correo",
-    telefono: "86641188",
+    nombre: "",
+    correo: "",
+    telefono: "",
     pais: "",
-    urlLogo: "https://plus.unsplash.com/premium_photo-1673716788931-894d9e9f3a38?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    notas: "esto es una nota!"
+    urlLogo: "",
+    notas: ""
   };
 
   admin = {
-    nombre: "Thom Yorke",
-    correo: "ty@gmail.com",
-    contrasena: "radiohead1sgreat",
-    repContrasena: "radiohead1sgreat"
+    uid: "",
+    nombre: "",
+    correo: "",
+    contrasena: "",
+    repContrasena: "",
+    empresaId: "",
+    //administrador de empresa
+    tipo: 2
   }
 
-  constructor(private titleService: Title, private empresasService: EmpresasService, private paisesService: PaisesService) { }
+  constructor(
+    private titleService: Title, private empresasService: EmpresasService,
+    private paisesService: PaisesService, private usuarioService:UsuarioService
+  ) { }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Empresas");
@@ -38,8 +48,24 @@ export class CreateComponent implements OnInit {
 
   crearEmpresa() {
     if (this.formularioEsValido()) {
-      this.empresasService.crearEmpresa(this.empresa, this.admin);
+      this.empresasService.crearEmpresa(this.empresa).then(rEmpresa => {
+        console.log(rEmpresa);
+        this.admin.empresaId = rEmpresa.id;
+        this.crearAdmin();
+      });
     }
+  }
+
+  // registra al usuario en fire auth
+  crearAdmin () {
+      this.usuarioService.registrar(this.admin).then(registro => {
+        this.admin.uid = registro.user.uid
+        console.log(registro);
+        // crea el usuario en firestore
+        this.usuarioService.crearUsuario(this.admin).then(usuario => {
+          console.log(usuario);
+        });
+      });
   }
 
   formularioEsValido() {
@@ -52,12 +78,12 @@ export class CreateComponent implements OnInit {
 
   mostrarImagen($event:any) {
     if ($event.target.files) {
+      this.archivoLogo = $event.target.files[0];
       let reader = new FileReader();
-      reader.readAsDataURL($event.target.files[0]);
+      reader.readAsDataURL(this.archivoLogo);
       reader.onload = (e:any) => {
-        this.empresa.urlLogo = e.target.result;
+        this.displayLogo = e.target.result;
       }
     }
   }
-
 }
