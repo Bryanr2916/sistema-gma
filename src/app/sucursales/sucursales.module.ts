@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { SucursalesRoutingModule } from './sucursales-routing.module';
 import { IndexComponent } from './index/index.component';
-
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -11,7 +11,8 @@ import { IndexComponent } from './index/index.component';
   ],
   imports: [
     CommonModule,
-    SucursalesRoutingModule
+    SucursalesRoutingModule,
+    FormsModule
   ]
 })
 export class SucursalesModule { }
