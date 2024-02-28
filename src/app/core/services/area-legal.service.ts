@@ -16,8 +16,8 @@ export class AreaLegalService {
   }
 
   obtenerAreas() {
-    const areaRef = collection(this.firestore, this.path);
-    return collectionData(areaRef, {idField: 'id'}) as Observable<any[]>;
+    const areasRef = collection(this.firestore, this.path);
+    return collectionData(areasRef, {idField: 'id'}) as Observable<any[]>;
   }
 
   obtenerArea(id: any) {

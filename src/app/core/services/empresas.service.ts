@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage, ref, getDownloadURL, uploadBytesResumable } from '@angular/fire/storage';
-import { Firestore, addDoc, collection, collectionData, doc, runTransaction } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -15,6 +15,11 @@ export class EmpresasService {
   crearEmpresa(empresa: any) {
     const empresaRef = collection(this.firestore, this.path);
     return addDoc(empresaRef, empresa);
+  }
+
+  obtenerEmpresas() {
+    const empresasRef = collection(this.firestore, this.path);
+    return collectionData(empresasRef, {idField: 'id'}) as Observable<any[]>;
   }
 
   subirArchivo(archivo: any) {
@@ -47,5 +52,10 @@ export class EmpresasService {
       });
     });  
     });
+  }
+
+  borrarEmpresa(id: any) {
+    const empresaRef = doc(this.firestore, `${this.path}/${id}`);
+    return deleteDoc(empresaRef);
   }
 }
