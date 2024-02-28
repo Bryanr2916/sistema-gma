@@ -37,4 +37,13 @@ export class IndexComponent implements OnInit {
     console.log("usar como: ", empresa);
   }
 
+  esSubsidiaria (empresaId: string, sucursales: any[] | undefined) {
+    console.log(empresaId, sucursales);
+    if (!sucursales) {
+      return false
+    };
+
+    return sucursales.includes(empresaId);
+  }
+
 }

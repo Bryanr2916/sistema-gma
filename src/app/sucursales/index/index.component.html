@@ -23,16 +23,16 @@
         <div *ngFor="let empresa of empresasFiltradas" class="card mb-5 border border-dark">
             <h5 class="card-header">{{empresa.nombre}} <a><i class="g-icon fa-solid fa-arrow-right-to-bracket fa-lg me-2"></i></a></h5>
             <div class="card-body">
-                <div class="form-check" *ngFor="let subsidiaria of empresasTodas">
-                    <input class="form-check-input border border-dark" type="checkbox" value="" id="flexCheckDefault">
-                    <label class="form-check-label" for="flexCheckDefault">
+                <div class="form-check" *ngFor="let subsidiaria of empresasTodas; index as i">
+                    <input [checked]="esSubsidiaria(subsidiaria.id, empresa.sucursales)" class="form-check-input border border-dark" type="checkbox" value="{{subsidiaria.id}}" id="sub-{{i}}">
+                    <label class="form-check-label" for="sub-{{i}}">
                         {{subsidiaria.nombre}}
                     </label>
                 </div>
             </div>
             <div class="card-footer">
                 <a href="#" class="btn btn-primary me-2">Actualizar</a>
-                <a href="#"> 0 subsidiarias </a>
+                <a href="#">{{empresa.sucursales ? empresa.sucursales.length : "0"}} subsidiarias </a>
             </div>
         </div>
     </div>
