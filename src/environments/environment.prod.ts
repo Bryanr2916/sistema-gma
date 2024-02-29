@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
+  secrectKey: "gm@-2024",
   firebase: {
     apiKey: "AIzaSyDatiFzqXXmK2Y_P__yrrIl6skgKkAOLgg",
     authDomain: "gma-sistema-e71c2.firebaseapp.com",

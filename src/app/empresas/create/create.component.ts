@@ -56,16 +56,11 @@ export class CreateComponent implements OnInit {
     }
   }
 
-  // registra al usuario en fire auth
+  // crea el usuario en firestore
   crearAdmin () {
-      this.usuarioService.registrar(this.admin).then(registro => {
-        this.admin.uid = registro.user.uid
-        console.log(registro);
-        // crea el usuario en firestore
-        this.usuarioService.crearUsuario(this.admin).then(usuario => {
-          console.log(usuario);
-        });
-      });
+    this.usuarioService.crearUsuario(this.admin).then(usuario => {
+      console.log(usuario);
+    });
   }
 
   formularioEsValido() {
