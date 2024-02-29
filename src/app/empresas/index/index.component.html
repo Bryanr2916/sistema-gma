@@ -20,7 +20,7 @@
         </div>
     </div>
     <!--Tabla-->
-    <div *ngIf="empresasFiltradas.length > 0" class="table-responsive my-4">
+    <div *ngIf="empresasFiltradas.length > 0 && !cargando" class="table-responsive my-4">
         <table class="table table-light table-striped table-hover shadow">
             <thead>
               <tr class="table-success">
