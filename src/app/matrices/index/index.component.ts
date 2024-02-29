@@ -15,6 +15,7 @@ export class IndexComponent implements OnInit {
   empresasMatrices: any[] = [];
   empresasFiltradas:any[] = [];
   matrices:any[] = [];
+  ths = ["#","Título","Empresa","Acciones"];
 
   constructor(
     private titleService: Title,
@@ -39,6 +40,10 @@ export class IndexComponent implements OnInit {
 
   nombreEmpresa (id: string) {
     return this.empresasTodas.find(emp => emp.id === id).nombre
+  }
+
+  borrar(matriz: any) {
+    console.log("borrando...", matriz);
   }
 
 }

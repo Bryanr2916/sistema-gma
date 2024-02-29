@@ -19,10 +19,35 @@
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
-    <!--List Group-->
-    <ul *ngIf="!cargando" class="list-group border border-dark my-5">
-      <li *ngFor="let matriz of matrices" class="list-group-item">
-        {{matriz.titulo}} (321) - {{nombreEmpresa(matriz.empresa)}}
-      </li>
-    </ul>
+    <!--table-->
+    <div *ngIf="matrices.length > 0" class="table-responsive my-4">
+      <table class="table table-light table-striped table-hover shadow">
+          <thead>
+            <tr class="table-success">
+              <th scope="col" *ngFor="let th of ths">{{th}}</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr *ngFor="let matriz of matrices; index as i">
+                  <th scope="row">{{ i + 1}}</th>
+                  <td>{{matriz.titulo}}</td>
+                  <td>{{matriz.empresa}}</td>
+                  <td>
+                      <a routerLink="ver/{{matriz.id}}"><i class="g-icon fa-solid fa-eye fa-lg me-2"></i>
+                        <span class="hidden-tooltip">Ver</span>
+                      </a>
+                      <a routerLink="editar/{{matriz.id}}"><i class="fa-solid fa-pen-to-square fa-lg me-2"></i>
+                        <span class="hidden-tooltip">Editar</span>
+                      </a>
+                      <a (click)="borrar(matriz)"><i class="r-icon fa-solid fa-trash fa-lg me-2"></i>
+                        <span class="hidden-tooltip">Borrar</span>
+                      </a>
+                      <a routerLink="ver/{{matriz.id}}"><i class="g-icon fa-solid fa-newspaper fa-lg ms-2"></i>
+                        <span class="hidden-tooltip">Crear artículos aplicables </span>
+                      </a>
+                  </td>
+              </tr>
+          </tbody>
+      </table>
+  </div>
 </div>
