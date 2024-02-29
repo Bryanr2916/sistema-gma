@@ -31,7 +31,7 @@
                 <tr *ngFor="let empresa of empresasFiltradas; index as i">
                     <th scope="row">{{i + 1}}</th>
                     <td>{{empresa.nombre}}</td>
-                    <td>{{empresa.admin || "no encontrado"}}</td>
+                    <td>{{usuarioAdmin(empresa) || "no encontrado"}}</td>
                     <td>{{empresa.correo}}</td>
                     <td> <!--<i class="fa-regular fa-copy"></i>-->
                         <a (click)="usarComo(empresa)"><i class="g-icon fa-solid fa-arrow-right-to-bracket fa-lg me-2"></i></a>

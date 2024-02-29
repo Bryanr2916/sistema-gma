@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
+import { UsuarioService } from 'src/app/core/services/usuario.service';
 
 @Component({
   selector: 'app-index',
@@ -14,16 +15,24 @@ export class IndexComponent implements OnInit {
   ths = ["#","Empresa", "Administrador", "Correo Electrónico", "Acciones"];
   empresasTodas:any[] = [];
   empresasFiltradas:any[] = [];
+  usuarios:any[] = [];
 
   constructor(private titleService: Title, private empresaService: EmpresasService,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService, private usuarioService: UsuarioService) { }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Empresas");
     this.empresaService.obtenerEmpresas().subscribe(datos => {
       this.empresasTodas = datos;
       this.empresasFiltradas = this.empresasTodas;
+      this.cargarUsuarios()
+    });
+  }
+
+  cargarUsuarios() {
+    this.usuarioService.obtenerUsuarios().subscribe(datos => {
       this.cargando = false;
+      this.usuarios = datos;
     });
   }
 
@@ -52,6 +61,10 @@ export class IndexComponent implements OnInit {
 
   duplicar (empresa: any) {
     console.log("duplicar: ", empresa);
+  }
+
+  usuarioAdmin(empresa: any) {
+    return this.usuarios.find( usuario => usuario.empresaId === empresa.id)?.correo;
   }
 
 }
