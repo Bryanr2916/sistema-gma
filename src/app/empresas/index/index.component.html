@@ -34,10 +34,18 @@
                     <td>{{usuarioAdmin(empresa) || "no encontrado"}}</td>
                     <td>{{empresa.correo}}</td>
                     <td> <!--<i class="fa-regular fa-copy"></i>-->
-                        <a (click)="usarComo(empresa)"><i class="g-icon fa-solid fa-arrow-right-to-bracket fa-lg me-2"></i></a>
-                        <a routerLink="editar/{{empresa.id}}"><i class="fa-solid fa-pen-to-square fa-lg me-2"></i></a>
-                        <a (click)="borrar(empresa)"><i class="r-icon fa-solid fa-trash fa-lg me-2"></i></a>
-                        <a (click)="duplicar(empresa)"><i class="g-icon fa-regular fa-copy fa-lg"></i></a>
+                        <a (click)="usarComo(empresa)"><i class="g-icon fa-solid fa-arrow-right-to-bracket fa-lg me-2"></i>
+                            <span class="hidden-tooltip">Usar como</span>
+                        </a>
+                        <a routerLink="editar/{{empresa.id}}"><i class="fa-solid fa-pen-to-square fa-lg me-2"></i>
+                            <span class="hidden-tooltip">Editar</span>
+                        </a>
+                        <a (click)="borrar(empresa)"><i class="r-icon fa-solid fa-trash fa-lg me-2"></i>
+                            <span class="hidden-tooltip">Borrar</span>
+                        </a>
+                        <a (click)="duplicar(empresa)"><i class="g-icon fa-regular fa-copy fa-lg"></i>
+                            <span class="hidden-tooltip">Duplicar</span>
+                        </a>
                     </td>
                 </tr>
             </tbody>

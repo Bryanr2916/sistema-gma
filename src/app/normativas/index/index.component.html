@@ -35,8 +35,12 @@
                         <p class="badge bg-secondary">{{nombreTipo(normativa.tipoId)}}</p>
                     </td>
                     <td>
-                        <a routerLink="editar/{{normativa.id}}"><i class="fa-solid fa-pen-to-square fa-lg me-2"></i></a>
-                        <a (click)="borrar(normativa)"><i class="r-icon fa-solid fa-trash fa-lg"></i></a>
+                        <a routerLink="editar/{{normativa.id}}"><i class="fa-solid fa-pen-to-square fa-lg me-2"></i>
+                            <span class="hidden-tooltip">Editar</span>
+                        </a>
+                        <a (click)="borrar(normativa)"><i class="r-icon fa-solid fa-trash fa-lg"></i>
+                            <span class="hidden-tooltip">Borrar</span>
+                        </a>
                     </td>
                 </tr>
             </tbody>
