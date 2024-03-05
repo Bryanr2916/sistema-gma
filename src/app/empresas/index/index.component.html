@@ -33,7 +33,10 @@
                     <td>{{empresa.nombre}}</td>
                     <td>{{usuarioAdmin(empresa) || "no encontrado"}}</td>
                     <td>{{empresa.correo}}</td>
-                    <td> <!--<i class="fa-regular fa-copy"></i>-->
+                    <td>
+                        <a routerLink="ver/{{empresa.id}}"><i class="g-icon fa-solid fa-eye fa-lg me-2"></i>
+                            <span class="hidden-tooltip">Ver</span>
+                          </a>
                         <a (click)="usarComo(empresa)"><i class="g-icon fa-solid fa-arrow-right-to-bracket fa-lg me-2"></i>
                             <span class="hidden-tooltip">Usar como</span>
                         </a>
