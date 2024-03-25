@@ -23,17 +23,21 @@
         <div *ngFor="let empresa of empresasFiltradas" class="card mb-5 border border-dark">
             <h5 class="card-header">{{empresa.nombre}} <a><i class="g-icon fa-solid fa-arrow-right-to-bracket fa-lg me-2"></i></a></h5>
             <div class="card-body">
-                <div class="form-check" *ngFor="let subsidiaria of empresasTodas; index as i">
-                    <input [checked]="esSubsidiaria(subsidiaria.id, empresa.sucursales)" class="form-check-input border border-dark" type="checkbox" value="{{subsidiaria.id}}" id="sub-{{i}}">
+                <div class="form-check" *ngFor="let subsidiaria of obtenerSubsidiarias(empresa.id); index as i">
+                    <input (change)="seleccionarSubsidiaria(empresa, subsidiaria, $event)" [checked]="esSubsidiaria(subsidiaria.id, empresa.sucursales)" class="form-check-input border border-dark" type="checkbox" value="{{subsidiaria.id}}" id="sub-{{i}}">
                     <label class="form-check-label" for="sub-{{i}}">
                         {{subsidiaria.nombre}}
                     </label>
                 </div>
             </div>
             <div class="card-footer">
-                <a href="#" class="btn btn-primary me-2">Actualizar</a>
+                <a (click)="actualizarSucursales(empresa)" class="btn btn-primary me-2">Actualizar</a>
                 <a href="#">{{empresa.sucursales ? empresa.sucursales.length : "0"}} subsidiarias </a>
             </div>
         </div>
+    </div>
+    <!--No hay resultados-->
+    <div *ngIf="empresasFiltradas.length === 0 && empresasTodas.length > 0" class="my-4">
+        <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No se encontraron resultados</h4>
     </div>
 </div>

@@ -14,6 +14,8 @@ export class IndexComponent implements OnInit {
   busqueda = "";
   empresasTodas:any[] = [];
   empresasFiltradas:any[] = [];
+  empresasVinculadas:any[] = [];
+
 
   constructor(private titleService: Title, private empresaService: EmpresasService,
     private toastr: ToastrService) { }
@@ -21,9 +23,15 @@ export class IndexComponent implements OnInit {
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Sucursales");
     this.empresaService.obtenerEmpresas().subscribe(datos => {
-      this.empresasTodas = datos;
+      this.empresasTodas = datos.map(emp => {
+        return {sucursales: [],...emp};
+      });
       this.empresasFiltradas = this.empresasTodas;
       this.cargando = false;
+
+      this.empresasVinculadas = this.empresasTodas.map(emp => {
+        return { id: emp.id, sucursales: emp.sucursales || []}
+      });
     });
   }
 
@@ -38,12 +46,39 @@ export class IndexComponent implements OnInit {
   }
 
   esSubsidiaria (empresaId: string, sucursales: any[] | undefined) {
-    console.log(empresaId, sucursales);
     if (!sucursales) {
       return false
     };
 
     return sucursales.includes(empresaId);
+  }
+
+  // filtra las empresas para no tener la empresa misma
+  obtenerSubsidiarias (empresaId: string) {
+    return this.empresasTodas.filter(emp => emp.id !== empresaId);
+  }
+
+  seleccionarSubsidiaria(empresa: any, subsidiaria: any, event: any) {
+    const empresaIndex = this.empresasVinculadas.findIndex( emp => emp.id === empresa.id); 
+    const sucursalIndex = this.empresasVinculadas[empresaIndex].sucursales.findIndex( (suc: any) => 
+      suc === subsidiaria.id);
+    if (event.target.checked) {
+      this.empresasVinculadas[empresaIndex].sucursales.push(subsidiaria.id);
+      console.log("vincular");
+    } else {
+      this.empresasVinculadas[empresaIndex].sucursales.splice(sucursalIndex, 1);
+      console.log("desvincular");
+    }
+  }
+
+  actualizarSucursales(empresa: any) {
+    this.empresaService.editarEmpresa(empresa).then(_ => {
+      this.toastr.success("Subsidiarias actualizadas con éxito", undefined, {
+        closeButton: true,
+        timeOut: 4000,
+        progressBar: true
+      });
+    });
   }
 
 }

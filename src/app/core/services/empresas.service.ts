@@ -54,6 +54,11 @@ export class EmpresasService {
     });
   }
 
+  editarEmpresa(empresa: any) {
+    const empresaRef = doc(this.firestore, `${this.path}/${empresa.id}`);
+    return updateDoc(empresaRef, empresa);
+  }
+
   borrarEmpresa(id: any) {
     const empresaRef = doc(this.firestore, `${this.path}/${id}`);
     return deleteDoc(empresaRef);
