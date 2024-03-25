@@ -15,7 +15,7 @@ export class IndexComponent implements OnInit {
   busqueda = "";
   tipos: any[] = [];
   acciones= ["Editar |", "Borrar"]
-  ths = ["Número","Título","Tipo de Normativa", "Acciones"];
+  ths = ["Número","Título", "Archivo","Tipo de Normativa", "Acciones"];
   normativasTodas:any[] = [];
   normativasFiltradas:any[] = [];
 

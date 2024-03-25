@@ -32,6 +32,15 @@
                     <th scope="row">{{normativa.numero}}</th>
                     <td>{{normativa.titulo}}</td>
                     <td>
+                        <a *ngIf="normativa.urlArchivo" target="_blank" href="{{normativa.urlArchivo}}"><i class="g-i fa-solid fa-paperclip fa-lg"></i>
+                            <span class="hidden-tooltip">Ver archivo</span>
+                        </a>
+                        <a *ngIf="!normativa.urlArchivo">
+                            <i class="r-icon fa-solid fa-ban fa-lg"></i>
+                            <span class="hidden-tooltip">No hay archivo</span>
+                        </a>
+                    </td>
+                    <td>
                         <p class="badge bg-secondary">{{nombreTipo(normativa.tipoId)}}</p>
                     </td>
                     <td>
