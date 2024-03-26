@@ -10,9 +10,7 @@ import { UsuarioService } from 'src/app/core/services/usuario.service';
 })
 export class HeaderComponent implements OnInit {
 
-  usuario: any = {
-    correo: ""
-  };
+  usuario: any = {};
   constructor(
     private usuarioService: UsuarioService, private toastr: ToastrService,
     private router: Router
@@ -21,7 +19,14 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     this.usuarioService.usuarioActual().subscribe( usuarioActivo => {
       if (usuarioActivo) { 
-        this.usuario.correo = usuarioActivo?.email
+        console.log(usuarioActivo);
+        this.usuarioService.usuarioActualFS(usuarioActivo.uid).then(respuseta => {
+          console.log(respuseta.docs[0].data());
+          const usuarioUID = respuseta.docs[0].data();
+          if ( usuarioUID) {
+            this.usuario = usuarioUID
+          }
+        });
       } else {
         this.usuario.correo = "";
       }

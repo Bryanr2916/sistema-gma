@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, user } from '@angular/fire/auth';
-import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, query, where, getDocs } from '@angular/fire/firestore';
 import { EncriptadorService } from './encriptador.service';
 import { Observable } from 'rxjs';
 
@@ -28,10 +28,16 @@ export class UsuarioService {
     return user(this.auth);
   }
 
-  crearUsuario( usuario:any ) {
+  usuarioActualFS(uid: string) {
+    const usuarioRef = collection(this.firestore, this.path);
+    
+    const usuarioUID = query(usuarioRef, where("uid", "==", uid));
+    return getDocs(usuarioUID);
+  }
 
-    const areaRef = collection(this.firestore, this.path);
-    return addDoc(areaRef,
+  crearUsuario( usuario:any ) {
+    const usuarioRef = collection(this.firestore, this.path);
+    return addDoc(usuarioRef,
       {
         correo: usuario.correo,
         nombre: usuario.nombre,
