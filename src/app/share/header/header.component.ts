@@ -19,7 +19,6 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     this.usuarioService.usuarioActual().subscribe( usuarioActivo => {
       if (usuarioActivo) { 
-        console.log(usuarioActivo);
         this.usuarioService.usuarioActualFS(usuarioActivo.uid).then(respuseta => {
           console.log(respuseta.docs[0].data());
           const usuarioUID = respuseta.docs[0].data();
@@ -30,7 +29,7 @@ export class HeaderComponent implements OnInit {
       } else {
         this.usuario.correo = "";
       }
-    })
+    });
   }
 
   cerrarSesion() {

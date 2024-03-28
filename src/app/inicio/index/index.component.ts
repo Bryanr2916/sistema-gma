@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
+import { UsuarioService } from 'src/app/core/services/usuario.service';
 
 @Component({
   selector: 'app-index',
@@ -8,21 +9,37 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./index.component.scss']
 })
 export class IndexComponent implements OnInit {
-
+  cargando = true;
+  usuario: any = {};
   menu = [
-    {logo:"briefcase", nombre: "Empresas", enlace: "empresas"},
     {logo:"globe", nombre: "Sucursales", enlace: "sucursales"},
     {logo:"table-cells", nombre: "Matrices", enlace: "matrices"},
-    {logo:"book", nombre: "Normativas", enlace: "normativas"},
-    {logo:"rectangle-list", nombre: "Tipos de Normativas", enlace: "tipos-normativas"},
-    {logo:"bookmark", nombre: "Área Legal", enlace: "area-legal"},
     {logo:"user", nombre: "Perfil de Usuario", enlace: "usuario/perfil"}
   ];
 
-  constructor(private titleService: Title, private toastr: ToastrService) { }
+  constructor(private titleService: Title, private toastr: ToastrService, private usuarioService: UsuarioService) { }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Inicio");
+    this.usuarioService.usuarioActual().subscribe( usuarioActivo => {
+      if (usuarioActivo) { 
+        this.usuarioService.usuarioActualFS(usuarioActivo.uid).then(respuseta => {
+          const usuarioUID = respuseta.docs[0].data();
+          if ( usuarioUID) {
+            this.usuario = usuarioUID
+            this.cargando = false;
+            if (this.usuario.tipo == 1) {
+              this.menu.unshift({logo:"briefcase", nombre: "Empresas", enlace: "empresas"});
+              this.menu.push({logo:"book", nombre: "Normativas", enlace: "normativas"});
+              this.menu.push({logo:"rectangle-list", nombre: "Tipos de Normativas", enlace: "tipos-normativas"});
+              this.menu.push({logo:"bookmark", nombre: "Área Legal", enlace: "area-legal"});
+            }
+          }
+        });
+      } else {
+        this.usuario.correo = "";
+      }
+    });
   }
 
 }

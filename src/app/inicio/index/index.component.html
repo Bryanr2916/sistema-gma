@@ -3,8 +3,7 @@
     <hr class="border border-success border-1 opacity-75">
     <p class="text-muted">Seleccione una de las opciones del menú para continuar.</p>
     
-    <div class="row">
-
+    <div *ngIf="!cargando" class="row">
       <div routerLink="{{opcion.enlace}}" class="card col-auto m-3 border border-dark" *ngFor="let opcion of menu; index as i">
         <div class="card-body">
           <h3><i class="fa-solid fa-{{opcion.logo}} g-icon me-1"></i>{{opcion.nombre}}</h3>
@@ -12,4 +11,10 @@
       </div>
 
     </div>
+    <!--loading-->
+    <div *ngIf="cargando" class="d-flex justify-content-center">
+      <div class="spinner-border mt-5 text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+  </div>
 </div>
