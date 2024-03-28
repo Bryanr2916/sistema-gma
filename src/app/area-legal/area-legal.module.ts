@@ -6,12 +6,14 @@ import { IndexComponent } from './index/index.component';
 import { CreateComponent } from './create/create.component';
 import { FormsModule } from '@angular/forms';
 import { EditComponent } from './edit/edit.component';
+import { ViewComponent } from './view/view.component';
 
 @NgModule({
   declarations: [
     IndexComponent,
     CreateComponent,
-    EditComponent
+    EditComponent,
+    ViewComponent
   ],
   imports: [
     CommonModule,
