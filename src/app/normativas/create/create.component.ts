@@ -62,7 +62,7 @@ export class CreateComponent implements OnInit {
         timeOut: 4000,
         progressBar: true
       });
-      this.router.navigate(["/normativas"]);        
+      this.router.navigate(["/normativas"]);
     }).catch(error => {
       console.log(error);
     });
