@@ -22,6 +22,11 @@ export class EmpresasService {
     return collectionData(empresasRef, {idField: 'id'}) as Observable<any[]>;
   }
 
+  obtenerEmpresa(id: any) {
+    const empresaRef = doc(this.firestore, `${this.path}/${id}`);
+    return getDoc(empresaRef);
+  }
+
   subirArchivo(archivo: any) {
     let urlArchivo = "";
     const archivoRef = ref(this.storage, `empresas/logos/${archivo.name}`);
