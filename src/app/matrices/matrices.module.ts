@@ -7,6 +7,7 @@ import { CreateComponent } from './create/create.component';
 import { FormsModule } from '@angular/forms';
 import { ViewComponent } from './view/view.component';
 import { ArticulosAplicablesComponent } from './articulos-aplicables/articulos-aplicables.component';
+import { EditComponent } from './edit/edit.component';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { ArticulosAplicablesComponent } from './articulos-aplicables/articulos-a
     IndexComponent,
     CreateComponent,
     ViewComponent,
-    ArticulosAplicablesComponent
+    ArticulosAplicablesComponent,
+    EditComponent
   ],
   imports: [
     CommonModule,
