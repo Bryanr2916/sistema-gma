@@ -9,7 +9,7 @@ import { UsuarioService } from 'src/app/core/services/usuario.service';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-
+  cargando = true;
   usuario: any = {};
   constructor(
     private usuarioService: UsuarioService, private toastr: ToastrService,
@@ -20,10 +20,10 @@ export class HeaderComponent implements OnInit {
     this.usuarioService.usuarioActual().subscribe( usuarioActivo => {
       if (usuarioActivo) { 
         this.usuarioService.usuarioActualFS(usuarioActivo.uid).then(respuseta => {
-          console.log(respuseta.docs[0].data());
           const usuarioUID = respuseta.docs[0].data();
           if ( usuarioUID) {
             this.usuario = usuarioUID
+            this.cargando = false;
           }
         });
       } else {

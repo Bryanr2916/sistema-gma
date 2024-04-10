@@ -4,10 +4,10 @@
         <img src="../assets/images/GMA-logo.png" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
         GMA Sistema
       </a>
-      <button *ngIf="usuario" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button *ngIf="!cargando" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div  *ngIf="usuario" class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div  *ngIf="!cargando" class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <!--Empresas-->
           <li *ngIf="usuario.tipo == 1" class="nav-item dropdown">
