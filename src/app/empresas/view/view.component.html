@@ -1,1 +1,54 @@
-<p>view works!</p>
+<div class="d-flex justify-content-center align-items-center">
+    <div class="card shadow my-5 border border-dark">
+        <div class="card-header d-flex justify-content-around">
+            <h2><i class="g-icon fa-solid fa-briefcase me-1"></i>Empresa</h2>
+             <!--Nav-->
+            <ul class="nav nav-pills mx-5">
+                <li class="nav-item mx-2">
+                    <a class="nav-link active" routerLink="/empresas"><i class="fa-solid fa-chevron-left"></i> Regresar</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body mb-4 mx-3">
+            <!--Imagen-->
+            <div class="row mb-2">
+                <div *ngIf="empresa.urlLogo !== ''" class="col-4 offset-4">
+                    <img src="{{empresa.urlLogo}}" alt="">
+                </div>
+            </div>
+            <!--Nombre - Correo-->
+            <div class="row mb-2">
+                <div class="col-6">
+                    <h3>Nombre:</h3>
+                    <p class="lead">{{empresa.nombre}}</p>
+                </div>
+                <div class="col-6">
+                    <h3>Correo:</h3>
+                    <p class="lead">{{empresa.correo}}</p>
+                </div>
+            </div>
+            <!--Telefono - Pais-->
+            <div class="row mb-2">
+                <div class="col-6">
+                    <h3>Teléfono:</h3>
+                    <p class="lead">{{empresa.telefono}}</p>
+                </div>
+                <div class="col-6">
+                    <h3>País:</h3>
+                    <p class="lead">{{empresa.pais}}</p>
+                </div>
+            </div>
+            <!--Notas-->
+            <div class="row">
+                <div *ngIf="empresa.notas !==''" class="col-6">
+                    <h3>Notas:</h3>
+                    <p class="lead">{{empresa.notas}}</p>
+                </div>
+                <div *ngIf="empresa.admin" class="col-6">
+                    <h3>Administrador:</h3>
+                    <p class="lead">{{empresa.admin}}</p>
+                </div>
+            </div>
+        </div>
+      </div>
+</div>
