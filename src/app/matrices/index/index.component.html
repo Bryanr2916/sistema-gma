@@ -6,7 +6,7 @@
         <li class="nav-item mx-4">
             <div class="input-group mb-3">
                 <span class="input-group-text border- border-dark" id="basic-addon1"><i class="fa-solid fa-magnifying-glass"></i></span>
-                <input type="text" class="form-control border- border-dark" placeholder="Buscar..." aria-label="Username" aria-describedby="basic-addon1">
+                <input (ngModelChange)="buscar($event)" [(ngModel)]="busqueda" [ngModelOptions]="{standalone:true}" type="text" class="form-control border- border-dark" placeholder="Buscar..." aria-label="Username" aria-describedby="basic-addon1">
               </div>
         </li>
         <li class="nav-item mx-2">
@@ -20,7 +20,7 @@
       </div>
     </div>
     <!--table-->
-    <div *ngIf="matrices.length > 0" class="table-responsive my-4">
+    <div *ngIf="matricesFiltradas.length > 0" class="table-responsive my-4">
       <table class="table table-light table-striped table-hover shadow">
           <thead>
             <tr class="table-success">
@@ -28,7 +28,7 @@
             </tr>
           </thead>
           <tbody>
-              <tr *ngFor="let matriz of matrices; index as i">
+              <tr *ngFor="let matriz of matricesFiltradas; index as i">
                   <th scope="row">{{ i + 1}}</th>
                   <td>{{matriz.titulo}}</td>
                   <td>{{nombreEmpresa(matriz.empresa)}}</td>
@@ -49,5 +49,9 @@
               </tr>
           </tbody>
       </table>
-  </div>
+    </div>
+    <!--No hay resultados-->
+    <div *ngIf="matricesFiltradas.length === 0 && matricesTodas.length > 0" class="my-4">
+      <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No se encontraron resultados</h4>
+    </div>
 </div>

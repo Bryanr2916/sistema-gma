@@ -11,10 +11,9 @@ import { MatricesService } from 'src/app/core/services/matrices.service';
 export class IndexComponent implements OnInit {
   cargando = true;
   busqueda = "";
-  empresasTodas:any[] = [];
-  empresasMatrices: any[] = [];
-  empresasFiltradas:any[] = [];
-  matrices:any[] = [];
+  empresas:any[] = [];
+  matricesTodas:any[] = [];
+  matricesFiltradas:any[] = [];
   ths = ["#","Título","Empresa","Acciones"];
 
   constructor(
@@ -26,20 +25,29 @@ export class IndexComponent implements OnInit {
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Matrices");
     this.empresasService.obtenerEmpresas().subscribe(datos => {
-      this.empresasTodas = datos;
+      this.empresas = datos;
       this.cargarMatrices();
     });
   }
 
   cargarMatrices() {
     this.matricesService.obtenerMatrices().subscribe(datos => {
-      this.matrices = datos;
+      this.matricesTodas = datos;
+      this.matricesFiltradas = this.matricesTodas;
       this.cargando = false;
     });
   }
 
   nombreEmpresa (id: string) {
-    return this.empresasTodas.find(emp => emp.id === id).nombre
+    return this.empresas.find(emp => emp.id === id).nombre
+  }
+
+  buscar(event: any) {
+    const busquedaMinuscuala = event.toLowerCase();
+    console.log(this.matricesTodas[0]);
+    this.matricesFiltradas = this.matricesTodas.filter(matriz => 
+      matriz.titulo.toLowerCase().includes(busquedaMinuscuala) ||
+      this.nombreEmpresa(matriz.empresa).includes(busquedaMinuscuala));
   }
 
   borrar(matriz: any) {
