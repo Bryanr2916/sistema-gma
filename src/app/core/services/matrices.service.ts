@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, CollectionReference } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -33,5 +33,12 @@ export class MatricesService {
   borrarMatriz(id: any) {
     const matrizRef = doc(this.firestore, `${this.path}/${id}`);
     return deleteDoc(matrizRef);
+  }
+
+  agregarArticulosAplicables(articulosAplicables: any) {
+    const matrizDocRef = doc(this.firestore, `${this.path}/${articulosAplicables.matrizId}`);
+    const articulosAplicablesRef = collection(matrizDocRef, 'articulosAplicables') as CollectionReference;
+
+    return addDoc(articulosAplicablesRef, articulosAplicables);
   }
 }

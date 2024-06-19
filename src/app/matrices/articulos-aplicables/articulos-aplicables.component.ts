@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { AreaLegalService } from 'src/app/core/services/area-legal.service';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { MatricesService } from 'src/app/core/services/matrices.service';
@@ -30,14 +31,15 @@ export class ArticulosAplicablesComponent implements OnInit {
   };
   constructor(private areaLegalService:AreaLegalService, private normativaService:NormativaService,
     private matricesService:MatricesService, private route: ActivatedRoute,
-    private empresaService:EmpresasService, private titleService: Title) { }
+    private empresaService:EmpresasService, private titleService: Title,
+    private toastr: ToastrService, private router: Router) { }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Matrices");
     this.route.params.subscribe( params => {
 
       this.matricesService.obtenerMatriz(params["id"]).then(respuesta => {
-
+        this.articulosAplicables.matrizId = respuesta.get("id");
         this.matriz.titulo = respuesta.get("titulo");
         this.matriz.empresa = respuesta.get("empresa");
         this.empresaService.obtenerEmpresa(this.matriz.empresa).then(respuestaEmpresa => {
@@ -61,7 +63,16 @@ export class ArticulosAplicablesComponent implements OnInit {
   }
 
   crearArticulo() {
-    console.log("creando...");
+    this.matricesService.agregarArticulosAplicables(this.articulosAplicables).then(_ => {
+      this.toastr.success("Artículos aplicables creados con éxito", undefined, {
+        closeButton: true,
+        timeOut: 4000,
+        progressBar: true
+      });
+      this.router.navigate(["/matrices"]);
+    }).catch(error => {
+      console.log(error);
+    });
   }
 
 }
