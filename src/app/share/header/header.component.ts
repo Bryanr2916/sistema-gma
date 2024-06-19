@@ -35,6 +35,7 @@ export class HeaderComponent implements OnInit {
   cerrarSesion() {
     if (confirm("¿Desea cerrar sesión?")) {
       this.usuarioService.cerrarSesion().then(() => {
+        this.usuario = {};
         this.toastr.success("Ha cerrado sesión de forma exitosa", undefined, {
           closeButton: true,
           timeOut: 4000,
@@ -43,6 +44,10 @@ export class HeaderComponent implements OnInit {
         this.router.navigate(["usuario/inicio-sesion"])
       }).catch(error => console.log(error));
     }
+  }
+
+  usuarioVacio() {
+    return Object.keys(this.usuario).length === 1;
   }
 
 }
