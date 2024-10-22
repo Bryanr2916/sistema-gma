@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { ViewComponent } from './view/view.component';
 import { ArticulosAplicablesComponent } from './articulos-aplicables/articulos-aplicables.component';
 import { EditComponent } from './edit/edit.component';
+import { MatrizArticulosViewComponent } from './matriz-articulos-view/matriz-articulos-view.component';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { EditComponent } from './edit/edit.component';
     CreateComponent,
     ViewComponent,
     ArticulosAplicablesComponent,
-    EditComponent
+    EditComponent,
+    MatrizArticulosViewComponent
   ],
   imports: [
     CommonModule,

@@ -14,7 +14,8 @@ export class IndexComponent implements OnInit {
   empresas:any[] = [];
   matricesTodas:any[] = [];
   matricesFiltradas:any[] = [];
-  ths = ["#","Título","Empresa","Acciones"];
+  articulosAplicables: any[] = [];
+  ths = ["#","Título","Artículos","Empresa","Acciones"];
 
   constructor(
     private titleService: Title,
@@ -30,16 +31,23 @@ export class IndexComponent implements OnInit {
     });
   }
 
-  cargarMatrices() {
-    this.matricesService.obtenerMatrices().subscribe(datos => {
+  async cargarMatrices() {
+    this.matricesService.obtenerMatrices().subscribe(async datos => {
       this.matricesTodas = datos;
       this.matricesFiltradas = this.matricesTodas;
+      this.articulosAplicables = (await this.matricesService.obtenerArticulosAplicables()).docs.map((value) => { return {id: value.id, ...value.data() };});
       this.cargando = false;
     });
   }
 
   nombreEmpresa (id: string) {
     return this.empresas.find(emp => emp.id === id).nombre
+  }
+
+  obtenerCantidadArticulosAplicables(matrizId: string) {
+    return this.articulosAplicables.filter(aa => {
+      return aa.matrizId === matrizId;
+    }).length;
   }
 
   buscar(event: any) {

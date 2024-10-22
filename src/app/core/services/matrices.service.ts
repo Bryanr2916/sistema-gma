@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, CollectionReference } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, getDocs, query, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 export class MatricesService {
 
   path = "matrices";
+  articulosPath = "articulos";
   constructor(private firestore: Firestore) { }
 
   crearMatriz( matriz:any ) {
@@ -36,9 +37,20 @@ export class MatricesService {
   }
 
   agregarArticulosAplicables(articulosAplicables: any) {
-    const matrizDocRef = doc(this.firestore, `${this.path}/${articulosAplicables.matrizId}`);
-    const articulosAplicablesRef = collection(matrizDocRef, 'articulosAplicables') as CollectionReference;
+    const articulosAplicablesRef = collection(this.firestore, this.articulosPath);
 
     return addDoc(articulosAplicablesRef, articulosAplicables);
+  }
+
+  obtenerArticulosAplicables(matrizId?: string) {
+    const articuloRef = collection(this.firestore, this.articulosPath);
+    
+    if (matrizId) {
+      const articulosMatriz = query(articuloRef, where("matrizId", "==", matrizId));
+      return getDocs(articulosMatriz);
+    } else {
+      const articulosMatriz = query(articuloRef);
+      return getDocs(articulosMatriz);
+    }
   }
 }

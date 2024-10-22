@@ -31,6 +31,7 @@
               <tr *ngFor="let matriz of matricesFiltradas; index as i">
                   <th scope="row">{{ i + 1}}</th>
                   <td>{{matriz.titulo}}</td>
+                  <td>({{obtenerCantidadArticulosAplicables(matriz.id)}})</td>
                   <td>{{nombreEmpresa(matriz.empresa)}}</td>
                   <td>
                       <a routerLink="ver/{{matriz.id}}"><i class="g-icon fa-solid fa-eye fa-lg me-2"></i>

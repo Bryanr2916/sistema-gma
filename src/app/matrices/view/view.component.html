@@ -1,1 +1,43 @@
-<p>view works!</p>
+<div class="d-flex justify-content-center align-items-center">
+    <div class="card shadow my-5 text-center border border-dark">
+        <div class="card-header d-flex justify-content-around">
+            <h2><i class="g-icon fa-solid fa-bookmark me-1"></i>{{matriz.titulo}}</h2>
+             <!--Nav-->
+            <ul class="nav nav-pills mx-5">
+                <li class="nav-item mx-2">
+                    <a class="nav-link active" routerLink="/matrices"><i class="fa-solid fa-chevron-left"></i> Regresar</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <!--loading-->
+        <div *ngIf="this.cargando" class="d-flex justify-content-center">
+            <div class="spinner-border mt-5 text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+            <div *ngIf="!cargando ">
+                <form *ngIf="areasAplicables.length !== 0" id="form" class="my-4">
+                    <!--Area Legal-->
+                    <div class="mb-3 me-5 row">
+                       <label for="inputArea" class="col-sm-4 col-form-label">Seleccione el área legal</label>
+                       <div class="col-sm-8">
+                           <select (change)="seleccionarAreaLegal()" [(ngModel)]="areaSeleccionada.id" [ngModelOptions]="{standalone:true}" id="inputArea" class="form-select border border-dark">
+                               <option value="vacio" selected>Seleccione el área legal</option>
+                               <option *ngFor="let areaAplicable of areasAplicables" value="{{areaAplicable.id}}">{{areaAplicable.nombre}} ({{ obtenerCantidadArticulos(areaAplicable.id)}})</option>
+                           </select>
+                       </div>
+                   </div>
+               </form>
+               <!--Articulos Aplicables-->
+               <div *ngIf="articulosAplicablesFiltro.length !==0">
+                <app-matriz-articulos-view [normativa]="obtenerNormativa(articulo.normativaId)" [articulo]="articulo" *ngFor="let articulo of articulosAplicablesFiltro"></app-matriz-articulos-view>
+               </div>
+            </div>
+            <!--No hay resultados-->
+            <div *ngIf="areasAplicables.length === 0 && !cargando" class="my-4">
+                <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No hay artículos aplicables para esta matriz</h4>
+            </div>
+        </div>
+      </div>
+</div>

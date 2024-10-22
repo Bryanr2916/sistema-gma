@@ -1,0 +1,27 @@
+<div class="card text-start">
+    <div class="card-header">
+      <h2>Leyes</h2>
+    </div>
+    <div class="card-body">
+      <h3 class="card-title">{{normativa.titulo}}</h3>
+      <ul class="nav nav-tabs">
+        <!--*ngIf="articulo.tramites !== ''"-->
+        <div *ngFor="let _tab of tabs">
+            <li *ngIf='articulo[_tab.value] !== ""' class="nav-item">
+                <a class="nav-link" (click)="changeTab(_tab)" [ngClass]="{ 'active': tab.value === _tab.value}" aria-current="page">{{_tab.label}}</a>  
+            </li>
+        </div>
+      </ul>
+      <div *ngIf="tab.value === 'general'" class="my-3">
+        <h5>Número: {{normativa.numero}}</h5>
+        <h5>Número de artículos: {{articulo.numeroArticulos}}</h5>
+        <h5>Descargar Normativa: <a href={{normativa.urlArchivo}}>{{normativa.titulo}}</a></h5>
+        <h5>Fecha de publicación de normativa: {{normativa.fecha}}</h5>
+        <h5>Entidad: {{normativa.entidad}}</h5>
+      </div>
+      <div *ngIf="tab.value !== 'general'" class="my-3">
+        <h5>{{tab.label}}</h5>
+        <p>{{articulo[tab.value]}}</p>
+      </div>
+    </div>
+  </div>
