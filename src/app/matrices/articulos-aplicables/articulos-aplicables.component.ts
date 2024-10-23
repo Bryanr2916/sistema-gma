@@ -37,9 +37,8 @@ export class ArticulosAplicablesComponent implements OnInit {
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Matrices");
     this.route.params.subscribe( params => {
-
+      this.articulosAplicables.matrizId = params["id"];
       this.matricesService.obtenerMatriz(params["id"]).then(respuesta => {
-        this.articulosAplicables.matrizId = respuesta.get("id");
         this.matriz.titulo = respuesta.get("titulo");
         this.matriz.empresa = respuesta.get("empresa");
         this.empresaService.obtenerEmpresa(this.matriz.empresa).then(respuestaEmpresa => {

@@ -27,4 +27,11 @@ export class MatrizArticulosViewComponent implements OnInit {
     this.tab = activeTab;
   }
 
+  borrarArticulo(id: string) {
+    console.log("eliminando...");
+  }
+
+  editarArticulo(id: string) {
+    console.log("editando...");
+  }
 }

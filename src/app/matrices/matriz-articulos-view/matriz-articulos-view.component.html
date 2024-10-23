@@ -1,7 +1,4 @@
-<div class="card text-start">
-    <div class="card-header">
-      <h2>Leyes</h2>
-    </div>
+<div class="card text-start my-4">
     <div class="card-body">
       <h3 class="card-title">{{normativa.titulo}}</h3>
       <ul class="nav nav-tabs">
@@ -23,5 +20,14 @@
         <h5>{{tab.label}}</h5>
         <p>{{articulo[tab.value]}}</p>
       </div>
+    </div>
+    <div class="card-footer">
+      <!--Acciones-->
+      <a><i class="b-icon fa-solid fa-pen-to-square fa-lg m-2"></i>
+        <span class="hidden-tooltip">Editar</span>
+      </a>
+      <a (click)="borrarArticulo('')"><i class="r-icon fa-solid fa-trash fa-lg m-2"></i>
+        <span class="hidden-tooltip">Borrar</span>
+      </a>
     </div>
   </div>
