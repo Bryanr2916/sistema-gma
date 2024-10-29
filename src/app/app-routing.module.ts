@@ -2,13 +2,15 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { IndexComponent } from './inicio/index/index.component';
 import { PaginaNoEncontradaComponent } from './share/pagina-no-encontrada/pagina-no-encontrada.component';
-import { canActivate, redirectUnauthorizedTo, redirectLoggedInTo } from '@angular/fire/auth-guard';
+import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
+import { TipoGuard } from './core/guards/tipo.guard';
 
 const routes: Routes = [
   {path:'',component:IndexComponent,pathMatch:'full', ...canActivate(() => redirectUnauthorizedTo(["usuario/inicio-sesion"]))},
   { path:'area-legal',
     loadChildren: () => import ('./area-legal/area-legal.module').then( m => m.AreaLegalModule),
-    ...canActivate(() => redirectUnauthorizedTo(["usuario/inicio-sesion"]))
+    canActivate: [TipoGuard],
+    data: { tipo: 1}
   },
   { path:'buscar',
     loadChildren: () => import ('./buscar/buscar.module').then( m => m.BuscarModule),
@@ -16,7 +18,8 @@ const routes: Routes = [
   },
   { path:'empresas',
     loadChildren: () => import ('./empresas/empresas.module').then( m => m.EmpresasModule),
-    ...canActivate(() => redirectUnauthorizedTo(["usuario/inicio-sesion"]))
+    canActivate: [TipoGuard],
+    data: { tipo: 1}
   },
   { path:'matrices',
     loadChildren: () => import ('./matrices/matrices.module').then( m => m.MatricesModule),
@@ -24,7 +27,8 @@ const routes: Routes = [
   },
   { path:'normativas',
     loadChildren: () => import ('./normativas/normativas.module').then( m => m.NormativasModule),
-    ...canActivate(() => redirectUnauthorizedTo(["usuario/inicio-sesion"]))
+    canActivate: [TipoGuard],
+    data: { tipo: 1}
   },
   { path:'sucursales',
     loadChildren: () => import ('./sucursales/sucursales.module').then( m => m.SucursalesModule),
@@ -32,7 +36,8 @@ const routes: Routes = [
   },
   { path:'tipos-normativas',
     loadChildren: () => import ('./tipos-normativas/tipos-normativas.module').then( m => m.TiposNormativasModule),
-    ...canActivate(() => redirectUnauthorizedTo(["usuario/inicio-sesion"]))
+    canActivate: [TipoGuard],
+    data: { tipo: 1}
   },
   { path:'usuario',
     loadChildren: () => import ('./usuario/usuario.module').then( m => m.UsuarioModule)
