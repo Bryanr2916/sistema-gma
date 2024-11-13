@@ -32,7 +32,7 @@
                     <div class="col-sm-8">
                         <select [(ngModel)]="articulosAplicables.normativaId" [ngModelOptions]="{standalone:true}" id="inputNormativa" class="form-select border border-dark">
                             <option selected>Seleccione la normativa</option>
-                            <option *ngFor="let normativa of normativas" value="{{normativa.id}}">{{normativa.titulo}}</option>
+                            <option *ngFor="let normativa of normativas" value="{{normativa.id}}">{{normativa.titulo | truncarTexto: 68 : true}}</option>
                         </select>
                     </div>
                 </div>

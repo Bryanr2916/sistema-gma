@@ -30,7 +30,7 @@
             <tbody>
                 <tr *ngFor="let normativa of normativasFiltradas; index as i">
                     <th scope="row">{{normativa.numero}}</th>
-                    <td>{{normativa.titulo}}</td>
+                    <td>{{normativa.titulo | truncarTexto: 68 : true}}</td>
                     <td>
                         <a *ngIf="normativa.urlArchivo" target="_blank" href="{{normativa.urlArchivo}}"><i class="g-i fa-solid fa-paperclip fa-lg"></i>
                             <span class="hidden-tooltip">Ver archivo</span>

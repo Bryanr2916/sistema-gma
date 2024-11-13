@@ -4,12 +4,14 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { RouterModule } from '@angular/router';
 import { PaginaNoEncontradaComponent } from './pagina-no-encontrada/pagina-no-encontrada.component';
+import { TruncarTextoPipe } from './pipes/truncar-texto.pipe';
 
 @NgModule({
   declarations: [
     HeaderComponent,
     FooterComponent,
-    PaginaNoEncontradaComponent
+    PaginaNoEncontradaComponent,
+    TruncarTextoPipe
   ],
   imports: [
     CommonModule,
@@ -17,7 +19,8 @@ import { PaginaNoEncontradaComponent } from './pagina-no-encontrada/pagina-no-en
   ],
   exports: [
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    TruncarTextoPipe
   ]
 })
 export class ShareModule { }

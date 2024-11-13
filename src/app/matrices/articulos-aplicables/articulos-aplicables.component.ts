@@ -15,7 +15,7 @@ import { NormativaService } from 'src/app/core/services/normativa.service';
 export class ArticulosAplicablesComponent implements OnInit {
   cargando = true;
   matriz = {titulo: "", empresa: ""};
-  empresa = {nombre: ""};
+  empresa = {nombre: "", pais: ""};
   areasLegales: any[] = [];
   normativas:any[] = [];
   articulosAplicables = {
@@ -36,26 +36,29 @@ export class ArticulosAplicablesComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Matrices");
-    this.route.params.subscribe( params => {
+    this.cargarInformacion();
+  }
+
+  cargarInformacion = async () => {
+    this.route.params.subscribe( async params => {
       this.articulosAplicables.matrizId = params["id"];
-      this.matricesService.obtenerMatriz(params["id"]).then(respuesta => {
-        this.matriz.titulo = respuesta.get("titulo");
-        this.matriz.empresa = respuesta.get("empresa");
-        this.empresaService.obtenerEmpresa(this.matriz.empresa).then(respuestaEmpresa => {
+      const respuesta = await this.matricesService.obtenerMatriz(params["id"]);
+      this.matriz.titulo = respuesta.get("titulo");
+      this.matriz.empresa = respuesta.get("empresa");
+      
+      const respuestaEmpresa = await this.empresaService.obtenerEmpresa(this.matriz.empresa);
+      this.empresa.nombre = respuestaEmpresa.get("nombre");
+      this.empresa.pais = respuestaEmpresa.get("pais");
 
-          this.empresa.nombre = respuestaEmpresa.get("nombre");
-          this.areaLegalService.obtenerAreas().subscribe(datosArea => {
-
-            this.areasLegales = datosArea;
-            this.normativaService.obtenerNormativas().subscribe(datosNormativa => {
-              this.normativas = datosNormativa;
-              this.cargando = false;
-            });
-          });
+      this.areaLegalService.obtenerAreas().subscribe(datosArea => {
+        this.areasLegales = datosArea;
+        this.normativaService.obtenerNormativas().subscribe(datosNormativa => {
+          this.normativas = datosNormativa.filter(dn => dn.pais === this.empresa.pais);
+          this.cargando = false;
         });
       });
     });
-  }
+  };
 
   formularioEsValido() {
     return true;

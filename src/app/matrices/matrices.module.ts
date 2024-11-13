@@ -9,7 +9,7 @@ import { ViewComponent } from './view/view.component';
 import { ArticulosAplicablesComponent } from './articulos-aplicables/articulos-aplicables.component';
 import { EditComponent } from './edit/edit.component';
 import { MatrizArticulosViewComponent } from './matriz-articulos-view/matriz-articulos-view.component';
-
+import { ShareModule } from '../share/share.module';
 
 @NgModule({
   declarations: [
@@ -23,6 +23,7 @@ import { MatrizArticulosViewComponent } from './matriz-articulos-view/matriz-art
   imports: [
     CommonModule,
     MatricesRoutingModule,
+    ShareModule,
     FormsModule
   ]
 })
