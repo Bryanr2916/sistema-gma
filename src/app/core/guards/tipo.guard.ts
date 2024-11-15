@@ -25,7 +25,6 @@ export class TipoGuard implements CanActivate {
     const usuarioUID = respuesta.docs[0].data();
     console.log("usuario: ", usuario);
       if (usuarioUID) {
-        if(usuarioUID['tipo'] === 1) return true;
 
         if (usuarioUID['tipo'] !== tipoEsperado){
           this.toastr.error("Su usuario no tiene permisos para acceder a esta página", "Acceso Denegado", {

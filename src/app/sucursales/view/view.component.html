@@ -1,0 +1,37 @@
+<div class="mt-4 mb-2 mx-2">
+    <h2><i class="g-icon fa-solid fa-globe me-1"></i>Sucursales</h2>
+    <hr class="border border-success border-1 opacity-75">
+    <p class="text-muted">Selecciona una sucursal de la lista</p>
+
+    <!--Nav-->
+<ul class="nav nav-pills">
+    <li class="nav-item mx-4">
+        <div class="input-group mb-3">
+            <span class="input-group-text border- border-dark" id="basic-addon1"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input (ngModelChange)="buscar($event)" [(ngModel)]="busqueda" [ngModelOptions]="{standalone:true}" type="text" class="form-control border- border-dark" placeholder="Buscar..." aria-label="Username" aria-describedby="basic-addon1">
+          </div>
+    </li>
+</ul>
+<!--loading-->
+<div *ngIf="cargando" class="d-flex justify-content-center">
+    <div class="spinner-border mt-5 text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+<ul *ngIf="!cargando" class="list-group">
+    <li *ngFor="let sucursal of sucursalesFiltradas" class="list-group-item">
+        {{sucursal}}
+    </li>
+</ul>
+
+<!--No hay resultados-->
+<div *ngIf="sucursalesFiltradas.length === 0 && sucursalesTodas.length > 0" class="my-4">
+    <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No se encontraron resultados</h4>
+</div>
+
+<!--No Hay sucursales-->
+<div *ngIf="sucursalesTodas.length === 0 && !cargando" class="my-4">
+    <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No hay sucursales registradas</h4>
+</div>
+</div>

@@ -2,13 +2,16 @@ import { Injectable } from '@angular/core';
 import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, user } from '@angular/fire/auth';
 import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, query, where, getDocs } from '@angular/fire/firestore';
 import { EncriptadorService } from './encriptador.service';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
   path = "usuarios";
+
+  // todo: usar usuarioCache para optimizar llamados a la db
+  private usuarioCache$ = new BehaviorSubject<any | null>(null); // Cache user data
 
   constructor(private auth: Auth, private firestore: Firestore, private encriptador: EncriptadorService) { }
 
@@ -21,6 +24,7 @@ export class UsuarioService {
   }
 
   cerrarSesion() {
+    this.usuarioCache$.next(null);
     return signOut(this.auth);
   }
 

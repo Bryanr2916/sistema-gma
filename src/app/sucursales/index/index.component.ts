@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
+import { UsuarioService } from 'src/app/core/services/usuario.service';
 
 @Component({
   selector: 'app-index',
@@ -15,10 +16,13 @@ export class IndexComponent implements OnInit {
   empresasTodas:any[] = [];
   empresasFiltradas:any[] = [];
   empresasVinculadas:any[] = [];
+  usuario: any = {
+    empresaId: ""
+  };
 
 
-  constructor(private titleService: Title, private empresaService: EmpresasService,
-    private toastr: ToastrService) { }
+  constructor(private titleService: Title, private empresaService: EmpresasService, 
+    private usuarioService: UsuarioService ,private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Sucursales");
@@ -27,11 +31,25 @@ export class IndexComponent implements OnInit {
         return {sucursales: [],...emp};
       });
       this.empresasFiltradas = this.empresasTodas;
-      this.cargando = false;
 
       this.empresasVinculadas = this.empresasTodas.map(emp => {
         return { id: emp.id, sucursales: emp.sucursales || []}
       });
+    });
+
+    this.usuarioService.usuarioActual().subscribe( usuarioActivo => {
+      if (usuarioActivo) { 
+        this.usuarioService.usuarioActualFS(usuarioActivo.uid).then(respuseta => {
+          const usuarioUID = respuseta.docs[0].data();
+          console.log("usuarioUID: ", usuarioUID);
+          if ( usuarioUID) {
+            this.usuario = usuarioUID
+            this.cargando = false;
+          }
+        });
+      } else {
+        this.usuario.empresaId = "";
+      }
     });
   }
 
