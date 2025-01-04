@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { ToastrService } from 'ngx-toastr';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { MatricesService } from 'src/app/core/services/matrices.service';
 
@@ -20,7 +21,8 @@ export class IndexComponent implements OnInit {
   constructor(
     private titleService: Title,
     private empresasService: EmpresasService,
-    private matricesService: MatricesService
+    private matricesService: MatricesService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -59,7 +61,16 @@ export class IndexComponent implements OnInit {
   }
 
   borrar(matriz: any) {
-    console.log("borrando...", matriz);
+    if (confirm("¿Desea eliminar la matriz?")) {
+      this.matricesService.borrarMatriz(matriz.id).then(_ => {
+        this.toastr.success("Matriz borrada con éxito", undefined, {
+          closeButton: true,
+          timeOut: 4000,
+          progressBar: true
+        });
+      });
+    }
+    
   }
 
 }
