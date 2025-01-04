@@ -1,1 +1,85 @@
-<p>view works!</p>
+<div class="d-flex justify-content-center align-items-center">
+    <div class="card shadow my-5 border border-dark">
+        <div class="card-header d-flex justify-content-around">
+            <h2><i class="g-icon fa-solid fa-book me-1"></i>Normativa</h2>
+             <!--Nav-->
+            <ul class="nav nav-pills mx-5">
+                <li class="nav-item mx-2">
+                    <a class="nav-link active" routerLink="/normativas"><i class="fa-solid fa-chevron-left"></i> Regresar</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body mb-4 mx-3">
+            <!--Titulo - Tipo-->
+            <div class="row mb-4">
+                <div class="col-6">
+                    <h3>Título:</h3>
+                    <p class="lead">{{normativa.titulo}}</p>
+                </div>
+                <div class="col-6">
+                    <h3>Tipo Normativa:</h3>
+                    <p class="lead">{{tipo.nombre}}</p>
+                </div>
+            </div>
+            <!--Numero - Fecha-->
+            <div class="row mb-4">
+                <div class="col-6">
+                    <h3>Número:</h3>
+                    <p class="lead">{{normativa.numero}}</p>
+                </div>
+                <div class="col-6">
+                    <h3>Fecha:</h3>
+                    <p class="lead">{{normativa.fecha}}</p>
+                </div>
+            </div>
+            <!--Pais - Modificacion-->
+            <div class="row mb-4">
+                <div class="col-6">
+                    <h3>País:</h3>
+                    <p class="lead">{{normativa.pais}}</p>
+                </div>
+                <div class="col-6">
+                    <h3>Modificación:</h3>
+                    <p class="lead">
+                        {{normativa.modificacion ? normativa.modificacion : "No tiene"}}
+                    </p>
+                </div>
+            </div>
+            <!--Entidad - Enlace-->
+            <div class="row mb-4">
+                <div class="col-6">
+                    <h3>Entidad:</h3>
+                    <p class="lead">
+                        {{normativa.entidad ? normativa.entidad : "No tiene"}}
+                    </p>
+                </div>
+                <div class="col-6">
+                    <h3>Enlace:</h3>
+                    <p class="lead">
+                        {{normativa.enlace ? normativa.enlace : "No tiene"}}
+                    </p>
+                </div>
+            </div>
+            <!--Comentarios - Archivo-->
+            <div class="row mb-4">
+                <div class="col-6">
+                    <h3>Comentarios:</h3>
+                    <p class="lead">
+                        {{normativa.comentarios ? normativa.comentarios : "No tiene"}}
+                    </p>
+                </div>
+                <div class="col-6">
+                    <h3>Archivo:</h3>
+                    <p class="lead" *ngIf="!normativa.urlArchivo">
+                        No tiene
+                    </p>
+                    <p class="lead" *ngIf="normativa.urlArchivo">
+                        <a href={{normativa.urlArchivo}} target="_blank">
+                            {{normativa.titulo | truncarTexto: 68 : true}}
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
