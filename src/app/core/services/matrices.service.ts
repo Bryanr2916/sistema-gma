@@ -26,6 +26,16 @@ export class MatricesService {
     return getDoc(matrizRef);
   }
 
+  obtenerArticuloMatriz(id: any) {
+    const articuloRef = doc(this.firestore, `${this.articulosPath}/${id}`);
+    return getDoc(articuloRef);
+  }
+
+  editarArticulo(articulo: any) {
+    const articuloRef = doc(this.firestore, `${this.articulosPath}/${articulo.id}`);
+    return updateDoc(articuloRef, articulo);
+  }
+
   editarMatriz(matriz: any) {
     const matrizRef = doc(this.firestore, `${this.path}/${matriz.id}`);
     return updateDoc(matrizRef, matriz);

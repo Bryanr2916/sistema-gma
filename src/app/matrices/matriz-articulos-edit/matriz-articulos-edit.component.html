@@ -7,8 +7,8 @@
     </div>
     <div *ngIf="!cargando" class="card shadow my-5 text-center border border-dark">
         <div class="card-header d-flex justify-content-around">
-            <h2><i class="g-icon fa-solid fa-newspaper me-1"></i>Crear Artículo Aplicable</h2>
-             <!--Nav-->
+            <h2><i class="g-icon fa-solid fa-newspaper me-1"></i>Editar Artículo Aplicable</h2>
+            <!--Nav-->
             <ul class="nav nav-pills mx-5">
                 <li class="nav-item mx-2">
                     <a class="nav-link active" routerLink="/matrices"><i class="fa-solid fa-chevron-left"></i> Regresar</a>
@@ -19,18 +19,18 @@
             <form id="form" class="my-4">
                 <!--Matriz-->
                 <div class="mb-3 me-5 row">
-                        <h3 class="col-12">Matriz:
-                            <span class="text-muted">
-                                {{matriz.titulo}}
-                                ({{empresa.nombre}})
-                            </span>
-                        </h3>
+                    <h3 class="col-12">Matriz:
+                        <span class="text-muted">
+                            {{matriz.titulo}}
+                            ({{empresa.nombre}})
+                        </span>
+                    </h3>
                 </div>
                 <!--Normativa-->
                 <div class="mb-3 me-5 row">
                     <label for="inputNormativa" class="col-sm-4 col-form-label">Normativa</label>
                     <div class="col-sm-8">
-                        <select [(ngModel)]="articulosAplicables.normativaId" [ngModelOptions]="{standalone:true}" id="inputNormativa" class="form-select border border-dark">
+                        <select [(ngModel)]="articulo.normativaId" [ngModelOptions]="{standalone:true}" id="inputNormativa" class="form-select border border-dark">
                             <option selected>Seleccione la normativa</option>
                             <option *ngFor="let normativa of normativas" value="{{normativa.id}}">{{normativa.titulo | truncarTexto: 68 : true}}</option>
                         </select>
@@ -40,7 +40,7 @@
                 <div class="mb-3 me-5 row">
                     <label for="inputAreasLegales" class="col-sm-4 col-form-label">Áreas Legales</label>
                     <div class="col-sm-8">
-                        <select [(ngModel)]="articulosAplicables.areaLegalId" [ngModelOptions]="{standalone:true}" id="inputAreasLegales" class="form-select border border-dark">
+                        <select [(ngModel)]="articulo.areaLegalId" [ngModelOptions]="{standalone:true}" id="inputAreasLegales" class="form-select border border-dark">
                             <option selected>Seleccione el área legal</option>
                             <option *ngFor="let area of areasLegales" value="{{area.id}}">{{area.nombre}}</option>
                         </select>
@@ -50,42 +50,42 @@
                 <div class="mb-3 me-5 row">
                     <label for="inputNumeroArticulos" class="col-sm-4 col-form-label">Número Artículos</label>
                     <div class="col-sm-8">
-                      <input [(ngModel)]="articulosAplicables.numeroArticulos" [ngModelOptions]="{standalone:true}" type="number" class="form-control border border-dark" id="inputNumeroArticulos">
+                      <input [(ngModel)]="articulo.numeroArticulos" [ngModelOptions]="{standalone:true}" type="number" class="form-control border border-dark" id="inputNumeroArticulos">
                     </div>
                 </div>
                 <!--Articulos-->
                 <div class="mb-3 me-5 row">
                     <label for="inputArticulos" class="col-sm-12 col-form-label">Artículos</label>
                     <div class="col-sm-12">
-                        <textarea [(ngModel)]="articulosAplicables.articulos" [ngModelOptions]="{standalone:true}" class="form-control border border-dark articulos-tabs" name="Articulos" id="inputArticulos" cols="30" rows="10"></textarea>
+                        <textarea [(ngModel)]="articulo.articulos" [ngModelOptions]="{standalone:true}" class="form-control border border-dark articulos-tabs" name="Articulos" id="inputArticulos" cols="30" rows="10"></textarea>
                     </div>
                 </div>
                 <!--Tramites-->
                 <div class="mb-3 me-5 row">
                     <label for="inputTramites" class="col-sm-12 col-form-label">Trámites</label>
                     <div class="col-sm-12">
-                        <textarea [(ngModel)]="articulosAplicables.tramites" [ngModelOptions]="{standalone:true}" class="form-control border border-dark articulos-tabs" name="Tramites" id="inputTramites" cols="30" rows="10"></textarea>
+                        <textarea [(ngModel)]="articulo.tramites" [ngModelOptions]="{standalone:true}" class="form-control border border-dark articulos-tabs" name="Tramites" id="inputTramites" cols="30" rows="10"></textarea>
                     </div>
                 </div>
                 <!--Cumplimiento-->
                 <div class="mb-3 me-5 row">
                     <label for="inputCumplimiento" class="col-sm-12 col-form-label">Cumplimiento</label>
                     <div class="col-sm-12">
-                        <textarea [(ngModel)]="articulosAplicables.cumplimiento" [ngModelOptions]="{standalone:true}" class="form-control border border-dark articulos-tabs" name="Cumplimiento" id="inputCumplimiento" cols="30" rows="10"></textarea>
+                        <textarea [(ngModel)]="articulo.cumplimiento" [ngModelOptions]="{standalone:true}" class="form-control border border-dark articulos-tabs" name="Cumplimiento" id="inputCumplimiento" cols="30" rows="10"></textarea>
                     </div>
                 </div>
                 <!--Aspectos Ambientales-->
                 <div class="mb-3 me-5 row">
                     <label for="inputAspectosAmbientales" class="col-sm-12 col-form-label">Aspectos Ambientales</label>
                     <div class="col-sm-12">
-                        <textarea [(ngModel)]="articulosAplicables.aspectosAmbientales" [ngModelOptions]="{standalone:true}" class="form-control border border-dark articulos-tabs" name="AspectosAmbientales" id="inputAspectosAmbientales" cols="30" rows="10"></textarea>
+                        <textarea [(ngModel)]="articulo.aspectosAmbientales" [ngModelOptions]="{standalone:true}" class="form-control border border-dark articulos-tabs" name="AspectosAmbientales" id="inputAspectosAmbientales" cols="30" rows="10"></textarea>
                     </div>
                 </div>
                 <!--Cambios recientes-->
                 <div class="mb-3 me-5 row">
                     <label for="inputCambiosRecientes" class="col-sm-12 col-form-label">Cambios Recientes</label>
                     <div class="col-sm-12">
-                        <textarea [(ngModel)]="articulosAplicables.cambiosRecientes" [ngModelOptions]="{standalone:true}" class="form-control border border-dark articulos-tabs" name="CambiosRecientes" id="inputCambiosRecientes" cols="30" rows="10"></textarea>
+                        <textarea [(ngModel)]="articulo.cambiosRecientes" [ngModelOptions]="{standalone:true}" class="form-control border border-dark articulos-tabs" name="CambiosRecientes" id="inputCambiosRecientes" cols="30" rows="10"></textarea>
                     </div>
                 </div>
             </form>
@@ -93,7 +93,7 @@
         <div class="card-footer">
             <!--Acciones-->
             <div class="mb-3 mx-5 row align-items-center">
-                <button [disabled]="!formularioEsValido()" (click)="crearArticulo()" class="btn btn-primary col-sm-3" type="submit">Crear Artículos</button>
+                <button [disabled]="!formularioEsValido()" (click)="editar()" class="btn btn-primary col-sm-3" type="submit">Editar artículo</button>
             </div>
         </div>
     </div>

@@ -1,4 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-matriz-articulos-view',
@@ -12,26 +15,35 @@ export class MatrizArticulosViewComponent implements OnInit {
   tabs = [
     {value: "general", label: "General"},
     {value: "articulos", label: "Artículos"},
+    {value: "tramites", label: "Trámites"},
     {value: "cumplimiento", label: "Cumplimiento"},
     {value: "aspectosAmbientales", label: "Riesgos"},
     {value: "cambiosRecientes", label: "Cambios Recientes"}
   ];
   tab = {value: "general", label: "General"};
 
-  constructor() { }
+  constructor(
+    private titleService: Title,
+    private toastr: ToastrService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
+    this.titleService.setTitle("GMA Sistema - Matrices");
   }
 
   changeTab(activeTab: any) {
     this.tab = activeTab;
   }
 
-  borrarArticulo(id: string) {
-    console.log("eliminando...");
+  borrarArticulo() {
+    if (confirm("¿Desea eliminar el artículo?")) {
+      console.log("eliminando...");
+    }
   }
 
-  editarArticulo(id: string) {
-    console.log("editando...");
+  editarArticulo() {
+    this.router.navigate([`/matrices/editar-articulo/${this.articulo.id}`]);
   }
 }

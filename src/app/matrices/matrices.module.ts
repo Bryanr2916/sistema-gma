@@ -10,6 +10,7 @@ import { ArticulosAplicablesComponent } from './articulos-aplicables/articulos-a
 import { EditComponent } from './edit/edit.component';
 import { MatrizArticulosViewComponent } from './matriz-articulos-view/matriz-articulos-view.component';
 import { ShareModule } from '../share/share.module';
+import { MatrizArticulosEditComponent } from './matriz-articulos-edit/matriz-articulos-edit.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { ShareModule } from '../share/share.module';
     ViewComponent,
     ArticulosAplicablesComponent,
     EditComponent,
-    MatrizArticulosViewComponent
+    MatrizArticulosViewComponent,
+    MatrizArticulosEditComponent
   ],
   imports: [
     CommonModule,
