@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { MatricesService } from 'src/app/core/services/matrices.service';
+import { UsuarioService } from 'src/app/core/services/usuario.service';
 
 @Component({
   selector: 'app-index',
@@ -17,11 +18,13 @@ export class IndexComponent implements OnInit {
   matricesFiltradas:any[] = [];
   articulosAplicables: any[] = [];
   ths = ["#","Título","Artículos","Empresa","Acciones"];
+  usuario: any = { };
 
   constructor(
     private titleService: Title,
     private empresasService: EmpresasService,
     private matricesService: MatricesService,
+    private usuarioService: UsuarioService,
     private toastr: ToastrService
   ) { }
 
@@ -29,13 +32,24 @@ export class IndexComponent implements OnInit {
     this.titleService.setTitle("GMA Sistema - Matrices");
     this.empresasService.obtenerEmpresas().subscribe(datos => {
       this.empresas = datos;
+      this.cargarUsuario();
+    });
+  }
+
+  async cargarUsuario() {
+    this.usuarioService.usuarioActual().subscribe( async datos => {
+      const usuarioFS = await this.usuarioService.usuarioActualFS(datos?.uid || "");
+      this.usuario = usuarioFS.docs[0].data();
       this.cargarMatrices();
     });
   }
 
   async cargarMatrices() {
+    // filtrar matrices por empresa
+    const filtrarMatrices = this.usuario.tipo == 2;
+
     this.matricesService.obtenerMatrices().subscribe(async datos => {
-      this.matricesTodas = datos;
+      this.matricesTodas = !filtrarMatrices ?  datos : datos.filter(matriz => matriz.empresa === this.usuario.empresaId);
       this.matricesFiltradas = this.matricesTodas;
       this.articulosAplicables = (await this.matricesService.obtenerArticulosAplicables()).docs.map((value) => { return {id: value.id, ...value.data() };});
       this.cargando = false;
