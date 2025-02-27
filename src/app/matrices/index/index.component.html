@@ -9,7 +9,7 @@
                 <input (ngModelChange)="buscar($event)" [(ngModel)]="busqueda" [ngModelOptions]="{standalone:true}" type="text" class="form-control border- border-dark" placeholder="Buscar..." aria-label="Username" aria-describedby="basic-addon1">
               </div>
         </li>
-        <li class="nav-item mx-2">
+        <li *ngIf="usuario.tipo === 1" class="nav-item mx-2">
           <a class="nav-link active" routerLink="crear"><i class="fa-solid fa-plus"></i> Crear matriz</a>
         </li>
     </ul>
@@ -37,13 +37,13 @@
                       <a routerLink="ver/{{matriz.id}}"><i class="g-icon fa-solid fa-eye fa-lg me-2"></i>
                         <span class="hidden-tooltip">Ver</span>
                       </a>
-                      <a routerLink="editar/{{matriz.id}}"><i class="fa-solid fa-pen-to-square fa-lg me-2"></i>
+                      <a *ngIf="usuario.tipo === 1" routerLink="editar/{{matriz.id}}"><i class="fa-solid fa-pen-to-square fa-lg me-2"></i>
                         <span class="hidden-tooltip">Editar</span>
                       </a>
-                      <a (click)="borrar(matriz)"><i class="r-icon fa-solid fa-trash fa-lg me-2"></i>
+                      <a *ngIf="usuario.tipo === 1" (click)="borrar(matriz)"><i class="r-icon fa-solid fa-trash fa-lg me-2"></i>
                         <span class="hidden-tooltip">Borrar</span>
                       </a>
-                      <a routerLink="crear-articulos/{{matriz.id}}"><i class="g-icon fa-solid fa-newspaper fa-lg ms-2"></i>
+                      <a *ngIf="usuario.tipo === 1" routerLink="crear-articulos/{{matriz.id}}"><i class="g-icon fa-solid fa-newspaper fa-lg ms-2"></i>
                         <span class="hidden-tooltip">Crear artículos aplicables </span>
                       </a>
                   </td>
