@@ -89,9 +89,13 @@ export class IndexComponent implements OnInit {
     }
   }
 
-  actualizarSucursales(empresa: any) {
+  async actualizarSucursales(empresa: any) {
+    for (let i = 0; i < empresa.sucursales.length; i++) {
+      const emp = { id: empresa.sucursales[i], franquisia: empresa.id };
+      await this.empresaService.editarEmpresa(emp);
+    }
     this.empresaService.editarEmpresa(empresa).then(_ => {
-      this.toastr.success("Subsidiarias actualizadas con éxito", undefined, {
+      this.toastr.success("Sucursales actualizadas con éxito", undefined, {
         closeButton: true,
         timeOut: 4000,
         progressBar: true
@@ -99,4 +103,4 @@ export class IndexComponent implements OnInit {
     });
   }
 
-}
+  }

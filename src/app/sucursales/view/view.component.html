@@ -19,11 +19,38 @@
     </div>
 </div>
 
-<ul *ngIf="!cargando" class="list-group">
-    <li *ngFor="let sucursal of sucursalesFiltradas" class="list-group-item">
-        {{sucursal}}
-    </li>
-</ul>
+<!--table-->
+<div *ngIf="!cargando" class="table-responsive my-4">
+    <table class="table table-light table-striped table-hover shadow">
+        <thead>
+          <tr class="table-success">
+            <th scope="col" *ngFor="let th of ths">{{th}}</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr *ngIf="empresaActual.franquisia">
+                <th scope="row">0</th>
+                <td>{{obtenerNombreSucursal(empresaActual.franquisia)}}</td>
+                <td><span class="badge text-bg-primary">Franquisia</span></td>
+                <td>
+                    <a (click)="usarComo(0)"><i class="g-icon fa-solid fa-arrow-right-to-bracket fa-lg me-2"></i>
+                        <span class="hidden-tooltip">Usar como</span>
+                    </a>
+                </td>
+            </tr>
+            <tr *ngFor="let sucursal of sucursalesFiltradas; index as i">
+                <th scope="row">{{ i + 1}}</th>
+                <td>{{sucursal}}</td>
+                <td><span class="badge text-bg-warning">Sucursal</span></td>
+                <td>
+                    <a (click)="usarComo(i)"><i class="g-icon fa-solid fa-arrow-right-to-bracket fa-lg me-2"></i>
+                        <span class="hidden-tooltip">Usar como</span>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
 <!--No hay resultados-->
 <div *ngIf="sucursalesFiltradas.length === 0 && sucursalesTodas.length > 0" class="my-4">

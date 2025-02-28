@@ -21,6 +21,7 @@ export class ViewComponent implements OnInit {
   usuario: any = {
     empresaId: ""
   };
+  ths = ["#","Nombre","Tipo", "Acciones"];
 
   constructor(private titleService: Title, private empresaService: EmpresasService, 
     private usuarioService: UsuarioService ,private toastr: ToastrService) { }
@@ -60,6 +61,10 @@ export class ViewComponent implements OnInit {
 
   obtenerNombreSucursal(id: string) {
     return this.empresasTodas.find(emp => emp.id === id).nombre;
+  }
+
+  usarComo(id: number) {
+    //todo: logica usar como
   }
 
 
