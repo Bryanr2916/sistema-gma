@@ -1,58 +1,61 @@
 <div class="mt-4 mb-2 mx-2">
     <h2><i class="g-icon fa-solid fa-table-cells me-1"></i>Matrices</h2>
     <hr class="border border-success border-1 opacity-75">
-    <!--Nav-->
-    <ul class="nav nav-pills">
-        <li class="nav-item mx-4">
-            <div class="input-group mb-3">
-                <span class="input-group-text border- border-dark" id="basic-addon1"><i class="fa-solid fa-magnifying-glass"></i></span>
-                <input (ngModelChange)="buscar($event)" [(ngModel)]="busqueda" [ngModelOptions]="{standalone:true}" type="text" class="form-control border- border-dark" placeholder="Buscar..." aria-label="Username" aria-describedby="basic-addon1">
-              </div>
-        </li>
-        <li *ngIf="usuario.tipo === 1" class="nav-item mx-2">
-          <a class="nav-link active" routerLink="crear"><i class="fa-solid fa-plus"></i> Crear matriz</a>
-        </li>
-    </ul>
-    <!--loading-->
-    <div *ngIf="cargando" class="d-flex justify-content-center">
-      <div class="spinner-border mt-5 text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
+
+    <div class="content-container">
+      <!--Nav-->
+    <ul class="nav nav-pills my-4">
+      <li class="nav-item">
+          <div class="input-group mb-3">
+              <span class="input-group-text border- border-dark" id="basic-addon1"><i class="fa-solid fa-magnifying-glass"></i></span>
+              <input (ngModelChange)="buscar($event)" [(ngModel)]="busqueda" [ngModelOptions]="{standalone:true}" type="text" class="form-control border- border-dark" placeholder="Buscar..." aria-label="Username" aria-describedby="basic-addon1">
+            </div>
+      </li>
+      <li *ngIf="usuario.tipo === 1" class="nav-item mx-2">
+        <a class="nav-link active" routerLink="crear"><i class="fa-solid fa-plus"></i> Crear matriz</a>
+      </li>
+  </ul>
+  <!--loading-->
+  <div *ngIf="cargando" class="d-flex justify-content-center">
+    <div class="spinner-border mt-5 text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
-    <!--table-->
-    <div *ngIf="matricesFiltradas.length > 0" class="table-responsive my-4">
-      <table class="table table-light table-striped table-hover shadow">
-          <thead>
-            <tr class="table-success">
-              <th scope="col" *ngFor="let th of ths">{{th}}</th>
+  </div>
+  <!--table-->
+  <div *ngIf="matricesFiltradas.length > 0" class="table-responsive my-4">
+    <table class="table table-light table-striped table-hover shadow">
+        <thead>
+          <tr class="table-success">
+            <th scope="col" *ngFor="let th of ths">{{th}}</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let matriz of matricesFiltradas; index as i">
+                <th scope="row">{{ i + 1}}</th>
+                <td>{{matriz.titulo}}</td>
+                <td>({{obtenerCantidadArticulosAplicables(matriz.id)}})</td>
+                <td>{{nombreEmpresa(matriz.empresa)}}</td>
+                <td>
+                    <a routerLink="ver/{{matriz.id}}"><i class="g-icon fa-solid fa-eye fa-lg me-2"></i>
+                      <span class="hidden-tooltip">Ver</span>
+                    </a>
+                    <a *ngIf="usuario.tipo === 1" routerLink="editar/{{matriz.id}}"><i class="fa-solid fa-pen-to-square fa-lg me-2"></i>
+                      <span class="hidden-tooltip">Editar</span>
+                    </a>
+                    <a *ngIf="usuario.tipo === 1" (click)="borrar(matriz)"><i class="r-icon fa-solid fa-trash fa-lg me-2"></i>
+                      <span class="hidden-tooltip">Borrar</span>
+                    </a>
+                    <a *ngIf="usuario.tipo === 1" routerLink="crear-articulos/{{matriz.id}}"><i class="g-icon fa-solid fa-newspaper fa-lg ms-2"></i>
+                      <span class="hidden-tooltip">Crear artículos aplicables </span>
+                    </a>
+                </td>
             </tr>
-          </thead>
-          <tbody>
-              <tr *ngFor="let matriz of matricesFiltradas; index as i">
-                  <th scope="row">{{ i + 1}}</th>
-                  <td>{{matriz.titulo}}</td>
-                  <td>({{obtenerCantidadArticulosAplicables(matriz.id)}})</td>
-                  <td>{{nombreEmpresa(matriz.empresa)}}</td>
-                  <td>
-                      <a routerLink="ver/{{matriz.id}}"><i class="g-icon fa-solid fa-eye fa-lg me-2"></i>
-                        <span class="hidden-tooltip">Ver</span>
-                      </a>
-                      <a *ngIf="usuario.tipo === 1" routerLink="editar/{{matriz.id}}"><i class="fa-solid fa-pen-to-square fa-lg me-2"></i>
-                        <span class="hidden-tooltip">Editar</span>
-                      </a>
-                      <a *ngIf="usuario.tipo === 1" (click)="borrar(matriz)"><i class="r-icon fa-solid fa-trash fa-lg me-2"></i>
-                        <span class="hidden-tooltip">Borrar</span>
-                      </a>
-                      <a *ngIf="usuario.tipo === 1" routerLink="crear-articulos/{{matriz.id}}"><i class="g-icon fa-solid fa-newspaper fa-lg ms-2"></i>
-                        <span class="hidden-tooltip">Crear artículos aplicables </span>
-                      </a>
-                  </td>
-              </tr>
-          </tbody>
-      </table>
-    </div>
-    <!--No hay resultados-->
-    <div *ngIf="matricesFiltradas.length === 0 && matricesTodas.length > 0" class="my-4">
-      <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No se encontraron resultados</h4>
+        </tbody>
+    </table>
+  </div>
+  <!--No hay resultados-->
+  <div *ngIf="matricesFiltradas.length === 0 && matricesTodas.length > 0" class="my-4">
+    <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No se encontraron resultados</h4>
+  </div>
     </div>
 </div>

@@ -1,9 +1,11 @@
 <div class="mt-4 mb-2 mx-2">
     <h2><i class="g-icon fa-solid fa-briefcase me-1"></i>Empresas</h2>
     <hr class="border border-success border-1 opacity-75">
-    <!--Nav-->
-    <ul class="nav nav-pills">
-        <li class="nav-item mx-4">
+
+    <div class="content-container">
+        <!--Nav-->
+    <ul class="nav nav-pills my-4">
+        <li class="nav-item">
             <div class="input-group mb-3">
                 <span class="input-group-text border- border-dark" id="basic-addon1"><i class="fa-solid fa-magnifying-glass"></i></span>
                 <input (ngModelChange)="buscar($event)" [(ngModel)]="busqueda" [ngModelOptions]="{standalone:true}" type="text" class="form-control border- border-dark" placeholder="Buscar..." aria-label="Username" aria-describedby="basic-addon1">
@@ -58,4 +60,5 @@
     <div *ngIf="empresasFiltradas.length === 0 && empresasTodas.length > 0" class="my-4">
         <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No se encontraron resultados</h4>
     </div>
+    </div>    
 </div>

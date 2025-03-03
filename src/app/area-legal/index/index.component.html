@@ -1,9 +1,11 @@
 <div class="mt-4 mb-2 mx-2">
     <h2><i class="g-icon fa-solid fa-bookmark me-1"></i>Área Legal</h2>
     <hr class="border border-success border-1 opacity-75">
-    <!--Nav-->
-    <ul class="nav nav-pills">
-        <li class="nav-item mx-4">
+
+    <div class="content-container">
+        <!--Nav-->
+    <ul class="nav nav-pills my-4">
+        <li class="nav-item">
             <div class="input-group mb-3">
                 <span class="input-group-text border- border-dark" id="basic-addon1"><i class="fa-solid fa-magnifying-glass"></i></span>
                 <input (ngModelChange)="buscar($event)" [(ngModel)]="busqueda" [ngModelOptions]="{standalone:true}" type="text" class="form-control border- border-dark" placeholder="Buscar..." aria-label="Username" aria-describedby="basic-addon1">
@@ -43,8 +45,26 @@
             </tbody>
         </table>
     </div>
+    <!-- TODO: pagination
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item">
+            <a class="page-link" href="#">&laquo;</a>
+          </li>
+          <li class="page-item"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item"><a class="page-link" href="#">...</a></li>
+          <li class="page-item"><a class="page-link" href="#">6</a></li>
+          <li class="page-item">
+            <a class="page-link" href="#">&raquo;</a>
+          </li>
+        </ul>
+      </nav>
+    -->
     <!--No hay resultados-->
     <div *ngIf="areasFiltradas.length === 0 && areasTodas.length > 0" class="my-4">
         <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No se encontraron resultados</h4>
+    </div>
     </div>
 </div>

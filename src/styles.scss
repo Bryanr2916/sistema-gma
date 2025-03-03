@@ -14,3 +14,49 @@
 .b-icon {
     color: #0D6EFD
 }
+
+.table-responsive {
+    border-radius: 10px;
+}
+
+.content-container {
+    background-color: #EFF6FB;
+    border: .2px solid #CEE3F3;
+    border-radius: 10px;
+}
+
+table {
+    font-size: 12px;
+}
+
+/* Table Portrait*/
+@media (min-width: 600px) {
+    table {
+        font-size: 13px;
+    }
+}
+
+/* Table Landscape*/
+@media (min-width: 768px) {
+    table {
+        font-size: 14px;
+    }
+}
+
+/*Laptops */
+@media (min-width: 1024px) {
+    table {
+        font-size: 15px;
+    }
+}
+
+/*Large Screens */
+@media (min-width: 1440px) {
+    .content-container {
+        padding: 0 80px;
+    }
+
+    table {
+        font-size: 16px;
+    }
+}
