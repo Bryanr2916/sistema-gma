@@ -23,6 +23,7 @@
     background-color: #EFF6FB;
     border: .2px solid #CEE3F3;
     border-radius: 10px;
+    padding: 0 30px;
 }
 
 table {
@@ -31,6 +32,9 @@ table {
 
 /* Table Portrait*/
 @media (min-width: 600px) {
+    .content-container {
+        padding: 0 80px;
+    }
     table {
         font-size: 13px;
     }
@@ -38,6 +42,9 @@ table {
 
 /* Table Landscape*/
 @media (min-width: 768px) {
+    .content-container {
+        padding: 0 100px;
+    }
     table {
         font-size: 14px;
     }
@@ -45,6 +52,10 @@ table {
 
 /*Laptops */
 @media (min-width: 1024px) {
+    .content-container {
+        padding: 0 150px;
+    }
+
     table {
         font-size: 15px;
     }
@@ -53,7 +64,7 @@ table {
 /*Large Screens */
 @media (min-width: 1440px) {
     .content-container {
-        padding: 0 80px;
+        padding: 0 200px;
     }
 
     table {
