@@ -57,5 +57,9 @@
   <div *ngIf="matricesFiltradas.length === 0 && matricesTodas.length > 0" class="my-4">
     <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No se encontraron resultados</h4>
   </div>
-    </div>
+  <!--No Hay matrices-->
+  <div *ngIf="matricesTodas.length === 0 && !cargando" class="my-4">
+    <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No hay Matrices registradas</h4>
+  </div>
+</div>
 </div>

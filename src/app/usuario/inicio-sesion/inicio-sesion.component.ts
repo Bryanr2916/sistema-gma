@@ -51,7 +51,14 @@ export class InicioSesionComponent implements OnInit {
               progressBar: true
             });
           } else {
-            this.usuarioService.registrar(this.usuario).then(_ => {
+            this.usuarioService.registrar(this.usuario).then(respuesta => {
+              this.usuarioService.obtenerUsuarioPorCorreo(this.usuario.correo).then(oup => {
+                console.log("obtenerUsuarioPorCorreo: ", oup);
+                this.usuarioService.editarUsuario({
+                  id: oup.docs[0].id,
+                  uid: respuesta.user.uid
+                });
+              });
               this.router.navigate([""]);
               this.toastr.success("Bienvenido(a) a GMA Sistema", undefined, {
                 closeButton: true,

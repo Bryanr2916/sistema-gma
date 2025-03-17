@@ -57,4 +57,17 @@ export class UsuarioService {
     const usuariosRef = collection(this.firestore, this.path);
     return collectionData(usuariosRef, {idField: 'id'}) as Observable<any[]>;
   }
+
+  obtenerUsuarioPorCorreo(correo: string) {
+    const usuarioRef = collection(this.firestore, this.path);
+    
+    const usuarioCorreo = query(usuarioRef, where("correo", "==", correo));
+    return getDocs(usuarioCorreo);
+  }
+
+  editarUsuario(usuario: any) {
+    console.log("editarUsuario: ", usuario);
+    const usuarioref = doc(this.firestore, `${this.path}/${usuario.id}`);
+    return updateDoc(usuarioref, usuario);
+  }
 }

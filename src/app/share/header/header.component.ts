@@ -19,11 +19,14 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     this.usuarioService.usuarioActual().subscribe( usuarioActivo => {
       if (usuarioActivo) { 
-        this.usuarioService.usuarioActualFS(usuarioActivo.uid).then(respuseta => {
-          const usuarioUID = respuseta.docs[0].data();
-          if ( usuarioUID) {
-            this.usuario = usuarioUID
-            this.cargando = false;
+        this.usuarioService.usuarioActualFS(usuarioActivo.uid).then(respuesta => {
+          const usuarioFS = respuesta.docs[0];
+          if (usuarioFS) {
+            const usuarioUID = respuesta.docs[0].data();
+            if ( usuarioUID) {
+              this.usuario = usuarioUID
+              this.cargando = false;
+            }
           }
         });
       } else {

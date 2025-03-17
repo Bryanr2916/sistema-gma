@@ -33,17 +33,17 @@
                 <td>{{obtenerNombreSucursal(empresaActual.franquisia)}}</td>
                 <td><span class="badge text-bg-primary">Franquisia</span></td>
                 <td>
-                    <a (click)="usarComo(0)"><i class="g-icon fa-solid fa-arrow-right-to-bracket fa-lg me-2"></i>
+                    <a (click)="usarComo(empresaActual.franquisia)"><i class="g-icon fa-solid fa-arrow-right-to-bracket fa-lg me-2"></i>
                         <span class="hidden-tooltip">Usar como</span>
                     </a>
                 </td>
             </tr>
             <tr *ngFor="let sucursal of sucursalesFiltradas; index as i">
                 <th scope="row">{{ i + 1}}</th>
-                <td>{{sucursal}}</td>
+                <td>{{obtenerNombreSucursal(sucursal)}}</td>
                 <td><span class="badge text-bg-warning">Sucursal</span></td>
                 <td>
-                    <a (click)="usarComo(i)"><i class="g-icon fa-solid fa-arrow-right-to-bracket fa-lg me-2"></i>
+                    <a (click)="usarComo(sucursal)"><i class="g-icon fa-solid fa-arrow-right-to-bracket fa-lg me-2"></i>
                         <span class="hidden-tooltip">Usar como</span>
                     </a>
                 </td>
@@ -58,7 +58,7 @@
 </div>
 
 <!--No Hay sucursales-->
-<div *ngIf="sucursalesTodas.length === 0 && !cargando" class="my-4">
+<div *ngIf="sucursalesTodas.length === 0 && !(empresaActual.franquisia) && !cargando" class="my-4">
     <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No hay sucursales registradas</h4>
 </div>
 </div>

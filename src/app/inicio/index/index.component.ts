@@ -24,7 +24,9 @@ export class IndexComponent implements OnInit {
     this.usuarioService.usuarioActual().subscribe( usuarioActivo => {
       if (usuarioActivo) { 
         this.usuarioService.usuarioActualFS(usuarioActivo.uid).then(respuseta => {
-          const usuarioUID = respuseta.docs[0].data();
+          const usuarioFS = respuseta.docs[0];
+          if (usuarioFS) {
+            const usuarioUID = respuseta.docs[0].data();
           if ( usuarioUID) {
             this.usuario = usuarioUID
             this.cargando = false;
@@ -36,6 +38,7 @@ export class IndexComponent implements OnInit {
             } else {
               this.menu[0].enlace = "sucursales/ver";
             }
+          }
           }
         });
       } else {
