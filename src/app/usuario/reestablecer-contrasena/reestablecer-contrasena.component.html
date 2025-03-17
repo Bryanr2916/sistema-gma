@@ -12,12 +12,12 @@
                 <div class="mb-3 me-5 row">
                     <label for="staticEmail" class="col-sm-4 col-form-label">Correo electrónico</label>
                     <div class="col-sm-8">
-                      <input type="text" class="form-control border border-dark" id="staticEmail" placeholder="correo@ejemeplo.com">
+                      <input [(ngModel)]="correo" [ngModelOptions]="{standalone:true}" type="text" class="form-control border border-dark" id="staticEmail" placeholder="correo@ejemeplo.com">
                     </div>
                 </div>
                 <!--Acciones-->
                 <div class="mb-3 mx-5 row align-items-center">
-                    <button class="btn btn-primary col-sm-4" type="submit">Reestablecer</button>
+                    <button (click)="reestablecerContrasenna()" class="btn btn-primary col-sm-4" type="submit">Reestablecer</button>
                     <a routerLink="../inicio-sesion" class="col-sm-8">Volver a inicio de sesión</a>
                 </div>
             </form>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, user } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, user, sendPasswordResetEmail } from '@angular/fire/auth';
 import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, query, where, getDocs } from '@angular/fire/firestore';
 import { EncriptadorService } from './encriptador.service';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -69,5 +69,9 @@ export class UsuarioService {
     console.log("editarUsuario: ", usuario);
     const usuarioref = doc(this.firestore, `${this.path}/${usuario.id}`);
     return updateDoc(usuarioref, usuario);
+  }
+
+  reestablecerContrasena(correo: string) {
+    return sendPasswordResetEmail(this.auth, correo);
   }
 }
