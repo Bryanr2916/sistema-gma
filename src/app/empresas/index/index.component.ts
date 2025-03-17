@@ -62,7 +62,7 @@ export class IndexComponent implements OnInit {
   async usarComo (empresa: any) {
     const usuarioAdmin = this.usuarios.find( usuario => usuario.empresaId === empresa.id);
     if (usuarioAdmin) {
-      if (confirm(`Emp Al aceptar se cerrará la sesión actual e iniciará sesión como ${usuarioAdmin.correo}`)){
+      if (confirm(`Al aceptar se cerrará la sesión actual e iniciará sesión como ${usuarioAdmin.correo}`)){
         this.usuarioService.iniciarSesion({
           correo: usuarioAdmin.correo, contrasena: this.encriptador.desencriptarContrasena(usuarioAdmin.contrasena)
         }).then( _ => {

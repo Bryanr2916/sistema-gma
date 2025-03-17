@@ -79,7 +79,7 @@ export class ViewComponent implements OnInit {
   async usarComo (id: any) {
     const usuarioAdmin = this.usuarios.find( usuario => usuario.empresaId === id);
     if (usuarioAdmin) {
-      if (confirm(`Emp Al aceptar se cerrará la sesión actual e iniciará sesión como ${usuarioAdmin.correo}`)){
+      if (confirm(`Al aceptar se cerrará la sesión actual e iniciará sesión como ${usuarioAdmin.correo}`)){
         this.usuarioService.iniciarSesion({
           correo: usuarioAdmin.correo, contrasena: this.encriptador.desencriptarContrasena(usuarioAdmin.contrasena)
         }).then( _ => {
