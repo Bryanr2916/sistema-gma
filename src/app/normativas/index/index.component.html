@@ -64,5 +64,10 @@
     <div *ngIf="normativasFiltradas.length === 0 && normativasTodas.length > 0" class="my-4">
         <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No se encontraron resultados</h4>
     </div>
+
+    <!--No hay registro-->
+    <div *ngIf="normativasTodas.length === 0 && !cargando" class="my-4">
+        <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No hay normativas registradas</h4>
+      </div>
     </div>
 </div>

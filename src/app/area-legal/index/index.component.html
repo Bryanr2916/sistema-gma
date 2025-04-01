@@ -66,5 +66,10 @@
     <div *ngIf="areasFiltradas.length === 0 && areasTodas.length > 0" class="my-4">
         <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No se encontraron resultados</h4>
     </div>
+
+    <!--No hay registro-->
+    <div *ngIf="areasTodas.length === 0 && !cargando" class="my-4">
+      <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No hay áreas legales</h4>
+    </div>
     </div>
 </div>
