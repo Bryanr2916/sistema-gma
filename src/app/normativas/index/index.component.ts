@@ -54,7 +54,12 @@ export class IndexComponent implements OnInit {
   }
 
   nombreTipo(id: any) {
-    return this.tipos.find(tipo => tipo.id === id).nombre;
+    const tipo = this.tipos.find(tipo => tipo.id === id);
+
+    if (tipo) {
+      return tipo.nombre;  
+    }
+    return "Desconocido";
   }
 
 }
