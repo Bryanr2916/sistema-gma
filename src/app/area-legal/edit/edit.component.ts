@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -11,6 +12,7 @@ import { AreaLegalService } from 'src/app/core/services/area-legal.service';
 })
 export class EditComponent implements OnInit {
 
+  formulario: FormGroup = this.fb.group({});
   areaLegal = { nombre:"", id: "" };
 
   constructor(
@@ -18,8 +20,11 @@ export class EditComponent implements OnInit {
     private areaService: AreaLegalService,
     private toastr: ToastrService,
     private router: Router,
-    private route: ActivatedRoute
-  ) { }
+    private route: ActivatedRoute,
+    public fb: FormBuilder
+  ) {
+    this.definirFormulario(); 
+  }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Área legal");
@@ -27,12 +32,30 @@ export class EditComponent implements OnInit {
       this.areaLegal.id = params["id"];
     });
     this.areaService.obtenerArea(this.areaLegal.id).then( respuesta => {
-      this.areaLegal.nombre = respuesta.get("nombre");
+      this.formulario.controls["nombre"].setValue(respuesta.get("nombre"));
     });
   }
 
+  definirFormulario() {
+        this.formulario = this.fb.group({
+          nombre: ["", [Validators.required]]
+        });
+      }
+    
+  errorEnControlador (controlador: string, error: string) {
+    return (
+      this.formulario.controls[controlador].hasError(error) && 
+      this.formulario.controls[controlador].invalid &&
+      (this.formulario.controls[controlador].touched)
+    );
+  }
+
   editarArea() {
-    if(this.formularioEsValido()) {
+    this.formulario.markAllAsTouched();
+    if(this.formulario.valid) {
+
+      this.areaLegal.nombre = this.formulario.controls["nombre"].value;
+
       this.areaService.editarArea(
         this.areaLegal
       ).then(data => {
@@ -48,9 +71,4 @@ export class EditComponent implements OnInit {
       });
     }
   }
-
-  formularioEsValido() {
-    return this.areaLegal.nombre !== "";
-  }
-
 }
