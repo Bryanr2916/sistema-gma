@@ -4,24 +4,31 @@
             <h2><img src="../assets/images/GMA-logo.png" alt="Logo" width="30" height="24" class="mx-2">Ingresar a GMA Sistema</h2>
         </div>
         <div class="card-body">
-            <form id="form" class="my-4">
+            <form [formGroup]="formulario" id="form" class="my-4" novalidate (ngSubmit)="iniciarSesion()">
                 <!--Usuario-->
                 <div class="mb-3 me-5 row">
                     <label for="staticEmail" class="col-sm-4 col-form-label">Correo electrónico</label>
                     <div class="col-sm-8">
-                      <input [(ngModel)]="usuario.correo" [ngModelOptions]="{standalone:true}" type="text" class="form-control border border-dark" id="staticEmail" placeholder="correo@ejemeplo.com">
+                      <input formControlName="correo" type="email" class="form-control border border-dark" id="staticEmail" placeholder="correo@ejemeplo.com">
+                      <div class="d-flex">
+                        <small class="text-danger" *ngIf="errorEnControlador('correo', 'required')">Correo requerido</small>
+                        <small class="text-danger" *ngIf="errorEnControlador('correo', 'email')">Formato de correo inválido</small>
+                      </div>
                     </div>
                 </div>
                 <!--Contraseña-->
                 <div class="mb-3 me-5 row">
                     <label for="inputPassword" class="col-sm-4 col-form-label">Contraseña</label>
                     <div class="col-sm-8">
-                      <input [(ngModel)]="usuario.contrasena" [ngModelOptions]="{standalone:true}" type="password" class="form-control border border-dark" id="inputPassword">
+                      <input formControlName="contrasena" type="password" class="form-control border border-dark" id="inputPassword">
+                      <div class="d-flex">
+                        <small class="text-danger" *ngIf="errorEnControlador('contrasena', 'required')">Contraseña requerida</small>
+                      </div>
                     </div>
                 </div>
                 <!--Acciones-->
                 <div class="mb-3 mx-5 row align-items-center">
-                    <button (click)="iniciarSesion($event)" class="btn btn-primary col-sm-4" type="submit">Ingresar<i class="fa-solid fa-right-to-bracket ms-1"></i></button>
+                    <button class="btn btn-primary col-sm-4" type="submit">Ingresar<i class="fa-solid fa-right-to-bracket ms-1"></i></button>
                     <a routerLink="../reestablecer-contrasena" class="col-sm-8">Reestablecer contraseña</a>
                 </div>
             </form>
