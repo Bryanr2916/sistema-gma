@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -11,21 +12,42 @@ import { TiposNormativasService } from 'src/app/core/services/tipos-normativas.s
 })
 export class CreateComponent implements OnInit {
   
-  tipoNormativas = { nombre:"" };
+  formulario: FormGroup = this.fb.group({});
+  tipoNormativas = { nombre: "" };
 
   constructor(
     private titleService: Title,
     private tiposService: TiposNormativasService,
     private toastr: ToastrService,
-    private router: Router ) { }
+    private router: Router, public fb: FormBuilder ) {
+      this.definirFormulario();
+    }
 
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Tipos de normativas");
   }
 
+  definirFormulario() {
+        this.formulario = this.fb.group({
+          nombre: ["", [Validators.required]]
+        });
+      }
+    
+    errorEnControlador (controlador: string, error: string) {
+      return (
+        this.formulario.controls[controlador].hasError(error) && 
+        this.formulario.controls[controlador].invalid &&
+        (this.formulario.controls[controlador].touched)
+      );
+    }
+
   crearTipo() {
-    if(this.formularioEsValido()) {
+    this.formulario.markAllAsTouched();
+    if(this.formulario.valid) {
+
+      this.tipoNormativas.nombre = this.formulario.controls["nombre"].value;
+
       this.tiposService.crearTipo(
         this.tipoNormativas
       ).then(() => {
@@ -39,10 +61,6 @@ export class CreateComponent implements OnInit {
         console.log(error);
       });
     }
-  }
-
-  formularioEsValido() {
-    return this.tipoNormativas.nombre !== "";
   }
 
 }

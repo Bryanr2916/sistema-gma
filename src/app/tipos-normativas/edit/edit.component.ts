@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -11,6 +12,7 @@ import { TiposNormativasService } from 'src/app/core/services/tipos-normativas.s
 })
 export class EditComponent implements OnInit {
 
+  formulario: FormGroup = this.fb.group({});
   tipoNormativas = { nombre:"", id: "" };
 
   constructor(
@@ -18,8 +20,10 @@ export class EditComponent implements OnInit {
     private tiposService: TiposNormativasService,
     private toastr: ToastrService,
     private router: Router,
-    private route: ActivatedRoute
-  ) { }
+    private route: ActivatedRoute, public fb: FormBuilder
+  ) {
+    this.definirFormulario();
+  }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Tipos de normativas");
@@ -37,12 +41,30 @@ export class EditComponent implements OnInit {
         this.router.navigate(["/tipos-normativas"]);
       }
       console.log(respuesta.data());
-      this.tipoNormativas.nombre = respuesta.get("nombre");
+      this.formulario.controls["nombre"].setValue(respuesta.get("nombre"));
     });
   }
 
+  definirFormulario() {
+    this.formulario = this.fb.group({
+      nombre: ["", [Validators.required]]
+    });
+  }
+      
+  errorEnControlador (controlador: string, error: string) {
+    return (
+      this.formulario.controls[controlador].hasError(error) && 
+      this.formulario.controls[controlador].invalid &&
+      (this.formulario.controls[controlador].touched)
+    );
+  }
+
   editarTipo() {
-    if(this.formularioEsValido()) {
+    this.formulario.markAllAsTouched();
+    if(this.formulario.valid) {
+
+      this.tipoNormativas.nombre = this.formulario.controls["nombre"].value;
+
       this.tiposService.editarTipo(
         this.tipoNormativas
       ).then(data => {
@@ -57,10 +79,6 @@ export class EditComponent implements OnInit {
         console.log(error);
       });
     }
-  }
-
-  formularioEsValido() {
-    return this.tipoNormativas.nombre !== "";
   }
 
 }
