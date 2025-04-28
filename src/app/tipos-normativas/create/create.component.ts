@@ -29,10 +29,10 @@ export class CreateComponent implements OnInit {
   }
 
   definirFormulario() {
-        this.formulario = this.fb.group({
-          nombre: ["", [Validators.required]]
-        });
-      }
+    this.formulario = this.fb.group({
+      nombre: ["", [Validators.required]]
+    });
+  }
     
     errorEnControlador (controlador: string, error: string) {
       return (
