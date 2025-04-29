@@ -88,28 +88,28 @@
                 <div class="mb-3 me-5 row">
                     <label for="inputModificacion" class="col-sm-4 col-form-label ">Modificación</label>
                     <div class="col-sm-8">
-                      <input [(ngModel)]="normativa.modificacion" [ngModelOptions]="{standalone:true}" type="text" class="form-control border border-dark" id="inputModificacion">
+                      <input formControlName="modificacion" type="text" class="form-control border border-dark" id="inputModificacion">
                     </div>
                 </div>
                 <!--Entidad-->
                 <div class="mb-3 me-5 row">
                     <label for="inputEntidad" class="col-sm-4 col-form-label ">Entidad</label>
                     <div class="col-sm-8">
-                      <input [(ngModel)]="normativa.entidad" [ngModelOptions]="{standalone:true}" type="text" class="form-control border border-dark" id="inputEntidad">
+                      <input formControlName="entidad" type="text" class="form-control border border-dark" id="inputEntidad">
                     </div>
                 </div>
                 <!--Enlace-->
                 <div class="mb-3 me-5 row">
                     <label for="inputEnlace" class="col-sm-4 col-form-label ">Enlace</label>
                     <div class="col-sm-8">
-                      <input [(ngModel)]="normativa.enlace" [ngModelOptions]="{standalone:true}" type="text" class="form-control border border-dark" id="inputEnlace">
+                      <input formControlName="enlace" type="text" class="form-control border border-dark" id="inputEnlace">
                     </div>
                 </div>
                 <!--Comentarios-->
                 <div class="mb-3 me-5 row">
                     <label for="inputComentarios" class="col-sm-12 col-form-label ">Comentarios</label>
                     <div class="col-sm-12">
-                        <textarea [(ngModel)]="normativa.comentarios" [ngModelOptions]="{standalone:true}" class="form-control border border-dark" name="comentarios" id="inputComentarios" cols="30" rows="10"></textarea>
+                        <textarea formControlName="comentarios" class="form-control border border-dark" name="comentarios" id="inputComentarios" cols="30" rows="10"></textarea>
                     </div>
                 </div>
                 <!--Archivo-->

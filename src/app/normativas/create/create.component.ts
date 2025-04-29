@@ -75,12 +75,12 @@ export class CreateComponent implements OnInit {
       this.normativa.titulo = this.formulario.controls["titulo"].value;
       this.normativa.tipoId = this.formulario.controls["tipoId"].value;
       this.normativa.numero = this.formulario.controls["numero"].value;
+      this.normativa.fecha = this.formulario.controls["fecha"].value;
       this.normativa.pais = this.formulario.controls["pais"].value;
       this.normativa.modificacion = this.formulario.controls["modificacion"].value;
       this.normativa.entidad = this.formulario.controls["entidad"].value;
       this.normativa.enlace = this.formulario.controls["enlace"].value;
       this.normativa.comentarios = this.formulario.controls["comentarios"].value;
-      this.normativa.urlArchivo = this.formulario.controls["urlArchivo"].value;
 
       if (this.archivo) {
         this.normativaService.subirArchivo(this.archivo).then( respuesta => {
