@@ -39,7 +39,7 @@
                   <label for="inputPais" class="col-sm-4 col-form-label">País</label>
                   <div class="col-sm-8">
                     <select [(ngModel)]="empresa.pais" [ngModelOptions]="{standalone:true}" id="inputPais" class="form-select border border-dark">
-                      <option selected>Seleccione el país</option>
+                      <option value="select-valor-vacio" selected>Seleccione el país</option>
                       <option value={{pais}} *ngFor="let pais of paises; index as i">{{pais}}</option>
                     </select>
                   </div>

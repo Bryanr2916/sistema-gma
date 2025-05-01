@@ -23,7 +23,7 @@
                        <label for="inputArea" class="col-sm-4 col-form-label">Seleccione el área legal</label>
                        <div class="col-sm-8">
                            <select (change)="seleccionarAreaLegal()" [(ngModel)]="areaSeleccionada.id" [ngModelOptions]="{standalone:true}" id="inputArea" class="form-select border border-dark">
-                               <option value="vacio" selected>Seleccione el área legal</option>
+                               <option value="select-valor-vacio" selected>Seleccione el área legal</option>
                                <option *ngFor="let areaAplicable of areasAplicables" value="{{areaAplicable.id}}">{{areaAplicable.nombre}} ({{ obtenerCantidadArticulos(areaAplicable.id)}})</option>
                            </select>
                        </div>

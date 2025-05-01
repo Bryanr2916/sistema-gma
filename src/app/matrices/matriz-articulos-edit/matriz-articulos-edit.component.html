@@ -31,7 +31,7 @@
                     <label for="inputNormativa" class="col-sm-4 col-form-label">Normativa</label>
                     <div class="col-sm-8">
                         <select [(ngModel)]="articulo.normativaId" [ngModelOptions]="{standalone:true}" id="inputNormativa" class="form-select border border-dark">
-                            <option selected>Seleccione la normativa</option>
+                            <option value="select-valor-vacio" selected>Seleccione la normativa</option>
                             <option *ngFor="let normativa of normativas" value="{{normativa.id}}">{{normativa.titulo | truncarTexto: 68 : true}}</option>
                         </select>
                     </div>
@@ -41,7 +41,7 @@
                     <label for="inputAreasLegales" class="col-sm-4 col-form-label">Áreas Legales</label>
                     <div class="col-sm-8">
                         <select [(ngModel)]="articulo.areaLegalId" [ngModelOptions]="{standalone:true}" id="inputAreasLegales" class="form-select border border-dark">
-                            <option selected>Seleccione el área legal</option>
+                            <option value="select-valor-vacio" selected>Seleccione el área legal</option>
                             <option *ngFor="let area of areasLegales" value="{{area.id}}">{{area.nombre}}</option>
                         </select>
                     </div>

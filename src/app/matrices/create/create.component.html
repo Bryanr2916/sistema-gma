@@ -10,22 +10,35 @@
             </ul>
         </div>
         <div class="card-body">
-            <form id="form" class="my-4">
+            <form [formGroup]="formulario" id="form" class="my-4">
                 <!--Empresa-->
                 <div class="mb-3 me-5 row">
-                    <label for="inputEmpresa" class="col-sm-4 col-form-label">Empresa</label>
+                    <label for="inputEmpresa" class="col-sm-4 col-form-label">
+                        <span class="text-danger">*</span>
+                        Empresa
+                    </label>
                     <div class="col-sm-8">
-                        <select [(ngModel)]="matriz.empresa" [ngModelOptions]="{standalone:true}" id="inputTipo" class="form-select border border-dark">
-                            <option value="vacio" selected>Seleccione la empresa</option>
+                        <select formControlName="empresa" id="inputTipo" class="form-select border border-dark">
+                            <option value="select-valor-vacio" selected>Seleccione la empresa</option>
                             <option *ngFor="let empresa of empresas" value="{{empresa.id}}">{{empresa.nombre}}</option>    
                         </select>
+                        <div class="d-flex">
+                            <small class="text-danger" *ngIf="errorEnControlador('empresa', 'required')">Empresa es requerida</small>
+                            <small class="text-danger" *ngIf="errorEnControlador('empresa', 'emptySelect')">Empresa es requerida</small>
+                        </div>
                     </div>
                 </div>
                 <!--Título-->
                 <div class="mb-3 me-5 row">
-                    <label for="inputTitulo" class="col-sm-4 col-form-label">Título</label>
+                    <label for="inputTitulo" class="col-sm-4 col-form-label">
+                        <span class="text-danger">*</span>
+                        Título
+                    </label>
                     <div class="col-sm-8">
-                      <input [(ngModel)]="matriz.titulo" [ngModelOptions]="{standalone:true}" type="text" class="form-control border border-dark" id="inputTitulo">
+                      <input formControlName="titulo" type="text" class="form-control border border-dark" id="inputTitulo">
+                      <div class="d-flex">
+                        <small class="text-danger" *ngIf="errorEnControlador('titulo', 'required')">Título requerido</small>
+                      </div>
                     </div>
                 </div>
             </form>
@@ -33,7 +46,7 @@
         <div class="card-footer">
             <!--Acciones-->
             <div class="mb-3 mx-5 row align-items-center">
-                <button [disabled]="!formularioEsValido()" (click)="crearMatriz()" class="btn btn-primary col-sm-3" type="submit">Crear matriz</button>
+                <button (click)="crearMatriz()" class="btn btn-primary col-sm-3" type="submit">Crear matriz</button>
             </div>
         </div>
       </div>

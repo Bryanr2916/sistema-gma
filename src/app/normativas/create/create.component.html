@@ -32,7 +32,7 @@
                     </label>
                     <div class="col-sm-8">
                         <select formControlName="tipoId" id="inputTipo" class="form-select border border-dark">
-                            <option selected>Seleccione el tipo</option>
+                            <option value="select-valor-vacio" selected>Seleccione el tipo</option>
                             <option *ngFor="let tipo of tipos" value="{{tipo.id}}">{{tipo.nombre}}</option>
                         </select>
                         <div class="d-flex">
@@ -75,7 +75,7 @@
                 </label>
                 <div class="col-sm-8">
                   <select formControlName="pais" id="inputPais" class="form-select border border-dark">
-                    <option selected>Seleccione el país</option>
+                    <option value="select-valor-vacio" selected>Seleccione el país</option>
                     <option value={{pais}} *ngFor="let pais of paises">{{pais}}</option>
                   </select>
                   <div class="d-flex">

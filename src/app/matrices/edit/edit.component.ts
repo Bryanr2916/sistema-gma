@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { MatricesService } from 'src/app/core/services/matrices.service';
+import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
 
 @Component({
   selector: 'app-edit',
@@ -12,6 +14,7 @@ import { MatricesService } from 'src/app/core/services/matrices.service';
 })
 export class EditComponent implements OnInit {
 
+  formulario: FormGroup = this.fb.group({});
   matriz = {
     empresa: "",
     titulo: "",
@@ -26,8 +29,18 @@ export class EditComponent implements OnInit {
     private matricesService: MatricesService,
     private toastr: ToastrService,
     private router: Router,
-    private route: ActivatedRoute
-  ) { }
+    private route: ActivatedRoute,
+    public fb: FormBuilder
+  ) {
+    this.definirFormulario();
+  }
+
+  definirFormulario() {
+    this.formulario = this.fb.group({
+      titulo: ["", [Validators.required]],
+      empresa: ["", [Validators.required, seleccionVacia()]]
+    });
+  }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Matrices");
@@ -35,6 +48,8 @@ export class EditComponent implements OnInit {
       this.matriz.id = params["id"];
     });
     this.matricesService.obtenerMatriz(this.matriz.id).then(respuesta => {
+      this.formulario.controls["titulo"].setValue(respuesta.get("titulo"));
+      this.formulario.controls["empresa"].setValue(respuesta.get("empresa"));
       this.matriz.titulo = respuesta.get("titulo");
       this.matriz.empresa = respuesta.get("empresa");
     });
@@ -43,8 +58,21 @@ export class EditComponent implements OnInit {
     });
   }
 
+  errorEnControlador (controlador: string, error: string) {
+    return (
+      this.formulario.controls[controlador].hasError(error) && 
+      this.formulario.controls[controlador].invalid &&
+      (this.formulario.controls[controlador].touched)
+    );
+  }
+
   editarMatriz() {
-    if(this.formularioEsValido()) {
+    this.formulario.markAllAsTouched();
+    if(this.formulario.valid) {
+
+      this.matriz.empresa = this.formulario.controls["empresa"].value;
+      this.matriz.titulo = this.formulario.controls["titulo"].value;
+
       this.matricesService.editarMatriz(
         this.matriz
       ).then(data => {
@@ -59,17 +87,5 @@ export class EditComponent implements OnInit {
         console.log(error);
       });
     }
-  }
-
-  formularioEsValido() {
-
-    if (this.matriz.titulo === "") {
-      return false;
-    }
-
-    if (this.matriz.empresa === "" || this.matriz.empresa === "vacio") {
-      return false;
-    }
-    return true;
   }
 }
