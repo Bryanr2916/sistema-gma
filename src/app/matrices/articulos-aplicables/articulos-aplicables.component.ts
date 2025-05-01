@@ -22,7 +22,7 @@ export class ArticulosAplicablesComponent implements OnInit {
     matrizId: "",
     normativaId: "",
     areaLegalId: "",
-    numeroArticulos: 0,
+    numeroArticulos: "",
     articulos: "",
     tramites: "",
     cumplimiento: "",
