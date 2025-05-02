@@ -28,7 +28,10 @@
                 </div>
                 <!--Normativa-->
                 <div class="mb-3 me-5 row">
-                    <label for="inputNormativa" class="col-sm-4 col-form-label">Normativa</label>
+                    <label for="inputNormativa" class="col-sm-4 col-form-label">
+                        <span class="text-danger">*</span>
+                        Normativa
+                    </label>
                     <div class="col-sm-8">
                         <select formControlName="normativaId" id="inputNormativa" class="form-select border border-dark">
                             <option value="select-valor-vacio" selected>Seleccione la normativa</option>
@@ -42,7 +45,10 @@
                 </div>
                 <!--Areas legales-->
                 <div class="mb-3 me-5 row">
-                    <label for="inputAreasLegales" class="col-sm-4 col-form-label">Áreas Legales</label>
+                    <label for="inputAreasLegales" class="col-sm-4 col-form-label">
+                        <span class="text-danger">*</span>
+                        Áreas Legales
+                    </label>
                     <div class="col-sm-8">
                         <select formControlName="areaLegalId" id="inputAreasLegales" class="form-select border border-dark">
                             <option value="select-valor-vacio" selected>Seleccione el área legal</option>
