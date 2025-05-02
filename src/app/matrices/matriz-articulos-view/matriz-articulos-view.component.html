@@ -12,7 +12,7 @@
       <div *ngIf="tab.value === 'general'" class="my-3">
         <h5>Número: {{normativa.numero}}</h5>
         <h5>Número de artículos: {{articulo.numeroArticulos}}</h5>
-        <h5>Descargar Normativa: <a href={{normativa.urlArchivo}}>{{normativa.titulo}}</a></h5>
+        <h5>Descargar Normativa: <a target="_blank" href={{normativa.urlArchivo}}>{{normativa.titulo}}</a></h5>
         <h5>Fecha de publicación de normativa: {{normativa.fecha}}</h5>
         <h5>Entidad: {{normativa.entidad}}</h5>
       </div>

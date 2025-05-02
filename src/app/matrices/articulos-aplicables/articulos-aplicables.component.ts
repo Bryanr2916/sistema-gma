@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -6,6 +7,7 @@ import { AreaLegalService } from 'src/app/core/services/area-legal.service';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { MatricesService } from 'src/app/core/services/matrices.service';
 import { NormativaService } from 'src/app/core/services/normativa.service';
+import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
 
 @Component({
   selector: 'app-articulos-aplicables',
@@ -13,6 +15,8 @@ import { NormativaService } from 'src/app/core/services/normativa.service';
   styleUrls: ['./articulos-aplicables.component.scss']
 })
 export class ArticulosAplicablesComponent implements OnInit {
+
+  formulario: FormGroup = this.fb.group({});
   cargando = true;
   matriz = {titulo: "", empresa: ""};
   empresa = {nombre: "", pais: ""};
@@ -29,14 +33,38 @@ export class ArticulosAplicablesComponent implements OnInit {
     aspectosAmbientales: "",
     cambiosRecientes: "",
   };
+
   constructor(private areaLegalService:AreaLegalService, private normativaService:NormativaService,
     private matricesService:MatricesService, private route: ActivatedRoute,
     private empresaService:EmpresasService, private titleService: Title,
-    private toastr: ToastrService, private router: Router) { }
+    private toastr: ToastrService, private router: Router, public fb: FormBuilder) {
+      this.definirFormulario();
+    }
+
+  definirFormulario() {
+    this.formulario = this.fb.group({
+      normativaId: ["", [Validators.required, seleccionVacia()]],
+      areaLegalId: ["", [Validators.required, seleccionVacia()]],
+      numeroArticulos: ["", [Validators.required]],
+      articulos: ["", []],
+      tramites: ["", []],
+      cumplimiento: ["", []],
+      aspectosAmbientales: ["", []],
+      cambiosRecientes: ["", []]
+    });
+  }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Matrices");
     this.cargarInformacion();
+  }
+
+  errorEnControlador (controlador: string, error: string) {
+    return (
+      this.formulario.controls[controlador].hasError(error) && 
+      this.formulario.controls[controlador].invalid &&
+      (this.formulario.controls[controlador].touched)
+    );
   }
 
   cargarInformacion = async () => {
@@ -60,21 +88,32 @@ export class ArticulosAplicablesComponent implements OnInit {
     });
   };
 
-  formularioEsValido() {
-    return true;
-  }
-
   crearArticulo() {
-    this.matricesService.agregarArticulosAplicables(this.articulosAplicables).then(_ => {
-      this.toastr.success("Artículos aplicables creados con éxito", undefined, {
-        closeButton: true,
-        timeOut: 4000,
-        progressBar: true
+
+    this.formulario.markAllAsTouched();
+
+    if (this.formulario.valid) {
+
+      this.articulosAplicables.normativaId = this.formulario.controls["normativaId"].value;
+      this.articulosAplicables.areaLegalId = this.formulario.controls["areaLegalId"].value;
+      this.articulosAplicables.numeroArticulos = this.formulario.controls["numeroArticulos"].value;
+      this.articulosAplicables.articulos = this.formulario.controls["articulos"].value;
+      this.articulosAplicables.tramites = this.formulario.controls["tramites"].value;
+      this.articulosAplicables.cumplimiento = this.formulario.controls["cumplimiento"].value;
+      this.articulosAplicables.aspectosAmbientales = this.formulario.controls["aspectosAmbientales"].value;
+      this.articulosAplicables.cambiosRecientes = this.formulario.controls["cambiosRecientes"].value;
+
+      this.matricesService.agregarArticulosAplicables(this.articulosAplicables).then(_ => {
+        this.toastr.success("Artículos aplicables creados con éxito", undefined, {
+          closeButton: true,
+          timeOut: 4000,
+          progressBar: true
+        });
+        this.router.navigate(["/matrices"]);
+      }).catch(error => {
+        console.log(error);
       });
-      this.router.navigate(["/matrices"]);
-    }).catch(error => {
-      console.log(error);
-    });
+    }
   }
 
 }
