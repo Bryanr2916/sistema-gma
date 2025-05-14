@@ -13,7 +13,10 @@
             <form [formGroup]="formulario" id="form" class="my-4">
                 <!--Nombre-->
                 <div class="mb-3 me-5 row">
-                    <label for="inputNombre" class="col-sm-4 col-form-label">Nombre</label>
+                    <label for="inputNombre" class="col-sm-4 col-form-label">
+                        <span class="text-danger">*</span>
+                        Nombre
+                    </label>
                     <div class="col-sm-8">
                       <input formControlName="nombre" type="text" class="form-control border border-dark" id="inputNombre">
                       <div class="d-flex">

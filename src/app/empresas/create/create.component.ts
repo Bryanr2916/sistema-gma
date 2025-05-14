@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { PaisesService } from 'src/app/core/services/paises.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
+import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
 
 @Component({
   selector: 'app-create',
@@ -12,6 +14,8 @@ import { UsuarioService } from 'src/app/core/services/usuario.service';
   styleUrls: ['./create.component.scss']
 })
 export class CreateComponent implements OnInit {
+
+  formulario: FormGroup = this.fb.group({});
 
   tabEmpresa = true;
   displayLogo = "";
@@ -42,18 +46,38 @@ export class CreateComponent implements OnInit {
   constructor(
     private titleService: Title, private empresasService: EmpresasService,
     private paisesService: PaisesService, private usuarioService:UsuarioService,
-    private toastr: ToastrService, private router: Router
-  ) { }
+    private toastr: ToastrService, private router: Router, public fb: FormBuilder
+  ) {
+    this.definirFormulario();
+  }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Empresas");
   }
 
+  definirFormulario() {
+    this.formulario = this.fb.group({
+      nombre: ["", [Validators.required]],
+      correo: ["", [Validators.required, Validators.email]],
+      telefono: ["", [Validators.required]],
+      pais: ["", [Validators.required, seleccionVacia()]],
+      notas: ["", []]
+    });
+  }
+
+  errorEnControlador (controlador: string, error: string) {
+    return (
+      this.formulario.controls[controlador].hasError(error) && 
+      this.formulario.controls[controlador].invalid &&
+      (this.formulario.controls[controlador].touched)
+    );
+  }
+
   crearEmpresa() {
-    if (this.formularioEsValido()) {
+    this.formulario.markAllAsTouched();
+    if (this.formulario.valid) {
       if (this.archivoLogo) {
         this.empresasService.subirArchivo(this.archivoLogo).then( respuesta => {
-          console.log(respuesta);
           this.empresa.urlLogo = respuesta;
           this.crearEmpresaFB();
         });
@@ -65,10 +89,22 @@ export class CreateComponent implements OnInit {
 
   //crear empresa
   crearEmpresaFB() {
+
+    this.empresa.nombre = this.formulario.controls["nombre"].value;
+    this.empresa.correo = this.formulario.controls["correo"].value;
+    this.empresa.telefono = this.formulario.controls["telefono"].value;
+    this.empresa.pais = this.formulario.controls["pais"].value;
+    this.empresa.notas = this.formulario.controls["notas"].value;
+
     this.empresasService.crearEmpresa(this.empresa).then(rEmpresa => {
-      console.log(rEmpresa);
       this.admin.empresaId = rEmpresa.id;
-      this.crearAdmin();
+      this.toastr.success("Empresa creada con éxito", undefined, {
+        closeButton: true,
+        timeOut: 4000,
+        progressBar: true
+      });
+      this.router.navigate(["/empresas"]);
+      // this.crearAdmin();
     });
   };
 
@@ -83,10 +119,6 @@ export class CreateComponent implements OnInit {
       });
       this.router.navigate(["/empresas"]);
     });
-  }
-
-  formularioEsValido() {
-    return true;
   }
 
   cambiarTabEmpresa( valor: boolean) {

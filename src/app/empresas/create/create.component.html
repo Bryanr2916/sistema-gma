@@ -20,36 +20,62 @@
         </ul>
 
         <!--FORM Empresa-->
-          <form *ngIf="tabEmpresa" id="form" class="my-5">
+          <form [formGroup]="formulario" *ngIf="tabEmpresa" id="form" class="my-5">
               <!--Nombre-->
               <div class="mb-3 me-5 row">
-                  <label for="inputNombre" class="col-sm-4 col-form-label">Nombre</label>
+                  <label for="inputNombre" class="col-sm-4 col-form-label">
+                    <span class="text-danger">*</span>
+                    Nombre
+                  </label>
                   <div class="col-sm-8">
-                    <input [(ngModel)]="empresa.nombre" [ngModelOptions]="{standalone:true}" type="text" class="form-control border border-dark" id="inputNombre">
+                    <input formControlName="nombre" type="text" class="form-control border border-dark" id="inputNombre">
+                    <div class="d-flex">
+                      <small class="text-danger" *ngIf="errorEnControlador('nombre', 'required')">Nombre requerido</small>
+                    </div>
                   </div>
               </div>
               <!--Correo-->
               <div class="mb-3 me-5 row">
-                <label for="inputCorreo" class="col-sm-4 col-form-label">Correo Electrónico</label>
+                <label for="inputCorreo" class="col-sm-4 col-form-label">
+                  <span class="text-danger">*</span>
+                  Correo Electrónico
+                </label>
                 <div class="col-sm-8">
-                  <input [(ngModel)]="empresa.correo" [ngModelOptions]="{standalone:true}" type="email" class="form-control border border-dark" id="inputCorreo">
+                  <input formControlName="correo" type="email" class="form-control border border-dark" id="inputCorreo">
+                  <div class="d-flex">
+                    <small class="text-danger" *ngIf="errorEnControlador('correo', 'required')">Correo requerido</small>
+                    <small class="text-danger" *ngIf="errorEnControlador('correo', 'email')">Formato de correo inválido</small>
+                  </div>
                 </div>
               </div>
               <!--Telefono-->
               <div class="mb-3 me-5 row">
-                <label for="inputTelefono" class="col-sm-4 col-form-label">Número de teléfono</label>
+                <label for="inputTelefono" class="col-sm-4 col-form-label">
+                  <span class="text-danger">*</span>
+                  Número de teléfono
+                </label>
                 <div class="col-sm-8">
-                  <input [(ngModel)]="empresa.telefono" [ngModelOptions]="{standalone:true}" type="number" class="form-control border border-dark" id="inputTelefono">
+                  <input formControlName="telefono" type="number" class="form-control border border-dark" id="inputTelefono">
+                  <div class="d-flex">
+                    <small class="text-danger" *ngIf="errorEnControlador('telefono', 'required')">Teléfono requerido</small>
+                  </div>
                 </div>
               </div>
               <!--Pais-->
               <div class="mb-3 me-5 row">
-                <label for="inputPais" class="col-sm-4 col-form-label">País</label>
+                <label for="inputPais" class="col-sm-4 col-form-label">
+                  <span class="text-danger">*</span>
+                  País
+                </label>
                 <div class="col-sm-8">
-                  <select [(ngModel)]="empresa.pais" [ngModelOptions]="{standalone:true}" id="inputPais" class="form-select border border-dark">
+                  <select formControlName="pais" id="inputPais" class="form-select border border-dark">
                     <option value="select-valor-vacio" selected>Seleccione el país</option>
                     <option value={{pais}} *ngFor="let pais of paises; index as i">{{pais}}</option>
                   </select>
+                  <div class="d-flex">
+                    <small class="text-danger" *ngIf="errorEnControlador('pais', 'required')">País requerido</small>
+                    <small class="text-danger" *ngIf="errorEnControlador('pais', 'emptySelect')">País requerido</small>
+                  </div>
                 </div>
               </div>
               <!--Logo-->
@@ -67,7 +93,7 @@
               <div class="mb-3 me-5 row">
                 <label for="inputNotas" class="col-sm-12 col-form-label">Notas</label>
                 <div class="col-sm-12">
-                    <textarea [(ngModel)]="empresa.notas" [ngModelOptions]="{standalone:true}" class="form-control border border-dark" name="Notas" id="inputNotas" cols="30" rows="10"></textarea>
+                    <textarea formControlName="notas" class="form-control border border-dark" name="Notas" id="inputNotas" cols="30" rows="10"></textarea>
                 </div>
               </div>
           </form>
@@ -106,7 +132,7 @@
       <div class="card-footer">
           <!--Acciones-->
           <div class="mb-3 mx-5 row align-items-center">
-              <button [disabled]="!formularioEsValido()" (click)="crearEmpresa()" class="btn btn-primary col-sm-3" type="submit">Crear Empresa</button>
+              <button (click)="crearEmpresa()" class="btn btn-primary col-sm-3" type="submit">Crear Empresa</button>
           </div>
       </div>
     </div>
