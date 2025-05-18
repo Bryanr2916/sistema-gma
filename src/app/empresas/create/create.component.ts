@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { PaisesService } from 'src/app/core/services/paises.service';
-import { UsuarioService } from 'src/app/core/services/usuario.service';
 import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
 
 @Component({
@@ -17,7 +16,6 @@ export class CreateComponent implements OnInit {
 
   formulario: FormGroup = this.fb.group({});
 
-  tabEmpresa = true;
   displayLogo = "";
   archivoLogo:any = null;
  
@@ -32,20 +30,9 @@ export class CreateComponent implements OnInit {
     notas: ""
   };
 
-  admin = {
-    uid: "",
-    nombre: "",
-    correo: "",
-    contrasena: "",
-    repContrasena: "",
-    empresaId: "",
-    //administrador de empresa
-    tipo: 2
-  }
-
   constructor(
     private titleService: Title, private empresasService: EmpresasService,
-    private paisesService: PaisesService, private usuarioService:UsuarioService,
+    private paisesService: PaisesService,
     private toastr: ToastrService, private router: Router, public fb: FormBuilder
   ) {
     this.definirFormulario();
@@ -96,34 +83,15 @@ export class CreateComponent implements OnInit {
     this.empresa.pais = this.formulario.controls["pais"].value;
     this.empresa.notas = this.formulario.controls["notas"].value;
 
-    this.empresasService.crearEmpresa(this.empresa).then(rEmpresa => {
-      this.admin.empresaId = rEmpresa.id;
+    this.empresasService.crearEmpresa(this.empresa).then(_ => {
       this.toastr.success("Empresa creada con éxito", undefined, {
         closeButton: true,
         timeOut: 4000,
         progressBar: true
       });
       this.router.navigate(["/empresas"]);
-      // this.crearAdmin();
     });
   };
-
-  // crea el usuario en firestore
-  crearAdmin () {
-    this.usuarioService.crearUsuario(this.admin).then(usuario => {
-      console.log(usuario);
-      this.toastr.success("Empresa creada con éxito", undefined, {
-        closeButton: true,
-        timeOut: 4000,
-        progressBar: true
-      });
-      this.router.navigate(["/empresas"]);
-    });
-  }
-
-  cambiarTabEmpresa( valor: boolean) {
-    this.tabEmpresa = valor;
-  }
 
   mostrarImagen($event:any) {
     if ($event.target.files) {
