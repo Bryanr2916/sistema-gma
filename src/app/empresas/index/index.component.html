@@ -38,7 +38,7 @@
                     <td>
                         <a routerLink="ver/{{empresa.id}}"><i class="g-icon fa-solid fa-eye fa-lg me-2"></i>
                             <span class="hidden-tooltip">Ver</span>
-                          </a>
+                        </a>
                         <a (click)="usarComo(empresa)"><i class="g-icon fa-solid fa-arrow-right-to-bracket fa-lg me-2"></i>
                             <span class="hidden-tooltip">Usar como</span>
                         </a>
@@ -48,8 +48,11 @@
                         <a (click)="borrar(empresa)"><i class="r-icon fa-solid fa-trash fa-lg me-2"></i>
                             <span class="hidden-tooltip">Borrar</span>
                         </a>
-                        <a (click)="duplicar(empresa)"><i class="g-icon fa-regular fa-copy fa-lg"></i>
+                        <a (click)="duplicar(empresa)"><i class="g-icon fa-regular fa-copy fa-lg me-2"></i>
                             <span class="hidden-tooltip">Duplicar</span>
+                        </a>
+                        <a routerLink="{{empresa.id}}/usuarios"><i class="g-icon fa-solid fa-users fa-lg"></i>
+                            <span class="hidden-tooltip">Gestionar usuarios</span>
                         </a>
                     </td>
                 </tr>

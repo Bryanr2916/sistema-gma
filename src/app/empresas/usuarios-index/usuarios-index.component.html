@@ -1,0 +1,80 @@
+<div class="mt-4 mb-2 mx-2">
+    <div class="row">
+        <div class="col-5">
+            <h2><i class="g-icon fa-solid fa-briefcase  me-1"></i>Empresa {{empresa.nombre}} - Usuarios</h2>
+        </div>
+        <div class="col-7">
+            <ul class="nav nav-pills mx-5">
+                <li class="nav-item mx-2">
+                    <a class="nav-link active" routerLink="/empresas"><i class="fa-solid fa-chevron-left"></i> Regresar</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <hr class="border border-success border-1 opacity-75">
+
+    <div class="content-container">
+        <!--Nav-->
+        <ul class="nav nav-pills mt-4">
+            <li class="nav-item">
+                <div class="input-group mb-3">
+                    <span class="input-group-text border- border-dark" id="basic-addon1"><i class="fa-solid fa-magnifying-glass"></i></span>
+                    <input (ngModelChange)="buscar($event)" [(ngModel)]="busqueda" [ngModelOptions]="{standalone:true}" type="text" class="form-control border- border-dark" placeholder="Buscar..." aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+            </li>
+            <li class="nav-item mx-2">
+                <a class="nav-link active" aria-current="page" routerLink="crear"><i class="fa-solid fa-plus"></i> Crear un usuario</a>
+            </li>
+        </ul>
+        <!--loading-->
+        <div *ngIf="cargando" class="d-flex justify-content-center">
+            <div class="spinner-border mt-5 text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        <!--Tabla-->
+        <div *ngIf="usuariosFiltrados.length > 0 && !cargando" class="table-responsive mb-4 mt-2">
+            <table class="table table-light table-striped table-hover shadow table-bordered">
+                <thead>
+                    <tr class="table-success">
+                        <th scope="col" *ngFor="let th of ths">{{th}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let usuario of usuariosFiltrados; index as i">
+                        <th scope="row">{{i + 1}}</th>
+                        <td>{{usuario.nombre}}</td>
+                        <td>{{usuario.correo}}</td>
+                        <td>
+                            <p class={{claseTipo(usuario.tipo)}}>{{mostrarTipo(usuario.tipo)}}</p>
+                        </td>
+                        <td>
+                            <a routerLink="ver/{{usuario.id}}"><i class="g-icon fa-solid fa-eye fa-lg me-2"></i>
+                                <span class="hidden-tooltip">Ver</span>
+                            </a>
+                            <a (click)="usarComo(usuario)"><i class="g-icon fa-solid fa-arrow-right-to-bracket fa-lg me-2"></i>
+                            <span class="hidden-tooltip">Usar como</span>
+                        </a>
+                        <a routerLink="editar/{{usuario.id}}"><i class="fa-solid fa-pen-to-square fa-lg me-2"></i>
+                            <span class="hidden-tooltip">Editar</span>
+                        </a>
+                        <a (click)="borrar(usuario)"><i class="r-icon fa-solid fa-trash fa-lg me-2"></i>
+                            <span class="hidden-tooltip">Borrar</span>
+                        </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <!--No hay resultados-->
+        <div *ngIf="usuariosFiltrados.length === 0 && usuariosTodos.length > 0" class="my-4">
+            <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No se encontraron resultados</h4>
+        </div>
+
+        <!--No hay registro-->
+        <div *ngIf="usuariosTodos.length === 0 && !cargando" class="my-4">
+            <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No hay usuarios registrados</h4>
+        </div>
+        </div>
+</div>

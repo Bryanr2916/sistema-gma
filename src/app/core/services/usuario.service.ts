@@ -65,6 +65,18 @@ export class UsuarioService {
     return getDocs(usuarioCorreo);
   }
 
+  obtenerUsuarioPorEmpresa(empresaId: string) {
+    const usuarioRef = collection(this.firestore, this.path);
+
+    if (empresaId) {
+      const usuariosEmpresa = query(usuarioRef, where("empresaId", "==", empresaId));
+      return getDocs(usuariosEmpresa);
+    } else {
+      const usuariosEmpresa = query(usuarioRef);
+      return getDocs(usuariosEmpresa);
+    }
+  }
+
   editarUsuario(usuario: any) {
     console.log("editarUsuario: ", usuario);
     const usuarioref = doc(this.firestore, `${this.path}/${usuario.id}`);

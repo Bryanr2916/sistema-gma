@@ -6,6 +6,8 @@ import { CreateComponent } from './create/create.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EditComponent } from './edit/edit.component';
 import { ViewComponent } from './view/view.component';
+import { UsuariosIndexComponent } from './usuarios-index/usuarios-index.component';
+import { UsuariosCreateComponent } from './usuarios-create/usuarios-create.component';
 
 
 @NgModule({
@@ -13,7 +15,9 @@ import { ViewComponent } from './view/view.component';
     IndexComponent,
     CreateComponent,
     EditComponent,
-    ViewComponent
+    ViewComponent,
+    UsuariosIndexComponent,
+    UsuariosCreateComponent
   ],
   imports: [
     CommonModule,

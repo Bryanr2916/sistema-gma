@@ -1,0 +1,18 @@
+a {
+    cursor: pointer;
+    .hidden-tooltip {
+        position: absolute;
+        display: none;
+        background-color: rgba(0, 0, 0, 0.733);
+        color: #fff;
+        padding: 5px;
+        border-radius: 5px;
+        z-index: 1; /* Ensure tooltip is above other content */
+        margin: -38px 0 0 -35px;
+    }
+
+    &:hover .hidden-tooltip{
+        display: inline;
+        padding: 5px;
+    }
+}
