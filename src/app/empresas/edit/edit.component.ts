@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { PaisesService } from 'src/app/core/services/paises.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
+import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
 
 @Component({
   selector: 'app-edit',
@@ -12,6 +15,7 @@ import { UsuarioService } from 'src/app/core/services/usuario.service';
 })
 export class EditComponent implements OnInit {
 
+  formulario: FormGroup = this.fb.group({});
   displayLogo = "";
   archivoLogo:any = null;
   archivoNuevo:any = null;
@@ -42,8 +46,11 @@ export class EditComponent implements OnInit {
   constructor(
     private titleService: Title, private empresasService: EmpresasService,
     private paisesService: PaisesService, private usuarioService:UsuarioService,
-    private route: ActivatedRoute
-  ) { }
+    private toastr: ToastrService, private router: Router,
+    private route: ActivatedRoute, public fb: FormBuilder
+  ) {
+    this.definirFormulario();
+  }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Empresas");
@@ -54,11 +61,34 @@ export class EditComponent implements OnInit {
     this.obtenerEmpresa();
   }
 
+  definirFormulario() {
+    this.formulario = this.fb.group({
+      nombre: ["", [Validators.required]],
+      correo: ["", [Validators.required, Validators.email]],
+      telefono: ["", [Validators.required]],
+      pais: ["", [Validators.required, seleccionVacia()]],
+      notas: ["", []]
+    });
+  }
+
+  errorEnControlador (controlador: string, error: string) {
+    return (
+      this.formulario.controls[controlador].hasError(error) && 
+      this.formulario.controls[controlador].invalid &&
+      (this.formulario.controls[controlador].touched)
+    );
+  }
+
   obtenerEmpresa = async () => {
     const respuesta = await this.empresasService.obtenerEmpresa(this.empresa.id);
     const datosEmpresa = respuesta.data();
-    console.log(datosEmpresa);
     if (datosEmpresa) {
+      this.formulario.controls["correo"].setValue(datosEmpresa['correo']);
+      this.formulario.controls["nombre"].setValue(datosEmpresa['nombre']);
+      this.formulario.controls["telefono"].setValue(datosEmpresa['telefono']);
+      this.formulario.controls["pais"].setValue(datosEmpresa['pais']);
+      this.formulario.controls["notas"].setValue(datosEmpresa['notas']);
+      
       this.empresa.correo = datosEmpresa['correo'];
       this.empresa.nombre = datosEmpresa['nombre']; 
       this.empresa.telefono = datosEmpresa['telefono'];
@@ -72,7 +102,8 @@ export class EditComponent implements OnInit {
   }
 
   editarEmpresa() {
-    if (this.formularioEsValido()) {
+    this.formulario.markAllAsTouched();
+    if (this.formulario.valid) {
       if (this.archivoNuevo) {
         this.empresasService.subirArchivo(this.archivoNuevo).then(respuesta => {
         this.empresa.urlLogo = respuesta;
@@ -85,13 +116,21 @@ export class EditComponent implements OnInit {
   }
 
   editarEmpresaFB() {
-    this.empresasService.editarEmpresa(this.empresa).then(rEmpresa => {
-      console.log(rEmpresa);
-    });
-  }
 
-  formularioEsValido() {
-    return true;
+    this.empresa.nombre = this.formulario.controls["nombre"].value;
+    this.empresa.correo = this.formulario.controls["correo"].value;
+    this.empresa.telefono = this.formulario.controls["telefono"].value;
+    this.empresa.pais = this.formulario.controls["pais"].value;
+    this.empresa.notas = this.formulario.controls["notas"].value;
+
+    this.empresasService.editarEmpresa(this.empresa).then(_ => {
+      this.toastr.success("Empresa editada con éxito", undefined, {
+        closeButton: true,
+        timeOut: 4000,
+        progressBar: true
+      });
+      this.router.navigate(["/empresas"]);
+    });
   }
 
   mostrarImagen($event:any) {

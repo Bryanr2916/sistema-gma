@@ -23,7 +23,7 @@
     </div>
     <!--Tabla-->
     <div *ngIf="empresasFiltradas.length > 0 && !cargando" class="table-responsive mb-4 mt-2">
-        <table class="table table-light table-striped table-hover shadow">
+        <table class="table table-light table-striped table-hover shadow table-bordered">
             <thead>
               <tr class="table-success">
                 <th scope="col" *ngFor="let th of ths">{{th}}</th>
