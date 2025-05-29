@@ -7,7 +7,6 @@ import { CoreModule } from './core/core.module';
 import { ShareModule } from './share/share.module';
 import { InicioModule } from './inicio/inicio.module';
 import { EmpresasModule } from './empresas/empresas.module';
-import { SucursalesModule } from './sucursales/sucursales.module';
 import { MatricesModule } from './matrices/matrices.module';
 import { TiposNormativasModule } from './tipos-normativas/tipos-normativas.module';
 import { NormativasModule } from './normativas/normativas.module';
@@ -34,7 +33,6 @@ import { ToastrModule } from 'ngx-toastr';
     ShareModule,
     InicioModule,
     EmpresasModule,
-    SucursalesModule,
     MatricesModule,
     TiposNormativasModule,
     NormativasModule,

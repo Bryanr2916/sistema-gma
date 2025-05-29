@@ -30,10 +30,6 @@ const routes: Routes = [
     canActivate: [TipoGuard],
     data: { tipo: 1}
   },
-  { path:'sucursales',
-    loadChildren: () => import ('./sucursales/sucursales.module').then( m => m.SucursalesModule),
-    ...canActivate(() => redirectUnauthorizedTo(["usuario/inicio-sesion"]))
-  },
   { path:'tipos-normativas',
     loadChildren: () => import ('./tipos-normativas/tipos-normativas.module').then( m => m.TiposNormativasModule),
     canActivate: [TipoGuard],

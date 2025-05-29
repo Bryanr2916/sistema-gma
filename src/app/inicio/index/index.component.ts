@@ -12,7 +12,6 @@ export class IndexComponent implements OnInit {
   cargando = true;
   usuario: any = {};
   menu = [
-    {logo:"globe", nombre: "Sucursales", enlace: "sucursales"},
     {logo:"table-cells", nombre: "Matrices", enlace: "matrices"},
     {logo:"user", nombre: "Perfil de Usuario", enlace: "usuario/perfil"}
   ];
@@ -35,8 +34,6 @@ export class IndexComponent implements OnInit {
               this.menu.push({logo:"book", nombre: "Normativas", enlace: "normativas"});
               this.menu.push({logo:"rectangle-list", nombre: "Tipos de Normativas", enlace: "tipos-normativas"});
               this.menu.push({logo:"bookmark", nombre: "Área Legal", enlace: "area-legal"});
-            } else {
-              this.menu[0].enlace = "sucursales/ver";
             }
           }
           }
