@@ -22,7 +22,7 @@ export class IndexComponent implements OnInit {
   constructor(
     private titleService: Title, private empresaService: EmpresasService,
     private toastr: ToastrService, private usuarioService: UsuarioService,
-    private router: Router, private encriptador: EncriptadorService) { }
+    private router: Router, private encriptador: EncriptadorService, private empresasService:EmpresasService) { }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Empresas");
@@ -91,7 +91,15 @@ export class IndexComponent implements OnInit {
   }
 
   duplicar (empresa: any) {
-    console.log("duplicar: ", empresa);
+    const empDuplicada = {...empresa, nombre: `copia de ${empresa.nombre}`, urlLogo: ""};
+
+    this.empresasService.crearEmpresa(empDuplicada).then(_ => {
+      this.toastr.success("Empresa creada con éxito", undefined, {
+        closeButton: true,
+        timeOut: 4000,
+        progressBar: true
+      });
+    });
   }
 
   usuarioAdmin(empresa: any) {
