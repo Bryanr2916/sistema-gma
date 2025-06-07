@@ -1,7 +1,7 @@
 <div class="card text-start my-4">
     <div class="card-body">
-      <h3 class="card-title">{{normativa.titulo}}</h3>
-      <ul class="nav nav-tabs">
+      <p class="card-title my-3"><strong>{{normativa.titulo}}</strong></p>
+      <ul class="nav nav-tabs mt-2">
         <!--*ngIf="articulo.tramites !== ''"-->
         <div *ngFor="let _tab of tabs">
             <li *ngIf='articulo[_tab.value] !== ""' class="nav-item">
@@ -9,15 +9,15 @@
             </li>
         </div>
       </ul>
-      <div *ngIf="tab.value === 'general'" class="my-3">
-        <h5>Número: {{normativa.numero}}</h5>
-        <h5>Número de artículos: {{articulo.numeroArticulos}}</h5>
-        <h5>Descargar Normativa: <a target="_blank" href={{normativa.urlArchivo}}>{{normativa.titulo}}</a></h5>
-        <h5>Fecha de publicación de normativa: {{normativa.fecha}}</h5>
-        <h5>Entidad: {{normativa.entidad}}</h5>
+      <div *ngIf="tab.value === 'general'" class="contenedor-articulos my-3">
+        <p><strong>Número:</strong> {{normativa.numero}}</p>
+        <p><strong>Número de artículos:</strong> {{articulo.numeroArticulos}}</p>
+        <p><strong>Descargar Normativa: </strong> <a target="_blank" href={{normativa.urlArchivo}}>{{normativa.titulo}}</a></p>
+        <p><strong>Fecha de publicación de normativa:</strong> {{normativa.fecha}}</p>
+        <p><strong>Entidad:</strong> {{normativa.entidad}}</p>
       </div>
-      <div *ngIf="tab.value !== 'general'" class="my-3">
-        <h5>{{tab.label}}</h5>
+      <div *ngIf="tab.value !== 'general'" class="contenedor-articulos my-3">
+        <p><strong>{{tab.label}}:</strong></p>
         <p>{{articulo[tab.value]}}</p>
       </div>
     </div>

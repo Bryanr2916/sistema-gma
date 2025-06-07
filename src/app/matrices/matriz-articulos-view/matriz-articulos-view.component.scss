@@ -19,3 +19,9 @@ a {
         display: inline;
     }
 }
+
+.contenedor-articulos {
+    max-height: 230px;
+    min-height: 230px;
+    overflow-y: scroll;
+}
