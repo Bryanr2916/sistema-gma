@@ -101,13 +101,22 @@ export class EditComponent implements OnInit {
     }
   }
 
+  async borrarImagenActual() {
+    if (this.empresa.urlLogo !== "") {
+      const result = await this.empresasService.borrarArchivo(this.empresa.urlLogo);
+      console.log("result: ", result);
+    }
+  }
+
   editarEmpresa() {
     this.formulario.markAllAsTouched();
     if (this.formulario.valid) {
       if (this.archivoNuevo) {
-        this.empresasService.subirArchivo(this.archivoNuevo).then(respuesta => {
-        this.empresa.urlLogo = respuesta;
-        this.editarEmpresaFB();
+        this.borrarImagenActual().then(_ => {
+          this.empresasService.subirArchivo(this.archivoNuevo).then(respuesta => {
+          this.empresa.urlLogo = respuesta;
+          this.editarEmpresaFB();
+        });
         })
       } else {
         this.editarEmpresaFB();

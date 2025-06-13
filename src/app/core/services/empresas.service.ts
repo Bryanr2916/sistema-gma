@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Storage, ref, getDownloadURL, uploadBytesResumable } from '@angular/fire/storage';
+import { Storage, ref, getDownloadURL, uploadBytesResumable, deleteObject } from '@angular/fire/storage';
 import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
@@ -57,6 +57,11 @@ export class EmpresasService {
       });
     });  
     });
+  }
+
+  borrarArchivo(url: string) {
+    const archivoRef = ref(this.storage, url);
+    return deleteObject(archivoRef);
   }
 
   editarEmpresa(empresa: any) {
