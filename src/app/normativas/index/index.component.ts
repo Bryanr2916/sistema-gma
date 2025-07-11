@@ -3,11 +3,13 @@ import { Title } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
 import { NormativaService } from 'src/app/core/services/normativa.service';
 import { TiposNormativasService } from 'src/app/core/services/tipos-normativas.service';
+import { TruncarTextoPipe } from 'src/app/share/pipes/truncar-texto.pipe';
 
 @Component({
   selector: 'app-index',
   templateUrl: './index.component.html',
-  styleUrls: ['./index.component.scss']
+  styleUrls: ['./index.component.scss'],
+  providers: [TruncarTextoPipe]
 })
 export class IndexComponent implements OnInit {
 
@@ -20,7 +22,9 @@ export class IndexComponent implements OnInit {
   normativasFiltradas:any[] = [];
 
   constructor(private titleService: Title, private toastr: ToastrService,
-    private normativaService:NormativaService, private tiposService: TiposNormativasService) { }
+    private normativaService:NormativaService, private tiposService: TiposNormativasService,
+    private truncarTexto: TruncarTextoPipe
+  ) { }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Normativas");
@@ -41,15 +45,33 @@ export class IndexComponent implements OnInit {
       String(normativa.numero).includes(busquedaMinuscuala));
   }
 
-  borrar(normativa: any) {
-    if (confirm(`¿Desea eliminar la normativa "${normativa.titulo}"?`)) {
-      this.normativaService.borrarNormativa(normativa.id).then(_ => {
+  async borrarArchivoActual(urlArchivo: string) {
+    if (urlArchivo !== "") {
+      await this.normativaService.borrarArchivo(urlArchivo);
+    }
+  }
+
+  borrarNormativaFB(normativa: any) {
+    this.normativaService.borrarNormativa(normativa.id).then(_ => {
         this.toastr.success("Normativa borrada con éxito", undefined, {
           closeButton: true,
           timeOut: 4000,
           progressBar: true
         });
       });
+  }
+
+  borrar(normativa: any) {
+    
+    if (confirm(`¿Desea eliminar la normativa "${this.truncarTexto.transform(normativa.titulo, 68, true)}"?`)) {
+
+      if (normativa.urlArchivo) {
+        this.borrarArchivoActual(normativa.urlArchivo).then(_ => {
+          this.borrarNormativaFB(normativa);
+        });
+      } else {
+        this.borrarNormativaFB(normativa);
+      };
     }
   }
 
