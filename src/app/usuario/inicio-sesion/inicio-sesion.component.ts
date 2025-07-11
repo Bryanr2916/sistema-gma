@@ -79,7 +79,6 @@ export class InicioSesionComponent implements OnInit {
             } else {
               this.usuarioService.registrar(this.usuario).then(respuesta => {
                 this.usuarioService.obtenerUsuarioPorCorreo(this.usuario.correo).then(oup => {
-                  console.log("obtenerUsuarioPorCorreo: ", oup);
                   this.usuarioService.editarUsuario({
                     id: oup.docs[0].id,
                     uid: respuesta.user.uid

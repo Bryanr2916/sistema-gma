@@ -35,7 +35,6 @@ export class IndexComponent implements OnInit {
 
   borrar(tipo: any) {
     if (confirm(`¿Desea eliminar el área "${tipo.nombre}"?`)) {
-      console.log("borrando" + tipo);
       this.tiposService.borrarTipo(tipo.id).then(_ => {
         this.toastr.success("Área borrada con éxito", undefined, {
           closeButton: true,

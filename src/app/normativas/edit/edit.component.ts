@@ -103,6 +103,12 @@ export class EditComponent implements OnInit {
       (this.formulario.controls[controlador].touched)
     );
   }
+
+  async borrarArchivonActual() {
+    if (this.normativa.urlArchivo !== "") {
+      await this.normativaService.borrarArchivo(this.normativa.urlArchivo);
+    }
+  }
   
   editarNormativa() {
     this.formulario.markAllAsTouched();
@@ -119,9 +125,7 @@ export class EditComponent implements OnInit {
       this.normativa.comentarios = this.formulario.controls["comentarios"].value;
 
       if (this.archivo) {
-        this.normativaService.subirArchivo(this.archivo).then( respuesta => {
-          this.normativa.urlArchivo = respuesta;
-          this.editarNormativaFB();
+        this.borrarArchivonActual().then(_ => {
         });
       } else {
         this.editarNormativaFB();

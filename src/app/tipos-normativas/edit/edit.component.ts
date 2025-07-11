@@ -40,7 +40,6 @@ export class EditComponent implements OnInit {
         });
         this.router.navigate(["/tipos-normativas"]);
       }
-      console.log(respuesta.data());
       this.formulario.controls["nombre"].setValue(respuesta.get("nombre"));
     });
   }
@@ -67,8 +66,7 @@ export class EditComponent implements OnInit {
 
       this.tiposService.editarTipo(
         this.tipoNormativas
-      ).then(data => {
-        console.log(data);
+      ).then(_ => {
         this.toastr.success("Tipo de normativas editado con éxito", undefined, {
           closeButton: true,
           timeOut: 4000,
