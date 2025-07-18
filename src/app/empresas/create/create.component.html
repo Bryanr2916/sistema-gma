@@ -52,20 +52,17 @@
                   </div>
                 </div>
               </div>
-              <!--Pais-->
+              <!--Paises-->
               <div class="mb-3 me-5 row">
                 <label for="inputPais" class="col-sm-4 col-form-label">
                   <span class="text-danger">*</span>
-                  País
+                  Paises
                 </label>
                 <div class="col-sm-8">
-                  <select formControlName="pais" id="inputPais" class="form-select border border-dark">
-                    <option value="select-valor-vacio" selected>Seleccione el país</option>
-                    <option value={{pais}} *ngFor="let pais of paises; index as i">{{pais}}</option>
-                  </select>
+                  <app-multi-select [opciones]="paises" [controlName]="'paises'" [formulario]="formulario"></app-multi-select>
                   <div class="d-flex">
-                    <small class="text-danger" *ngIf="errorEnControlador('pais', 'required')">País requerido</small>
-                    <small class="text-danger" *ngIf="errorEnControlador('pais', 'emptySelect')">País requerido</small>
+                    <small class="text-danger" *ngIf="errorEnControlador('paises', 'required')">Paises requeridos</small>
+                    <small class="text-danger" *ngIf="errorEnControlador('paises', 'emptySelect')">Paises requeridos</small>
                   </div>
                 </div>
               </div>

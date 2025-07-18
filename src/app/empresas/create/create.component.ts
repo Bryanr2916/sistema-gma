@@ -25,7 +25,7 @@ export class CreateComponent implements OnInit {
     nombre: "",
     correo: "",
     telefono: "",
-    pais: "",
+    paises: [],
     urlLogo: "",
     notas: ""
   };
@@ -47,7 +47,7 @@ export class CreateComponent implements OnInit {
       nombre: ["", [Validators.required]],
       correo: ["", [Validators.required, Validators.email]],
       telefono: ["", [Validators.required]],
-      pais: ["", [Validators.required, seleccionVacia()]],
+      paises: [[], [Validators.required, seleccionVacia()]],
       notas: ["", []]
     });
   }
@@ -80,7 +80,7 @@ export class CreateComponent implements OnInit {
     this.empresa.nombre = this.formulario.controls["nombre"].value;
     this.empresa.correo = this.formulario.controls["correo"].value;
     this.empresa.telefono = this.formulario.controls["telefono"].value;
-    this.empresa.pais = this.formulario.controls["pais"].value;
+    this.empresa.paises = this.formulario.controls["paises"].value;
     this.empresa.notas = this.formulario.controls["notas"].value;
 
     this.empresasService.crearEmpresa(this.empresa).then(_ => {

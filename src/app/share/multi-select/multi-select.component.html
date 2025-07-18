@@ -1,0 +1,24 @@
+<div [formGroup]="formulario">
+  <div
+      class="form-select border border-dark"
+      (click)="toggle($event)"
+    >
+    <div class="input-group mb-3">
+      <input (ngModelChange)="buscar($event)" [(ngModel)]="busqueda" [ngModelOptions]="{standalone:true}"
+      type="text" class="form-control" placeholder="Buscar..." aria-label="País" aria-describedby="basic-addon1">
+    </div>
+      <span
+        *ngFor="let seleccion of seleccionActual; index as i"
+        class="badge text-bg-success mx-1 my-1"
+        (click)="removerSeleccion($event, i)"
+      >
+        {{seleccion}}
+      </span>
+    </div>
+    <div [class.hidden]="!abrirSelect" class="options-container border border-dark mt-2">
+        <span (click)="seleccionar(i)" class="opciones px-1" *ngFor="let opcion of opcionesFiltradas; index as i; trackBy: trackByOpcion">
+          {{opcion}}
+          <i [class.hidden]="!esSeleccionada(opcion)" class="fa-solid fa-check mx-1"></i>
+        </span>
+      </div>
+</div>

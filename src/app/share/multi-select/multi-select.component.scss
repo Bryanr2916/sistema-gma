@@ -1,0 +1,48 @@
+
+.form-select {
+    display: flex;
+    flex-wrap: wrap;
+    overflow: hidden;
+    max-height: 150px;
+    max-width: 542.8px;
+    user-select: none;
+}
+
+.options-container {
+    padding: 10px;
+    z-index: 100;
+    min-height: 46px;
+    max-height: 200px;
+    position: absolute;
+    overflow-y: scroll;
+    width: 542.8px;
+    top: 1;
+    left: 2;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    cursor: default;
+}
+
+.opciones {
+    width: 100%;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    user-select: none;
+
+    &:hover {
+        background-color: #198754;
+        color: white;
+    }
+}
+
+.hidden {
+    display: none;
+}
+
+.input-group {
+    max-height: 37.8px;
+}

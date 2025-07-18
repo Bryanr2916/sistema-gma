@@ -8,6 +8,7 @@ import { EditComponent } from './edit/edit.component';
 import { ViewComponent } from './view/view.component';
 import { UsuariosIndexComponent } from './usuarios-index/usuarios-index.component';
 import { UsuariosCreateComponent } from './usuarios-create/usuarios-create.component';
+import { ShareModule } from '../share/share.module';
 
 
 @NgModule({
@@ -23,6 +24,7 @@ import { UsuariosCreateComponent } from './usuarios-create/usuarios-create.compo
     CommonModule,
     EmpresasRoutingModule,
     FormsModule,
+    ShareModule,
     ReactiveFormsModule
   ]
 })
