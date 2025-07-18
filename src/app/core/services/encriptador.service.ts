@@ -24,8 +24,16 @@ export class EncriptadorService {
   }
 
   desencriptarContrasena (contrasenaEncriptada: string) {
-    const contrasenaDecifrada = Uint8Array.from(atob(contrasenaEncriptada), c => c.charCodeAt(0));
+    let  contrasenaDecifrada = undefined;
     
+    try {
+      contrasenaDecifrada = Uint8Array.from(atob(contrasenaEncriptada), c => c.charCodeAt(0));
+    } catch (error) {
+    }
+    
+    if (contrasenaDecifrada === undefined) {
+      return "";
+    }
     const textEncoderLlave = new TextEncoder();
     const llaveCifrada = textEncoderLlave.encode(this.llaveSecreta);
 

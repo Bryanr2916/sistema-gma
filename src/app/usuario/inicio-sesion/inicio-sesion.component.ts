@@ -48,12 +48,12 @@ export class InicioSesionComponent implements OnInit {
   iniciarSesion() {
     this.formulario.markAllAsTouched();
     if (this.formulario.valid) {
-
       this.usuario.correo = this.formulario.controls["correo"].value;
       this.usuario.contrasena = this.formulario.controls["contrasena"].value;
 
       this.usuarioService.iniciarSesion(this.usuario).then( _ => {
         this.router.navigate([""]);
+        this.toastr.clear();
         this.toastr.success("Bienvenido(a) a GMA Sistema", undefined, {
           closeButton: true,
           timeOut: 4000,
@@ -85,6 +85,7 @@ export class InicioSesionComponent implements OnInit {
                   });
                 });
                 this.router.navigate([""]);
+                this.toastr.clear();
                 this.toastr.success("Bienvenido(a) a GMA Sistema", undefined, {
                   closeButton: true,
                   timeOut: 4000,
