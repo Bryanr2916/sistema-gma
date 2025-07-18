@@ -27,14 +27,19 @@
                     <p class="lead">{{empresa.correo}}</p>
                 </div>
             </div>
-            <!--Telefono - Pais-->
+            <!--Telefono - Paises-->
             <div class="row mb-2">
                 <div class="col-6">
                     <h3>Teléfono:</h3>
                     <p class="lead">{{empresa.telefono}}</p>
                 </div>
                 <div class="col-6">
-                    <h3>País:</h3>
+                    <h3><i class="g-icon fa-solid fa-globe"></i> Paises:</h3>
+                    <ul>
+                        <li *ngFor="let ps of empresa.paises">
+                            {{ps}}
+                        </li>
+                    </ul>
                     <p class="lead">{{empresa.pais}}</p>
                 </div>
             </div>

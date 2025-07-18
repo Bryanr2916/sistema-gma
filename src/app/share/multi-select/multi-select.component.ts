@@ -17,9 +17,7 @@ export class MultiSelectComponent implements OnInit {
   opcionesFiltradas = [];
   busqueda = "";
 
-  constructor(private elementRef: ElementRef) {
-    this.formulario?.controls["paises"].setValue("HEY THERE");
-  }
+  constructor(private elementRef: ElementRef) {}
   
   @HostListener('document:click', ['$event'])
   handleClickOutside(event: MouseEvent) {
@@ -31,7 +29,12 @@ export class MultiSelectComponent implements OnInit {
 
   ngOnInit(): void {
     this.opcionesFiltradas = this.opciones;
-    this.formulario?.controls["paises"].setErrors({ emptySelect: true});
+    this.formulario?.controls[this.controlName].setErrors({ emptySelect: true});
+    const control = this.formulario.controls[this.controlName];
+
+    control?.valueChanges.subscribe(value => {
+      this.seleccionActual = value;
+    });
   }
 
   seleccionar(indice: any) {
@@ -46,13 +49,13 @@ export class MultiSelectComponent implements OnInit {
       // agregar seleccion
       this.seleccionActual.push(opcionSeleccionada);
     }
-    this.formulario?.controls["paises"].setValue(this.seleccionActual);
+    this.formulario?.controls[this.controlName].setValue(this.seleccionActual);
   }
 
   removerSeleccion($event: Event, indice: number) {
     $event.stopPropagation();
     this.seleccionActual.splice(indice, 1);
-    this.formulario?.controls["paises"].setValue(this.seleccionActual);
+    this.formulario?.controls[this.controlName].setValue(this.seleccionActual);
   }
 
   toggle($event: Event) {

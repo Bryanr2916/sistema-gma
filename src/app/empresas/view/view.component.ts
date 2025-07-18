@@ -18,6 +18,7 @@ export class ViewComponent implements OnInit {
     correo: "",
     telefono: "",
     pais: "",
+    paises: "",
     urlLogo: "",
     notas: "",
     admin: ""
@@ -39,6 +40,7 @@ export class ViewComponent implements OnInit {
       this.empresa.correo = respuesta.get("correo");
       this.empresa.telefono = respuesta.get("telefono");
       this.empresa.pais = respuesta.get("pais");
+      this.empresa.paises = respuesta.get("paises");
       this.empresa.urlLogo = respuesta.get("urlLogo");
       this.empresa.notas = respuesta.get("notas");
       this.empresa.admin = respuesta.get("admin");

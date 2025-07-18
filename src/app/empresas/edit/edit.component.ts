@@ -27,7 +27,7 @@ export class EditComponent implements OnInit {
     nombre: "",
     correo: "",
     telefono: "",
-    pais: "",
+    paises: [],
     urlLogo: "",
     notas: ""
   };
@@ -66,7 +66,7 @@ export class EditComponent implements OnInit {
       nombre: ["", [Validators.required]],
       correo: ["", [Validators.required, Validators.email]],
       telefono: ["", [Validators.required]],
-      pais: ["", [Validators.required, seleccionVacia()]],
+      paises: ["", [Validators.required, seleccionVacia()]],
       notas: ["", []]
     });
   }
@@ -86,13 +86,13 @@ export class EditComponent implements OnInit {
       this.formulario.controls["correo"].setValue(datosEmpresa['correo']);
       this.formulario.controls["nombre"].setValue(datosEmpresa['nombre']);
       this.formulario.controls["telefono"].setValue(datosEmpresa['telefono']);
-      this.formulario.controls["pais"].setValue(datosEmpresa['pais']);
+      this.formulario.controls["paises"].setValue(datosEmpresa['paises']);
       this.formulario.controls["notas"].setValue(datosEmpresa['notas']);
       
       this.empresa.correo = datosEmpresa['correo'];
       this.empresa.nombre = datosEmpresa['nombre']; 
       this.empresa.telefono = datosEmpresa['telefono'];
-      this.empresa.pais = datosEmpresa['pais'];
+      this.empresa.paises = datosEmpresa['paises'];
       this.empresa.urlLogo = datosEmpresa['urlLogo'];
       this.empresa.notas = datosEmpresa['notas'];
 
@@ -129,7 +129,7 @@ export class EditComponent implements OnInit {
     this.empresa.nombre = this.formulario.controls["nombre"].value;
     this.empresa.correo = this.formulario.controls["correo"].value;
     this.empresa.telefono = this.formulario.controls["telefono"].value;
-    this.empresa.pais = this.formulario.controls["pais"].value;
+    this.empresa.paises = this.formulario.controls["paises"].value;
     this.empresa.notas = this.formulario.controls["notas"].value;
 
     this.empresasService.editarEmpresa(this.empresa).then(_ => {
