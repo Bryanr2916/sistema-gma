@@ -19,7 +19,7 @@ export class ArticulosAplicablesComponent implements OnInit {
   formulario: FormGroup = this.fb.group({});
   cargando = true;
   matriz = {titulo: "", empresa: ""};
-  empresa = {nombre: "", pais: ""};
+  empresa = {nombre: "", paises: [] as any []};
   areasLegales: any[] = [];
   normativas:any[] = [];
   articulosAplicables = {
@@ -76,12 +76,12 @@ export class ArticulosAplicablesComponent implements OnInit {
       
       const respuestaEmpresa = await this.empresaService.obtenerEmpresa(this.matriz.empresa);
       this.empresa.nombre = respuestaEmpresa.get("nombre");
-      this.empresa.pais = respuestaEmpresa.get("pais");
+      this.empresa.paises = respuestaEmpresa.get("paises");
 
       this.areaLegalService.obtenerAreas().subscribe(datosArea => {
         this.areasLegales = datosArea;
         this.normativaService.obtenerNormativas().subscribe(datosNormativa => {
-          this.normativas = datosNormativa.filter(dn => dn.pais === this.empresa.pais);
+          this.normativas = datosNormativa.filter(dn => this.empresa.paises.includes(dn.pais));
           this.cargando = false;
         });
       });
