@@ -18,7 +18,7 @@
     <div [class.hidden]="!abrirSelect" class="options-container border border-dark mt-2">
         <span (click)="seleccionar(i)" class="opciones px-1" *ngFor="let opcion of opcionesFiltradas; index as i; trackBy: trackByOpcion">
           {{opcion}}
-          <i [class.hidden]="!esSeleccionada(opcion)" class="fa-solid fa-check mx-1"></i>
+          <!--<i [class.hidden]="!esSeleccionada(opcion)" class="fa-solid fa-check mx-1"></i>-->
         </span>
       </div>
 </div>
