@@ -4,6 +4,7 @@ import { IndexComponent } from './inicio/index/index.component';
 import { PaginaNoEncontradaComponent } from './share/pagina-no-encontrada/pagina-no-encontrada.component';
 import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { TipoGuard } from './core/guards/tipo.guard';
+import { UsuarioGuard } from './core/guards/usuario.guard';
 
 const routes: Routes = [
   {path:'',component:IndexComponent,pathMatch:'full', ...canActivate(() => redirectUnauthorizedTo(["usuario/inicio-sesion"]))},
@@ -38,7 +39,7 @@ const routes: Routes = [
   { path:'usuario',
     loadChildren: () => import ('./usuario/usuario.module').then( m => m.UsuarioModule)
   },
-  {path:'**',component:PaginaNoEncontradaComponent}
+  {path:'**',component:PaginaNoEncontradaComponent, canActivate: [UsuarioGuard]}
 ];
 
 @NgModule({
