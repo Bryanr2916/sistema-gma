@@ -3,7 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { take } from 'rxjs';
 import { EncriptadorService } from 'src/app/core/services/encriptador.service';
+import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
 
 @Component({
@@ -20,7 +22,7 @@ export class InicioSesionComponent implements OnInit {
   }
   constructor(
     private titleService: Title, private usuarioService: UsuarioService,
-    private router: Router, private toastr: ToastrService, private encriptador: EncriptadorService,
+    private router: Router, private mensajesService: MensajesService, private encriptador: EncriptadorService,
     public fb: FormBuilder
   ) {
     this.definirFormulario();
@@ -53,29 +55,16 @@ export class InicioSesionComponent implements OnInit {
 
       this.usuarioService.iniciarSesion(this.usuario).then( _ => {
         this.router.navigate([""]);
-        this.toastr.clear();
-        this.toastr.success("Bienvenido(a) a GMA Sistema", undefined, {
-          closeButton: true,
-          timeOut: 4000,
-          progressBar: true
-        });
+        this.mensajesService.mostrarMensaje("success", "Bienvenido(a) a GMA Sistema", undefined)
       }).catch( _ => {
-        this.usuarioService.obtenerUsuarios().subscribe(datos => {
+        this.usuarioService.obtenerUsuarios().pipe(take(1)).subscribe(datos => {
           const usuarioFB = datos.find( dt => dt.correo == this.usuario.correo);
           if (!usuarioFB) {
-            this.toastr.error("Correo no registrado en el sistema", "Error al iniciar sesión", {
-              closeButton: true,
-              timeOut: 4000,
-              progressBar: true
-            });
+            this.mensajesService.mostrarMensaje("error", "Correo no registrado en el sistema", "Error al iniciar sesión");
           } else {
             const contrasenaCoincide = this.encriptador.desencriptarContrasena(usuarioFB.contrasena) === this.usuario.contrasena;
             if (!contrasenaCoincide) {
-              this.toastr.error("La contraseña no coincide", "Error al iniciar sesión", {
-                closeButton: true,
-                timeOut: 4000,
-                progressBar: true
-              });
+              this.mensajesService.mostrarMensaje("error", "La contraseña no coincide", "Error al iniciar sesión");
             } else {
               this.usuarioService.registrar(this.usuario).then(respuesta => {
                 this.usuarioService.obtenerUsuarioPorCorreo(this.usuario.correo).then(oup => {
@@ -85,12 +74,7 @@ export class InicioSesionComponent implements OnInit {
                   });
                 });
                 this.router.navigate([""]);
-                this.toastr.clear();
-                this.toastr.success("Bienvenido(a) a GMA Sistema", undefined, {
-                  closeButton: true,
-                  timeOut: 4000,
-                  progressBar: true
-                });
+                this.mensajesService.mostrarMensaje("success", "Bienvenido(a) a GMA Sistema", undefined)
               });
             }
           }
