@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
 import { compararContrasenas } from 'src/app/core/validators/comparar-contrasenas';
 import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
@@ -39,7 +40,7 @@ export class UsuariosCreateComponent implements OnInit {
   };
 
   constructor(private titleService: Title, public fb: FormBuilder, private usuarioService: UsuarioService,
-    private toastr: ToastrService, private router: Router, private route: ActivatedRoute
+    private mensajesService: MensajesService, private router: Router, private route: ActivatedRoute
   ) {
     this.definirFormulario();
   }
@@ -86,11 +87,7 @@ export class UsuariosCreateComponent implements OnInit {
         this.usuario.empresaId = this.empresaId;
 
         this.usuarioService.crearUsuario(this.usuario).then(_ => {
-          this.toastr.success("Usuario creado con éxito", undefined, {
-            closeButton: true,
-            timeOut: 4000,
-            progressBar: true
-          });
+          this.mensajesService.mostrarMensaje("success", "Usuario creado con éxito", undefined);
           this.router.navigate([`/empresas/${this.empresaId}/usuarios`]);
             });
           }

@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AreaLegalService } from 'src/app/core/services/area-legal.service';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { MatricesService } from 'src/app/core/services/matrices.service';
+import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { NormativaService } from 'src/app/core/services/normativa.service';
 import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
 
@@ -37,7 +38,7 @@ export class ArticulosAplicablesComponent implements OnInit {
   constructor(private areaLegalService:AreaLegalService, private normativaService:NormativaService,
     private matricesService:MatricesService, private route: ActivatedRoute,
     private empresaService:EmpresasService, private titleService: Title,
-    private toastr: ToastrService, private router: Router, public fb: FormBuilder) {
+    private mensajesService: MensajesService, private router: Router, public fb: FormBuilder) {
       this.definirFormulario();
     }
 
@@ -104,11 +105,7 @@ export class ArticulosAplicablesComponent implements OnInit {
       this.articulosAplicables.cambiosRecientes = this.formulario.controls["cambiosRecientes"].value;
 
       this.matricesService.agregarArticulosAplicables(this.articulosAplicables).then(_ => {
-        this.toastr.success("Artículos aplicables creados con éxito", undefined, {
-          closeButton: true,
-          timeOut: 4000,
-          progressBar: true
-        });
+        this.mensajesService.mostrarMensaje("success", "Artículos aplicables creados con éxito", undefined);
         this.router.navigate(["/matrices"]);
       }).catch(error => {
         console.log(error);

@@ -4,6 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
+import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { PaisesService } from 'src/app/core/services/paises.service';
 import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
 
@@ -33,7 +34,7 @@ export class CreateComponent implements OnInit {
   constructor(
     private titleService: Title, private empresasService: EmpresasService,
     private paisesService: PaisesService,
-    private toastr: ToastrService, private router: Router, public fb: FormBuilder
+    private mensajesService: MensajesService, private router: Router, public fb: FormBuilder
   ) {
     this.definirFormulario();
   }
@@ -84,11 +85,7 @@ export class CreateComponent implements OnInit {
     this.empresa.notas = this.formulario.controls["notas"].value;
 
     this.empresasService.crearEmpresa(this.empresa).then(_ => {
-      this.toastr.success("Empresa creada con éxito", undefined, {
-        closeButton: true,
-        timeOut: 4000,
-        progressBar: true
-      });
+      this.mensajesService.mostrarMensaje("success", "Empresa creada con éxito", undefined);
       this.router.navigate(["/empresas"]);
     });
   };

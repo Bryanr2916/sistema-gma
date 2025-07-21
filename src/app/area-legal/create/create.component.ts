@@ -4,6 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AreaLegalService } from 'src/app/core/services/area-legal.service';
+import { MensajesService } from 'src/app/core/services/mensajes.service';
 
 @Component({
   selector: 'app-create',
@@ -18,7 +19,7 @@ export class CreateComponent implements OnInit {
   constructor(
     private titleService: Title,
     private areaService: AreaLegalService,
-    private toastr: ToastrService,
+    private mensajesService: MensajesService,
     private router: Router, public fb: FormBuilder ) {
       this.definirFormulario();
     }
@@ -49,12 +50,8 @@ export class CreateComponent implements OnInit {
 
       this.areaService.crearArea(
         this.areaLegal
-      ).then(data => {
-        this.toastr.success("Área creada con éxito", undefined, {
-          closeButton: true,
-          timeOut: 4000,
-          progressBar: true
-        });
+      ).then(_ => {
+        this.mensajesService.mostrarMensaje("success", "Área creada con éxito", undefined);
         this.router.navigate(["/area-legal"]);
       }).catch(error => {
         console.log(error);

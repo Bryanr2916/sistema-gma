@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
+import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
 
 @Component({
@@ -17,7 +18,7 @@ export class ReestablecerContrasenaComponent implements OnInit {
   constructor(
     private titleService: Title,
     private usuarioService: UsuarioService,
-    private toastr: ToastrService,
+    private mensajesService: MensajesService,
     public fb: FormBuilder
   ) {
     this.definirFormulario();
@@ -46,17 +47,9 @@ export class ReestablecerContrasenaComponent implements OnInit {
     if (this.formulario.valid) {
       this.correo = this.formulario.controls["correo"].value;
       this.usuarioService.reestablecerContrasena(this.correo).then(respuesta => {
-        this.toastr.success("Correo enviado", "Reestablecer contraseña", {
-          closeButton: true,
-          timeOut: 4000,
-          progressBar: true
-        });
+        this.mensajesService.mostrarMensaje("success", "Correo enviado", "Reestablecer contraseña");
       }).catch(error => {
-        this.toastr.error("Correo inválido", "Error", {
-          closeButton: true,
-          timeOut: 4000,
-          progressBar: true
-        });
+        this.mensajesService.mostrarMensaje("error", "Correo inválido", "Error");
       });
     }
   }

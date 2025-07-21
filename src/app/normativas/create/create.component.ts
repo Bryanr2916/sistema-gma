@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { NormativaService } from 'src/app/core/services/normativa.service';
 import { PaisesService } from 'src/app/core/services/paises.service';
 import { TiposNormativasService } from 'src/app/core/services/tipos-normativas.service';
@@ -34,7 +35,7 @@ export class CreateComponent implements OnInit {
 
   constructor(private titleService: Title, private paisesService: PaisesService,
     private tiposService:TiposNormativasService, private normativaService:NormativaService,
-    private toastr: ToastrService,
+    private mensajesService: MensajesService,
     private router: Router, public fb: FormBuilder) {
       this.definirFormulario();
     }
@@ -95,11 +96,7 @@ export class CreateComponent implements OnInit {
 
   crearNormativaFB() {
     this.normativaService.crearNormativa(this.normativa).then(_ => {
-      this.toastr.success("Normativa creada con éxito", undefined, {
-        closeButton: true,
-        timeOut: 4000,
-        progressBar: true
-      });
+      this.mensajesService.mostrarMensaje("success", "Normativa creada con éxito", undefined);
       this.router.navigate(["/normativas"]);
     }).catch(error => {
       console.log(error);

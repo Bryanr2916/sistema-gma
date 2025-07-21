@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
+import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { TiposNormativasService } from 'src/app/core/services/tipos-normativas.service';
 
 @Component({
@@ -16,7 +17,7 @@ export class IndexComponent implements OnInit {
   tiposFiltrados:any[] = [];
   ths = ["#","Tipos de Normativas", "Acciones"];
 
-  constructor(private titleService: Title, private tiposService: TiposNormativasService, private toastr: ToastrService) { }
+  constructor(private titleService: Title, private tiposService: TiposNormativasService, private mensajesService: MensajesService) { }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Tipos de normativas");
@@ -36,11 +37,7 @@ export class IndexComponent implements OnInit {
   borrar(tipo: any) {
     if (confirm(`¿Desea eliminar el área "${tipo.nombre}"?`)) {
       this.tiposService.borrarTipo(tipo.id).then(_ => {
-        this.toastr.success("Área borrada con éxito", undefined, {
-          closeButton: true,
-          timeOut: 4000,
-          progressBar: true
-        });
+        this.mensajesService.mostrarMensaje("success", "Área borrada con éxito", undefined);
       });
     }
   }

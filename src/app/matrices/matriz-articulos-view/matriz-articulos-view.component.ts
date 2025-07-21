@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { MensajesService } from 'src/app/core/services/mensajes.service';
 
 @Component({
   selector: 'app-matriz-articulos-view',
@@ -24,7 +25,7 @@ export class MatrizArticulosViewComponent implements OnInit {
 
   constructor(
     private titleService: Title,
-    private toastr: ToastrService,
+    private mensajesService: MensajesService,
     private router: Router,
     private route: ActivatedRoute
   ) { }

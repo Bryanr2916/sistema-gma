@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
+import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { NormativaService } from 'src/app/core/services/normativa.service';
 import { TiposNormativasService } from 'src/app/core/services/tipos-normativas.service';
 import { TruncarTextoPipe } from 'src/app/share/pipes/truncar-texto.pipe';
@@ -21,7 +22,7 @@ export class IndexComponent implements OnInit {
   normativasTodas:any[] = [];
   normativasFiltradas:any[] = [];
 
-  constructor(private titleService: Title, private toastr: ToastrService,
+  constructor(private titleService: Title, private mensajesService: MensajesService,
     private normativaService:NormativaService, private tiposService: TiposNormativasService,
     private truncarTexto: TruncarTextoPipe
   ) { }
@@ -53,11 +54,7 @@ export class IndexComponent implements OnInit {
 
   borrarNormativaFB(normativa: any) {
     this.normativaService.borrarNormativa(normativa.id).then(_ => {
-        this.toastr.success("Normativa borrada con éxito", undefined, {
-          closeButton: true,
-          timeOut: 4000,
-          progressBar: true
-        });
+      this.mensajesService.mostrarMensaje("success", "Normativa borrada con éxito", undefined);
       });
   }
 

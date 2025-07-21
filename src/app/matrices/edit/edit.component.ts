@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { MatricesService } from 'src/app/core/services/matrices.service';
+import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
 
 @Component({
@@ -27,7 +28,7 @@ export class EditComponent implements OnInit {
     private titleService: Title,
     private empresaService: EmpresasService,
     private matricesService: MatricesService,
-    private toastr: ToastrService,
+    private mensajesService: MensajesService,
     private router: Router,
     private route: ActivatedRoute,
     public fb: FormBuilder
@@ -77,11 +78,7 @@ export class EditComponent implements OnInit {
         this.matriz
       ).then(data => {
         console.log(data);
-        this.toastr.success("Matriz editada con éxito", undefined, {
-          closeButton: true,
-          timeOut: 4000,
-          progressBar: true
-        });
+        this.mensajesService.mostrarMensaje("success", "Matriz editada con éxito", undefined);
         this.router.navigate(["/matrices"]);
       }).catch(error => {
         console.log(error);

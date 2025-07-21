@@ -16,7 +16,7 @@ export class IndexComponent implements OnInit {
     {logo:"user", nombre: "Perfil de Usuario", enlace: "usuario/perfil"}
   ];
 
-  constructor(private titleService: Title, private toastr: ToastrService, private usuarioService: UsuarioService) { }
+  constructor(private titleService: Title, private usuarioService: UsuarioService) { }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Inicio");

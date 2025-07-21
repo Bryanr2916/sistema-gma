@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { EncriptadorService } from 'src/app/core/services/encriptador.service';
+import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
 
 @Component({
@@ -21,7 +22,7 @@ export class IndexComponent implements OnInit {
 
   constructor(
     private titleService: Title, private empresaService: EmpresasService,
-    private toastr: ToastrService, private usuarioService: UsuarioService,
+    private mensajesService: MensajesService, private usuarioService: UsuarioService,
     private router: Router, private encriptador: EncriptadorService, private empresasService:EmpresasService) { }
 
   ngOnInit(): void {
@@ -54,11 +55,7 @@ export class IndexComponent implements OnInit {
 
   borrarEmpresaFB(empresa: any) {
     this.empresaService.borrarEmpresa(empresa.id).then(_ => {
-        this.toastr.success("Empresa borrada con éxito", undefined, {
-          closeButton: true,
-          timeOut: 4000,
-          progressBar: true
-        });
+      this.mensajesService.mostrarMensaje("success", "Empresa borrada con éxito", undefined);
       });
   }
 
@@ -83,26 +80,13 @@ export class IndexComponent implements OnInit {
           correo: usuarioAdmin.correo, contrasena: this.encriptador.desencriptarContrasena(usuarioAdmin.contrasena)
         }).then( _ => {
           this.router.navigate([""]);
-          this.toastr.success("Bienvenido(a) a GMA Sistema", undefined, {
-            closeButton: true,
-            timeOut: 4000,
-            progressBar: true
-          });
-        }).catch(error => {
-          this.toastr.error("No se pudo iniciar sesión", undefined, {
-            closeButton: true,
-            timeOut: 4000,
-            progressBar: true
-          });
-          console.log("error: ", error);    
+          this.mensajesService.mostrarMensaje("success", "Bienvenido(a) a GMA Sistema", undefined);
+        }).catch(_ => {
+          this.mensajesService.mostrarMensaje("error", "No se pudo iniciar sesión", undefined);
         }); 
       }
     } else {
-      this.toastr.warning("No se encontró administrador", undefined, {
-        closeButton: true,
-        timeOut: 4000,
-        progressBar: true
-      })
+      this.mensajesService.mostrarMensaje("error", "No se encontró administrador", undefined);
     }
   }
 
@@ -110,11 +94,7 @@ export class IndexComponent implements OnInit {
     const empDuplicada = {...empresa, nombre: `copia de ${empresa.nombre}`, urlLogo: ""};
 
     this.empresasService.crearEmpresa(empDuplicada).then(_ => {
-      this.toastr.success("Empresa creada con éxito", undefined, {
-        closeButton: true,
-        timeOut: 4000,
-        progressBar: true
-      });
+      this.mensajesService.mostrarMensaje("success", "Empresa creada con éxito", undefined);
     });
   }
 

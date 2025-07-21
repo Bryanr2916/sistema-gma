@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { TiposNormativasService } from 'src/app/core/services/tipos-normativas.service';
 
 @Component({
@@ -18,7 +19,7 @@ export class CreateComponent implements OnInit {
   constructor(
     private titleService: Title,
     private tiposService: TiposNormativasService,
-    private toastr: ToastrService,
+    private mensajesService: MensajesService,
     private router: Router, public fb: FormBuilder ) {
       this.definirFormulario();
     }
@@ -51,11 +52,7 @@ export class CreateComponent implements OnInit {
       this.tiposService.crearTipo(
         this.tipoNormativas
       ).then(() => {
-        this.toastr.success("Tipo de normativas creada con éxito", undefined, {
-          closeButton: true,
-          timeOut: 4000,
-          progressBar: true
-        });
+        this.mensajesService.mostrarMensaje("success", "Tipo de normativas creada con éxito", undefined);
         this.router.navigate(["/tipos-normativas"]);
       }).catch(error => {
         console.log(error);

@@ -4,6 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
+import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { PaisesService } from 'src/app/core/services/paises.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
 import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
@@ -46,7 +47,7 @@ export class EditComponent implements OnInit {
   constructor(
     private titleService: Title, private empresasService: EmpresasService,
     private paisesService: PaisesService, private usuarioService:UsuarioService,
-    private toastr: ToastrService, private router: Router,
+    private mensajesService: MensajesService, private router: Router,
     private route: ActivatedRoute, public fb: FormBuilder
   ) {
     this.definirFormulario();
@@ -133,11 +134,7 @@ export class EditComponent implements OnInit {
     this.empresa.notas = this.formulario.controls["notas"].value;
 
     this.empresasService.editarEmpresa(this.empresa).then(_ => {
-      this.toastr.success("Empresa editada con éxito", undefined, {
-        closeButton: true,
-        timeOut: 4000,
-        progressBar: true
-      });
+      this.mensajesService.mostrarMensaje("success", "Empresa editada con éxito", undefined);
       this.router.navigate(["/empresas"]);
     });
   }

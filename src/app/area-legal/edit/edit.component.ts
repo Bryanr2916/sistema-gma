@@ -4,6 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AreaLegalService } from 'src/app/core/services/area-legal.service';
+import { MensajesService } from 'src/app/core/services/mensajes.service';
 
 @Component({
   selector: 'app-edit',
@@ -18,7 +19,7 @@ export class EditComponent implements OnInit {
   constructor(
     private titleService: Title,
     private areaService: AreaLegalService,
-    private toastr: ToastrService,
+    private mensajesService: MensajesService,
     private router: Router,
     private route: ActivatedRoute,
     public fb: FormBuilder
@@ -58,13 +59,8 @@ export class EditComponent implements OnInit {
 
       this.areaService.editarArea(
         this.areaLegal
-      ).then(data => {
-        console.log(data);
-        this.toastr.success("Área editada con éxito", undefined, {
-          closeButton: true,
-          timeOut: 4000,
-          progressBar: true
-        });
+      ).then(_ => {
+        this.mensajesService.mostrarMensaje("success", "Área editada con éxito", undefined);
         this.router.navigate(["/area-legal"]);
       }).catch(error => {
         console.log(error);

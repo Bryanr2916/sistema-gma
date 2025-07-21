@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
 
 @Component({
@@ -12,7 +13,7 @@ export class HeaderComponent implements OnInit {
   cargando = true;
   usuario: any = {};
   constructor(
-    private usuarioService: UsuarioService, private toastr: ToastrService,
+    private usuarioService: UsuarioService, private mensajesService: MensajesService,
     private router: Router
   ) { }
 
@@ -39,11 +40,7 @@ export class HeaderComponent implements OnInit {
     if (confirm("¿Desea cerrar sesión?")) {
       this.usuarioService.cerrarSesion().then(() => {
         this.usuario = {};
-        this.toastr.success("Ha cerrado sesión de forma exitosa", undefined, {
-          closeButton: true,
-          timeOut: 4000,
-          progressBar: true
-        });
+        this.mensajesService.mostrarMensaje("success", "Ha cerrado sesión de forma exitosa", undefined);
         this.router.navigate(["usuario/inicio-sesion"])
       }).catch(error => console.log(error));
     }

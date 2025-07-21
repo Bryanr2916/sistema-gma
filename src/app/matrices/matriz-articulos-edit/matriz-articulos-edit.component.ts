@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AreaLegalService } from 'src/app/core/services/area-legal.service';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { MatricesService } from 'src/app/core/services/matrices.service';
+import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { NormativaService } from 'src/app/core/services/normativa.service';
 import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
 
@@ -43,7 +44,7 @@ export class MatrizArticulosEditComponent implements OnInit {
     private normativaService:NormativaService,
     private matricesService: MatricesService,
     private empresaService: EmpresasService,
-    private toastr: ToastrService,
+    private mensajesService: MensajesService,
     private router: Router,
     private route: ActivatedRoute, public fb: FormBuilder
   ) {
@@ -92,11 +93,7 @@ export class MatrizArticulosEditComponent implements OnInit {
       this.articulo.cambiosRecientes = this.formulario.controls["cambiosRecientes"].value;
 
       this.matricesService.editarArticulo(this.articulo).then(_ => {
-        this.toastr.success("Artículo editado con éxito", undefined, {
-          closeButton: true,
-          timeOut: 4000,
-          progressBar: true
-        });
+        this.mensajesService.mostrarMensaje("success", "Artículo editado con éxito", undefined);
         this.router.navigate(["/matrices"]);
       });
     }

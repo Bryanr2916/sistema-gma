@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { NormativaService } from 'src/app/core/services/normativa.service';
 import { PaisesService } from 'src/app/core/services/paises.service';
 import { TiposNormativasService } from 'src/app/core/services/tipos-normativas.service';
@@ -37,7 +38,7 @@ export class EditComponent implements OnInit {
     private titleService: Title,
     private normativaService: NormativaService,
     private tiposService: TiposNormativasService,
-    private toastr: ToastrService,
+    private mensajesService: MensajesService,
     private router: Router,
     private route: ActivatedRoute,
     private paisesService: PaisesService,
@@ -135,11 +136,7 @@ export class EditComponent implements OnInit {
 
   editarNormativaFB() {
     this.normativaService.editarNormativa(this.normativa).then(_ => {
-      this.toastr.success("Normativa editada con éxito", undefined, {
-        closeButton: true,
-        timeOut: 4000,
-        progressBar: true
-      });
+      this.mensajesService.mostrarMensaje("success", "Normativa editada con éxito", undefined);
       this.router.navigate(["/normativas"]);        
     }).catch(error => {
       console.log(error);

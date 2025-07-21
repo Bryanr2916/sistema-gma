@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { TiposNormativasService } from 'src/app/core/services/tipos-normativas.service';
 
 @Component({
@@ -18,7 +19,7 @@ export class EditComponent implements OnInit {
   constructor(
     private titleService: Title,
     private tiposService: TiposNormativasService,
-    private toastr: ToastrService,
+    private mensajesService: MensajesService,
     private router: Router,
     private route: ActivatedRoute, public fb: FormBuilder
   ) {
@@ -32,12 +33,8 @@ export class EditComponent implements OnInit {
     });
     this.tiposService.obtenerTipo(this.tipoNormativas.id).then( respuesta => {
       // id no existente
-      if (! respuesta.data()) {
-        this.toastr.info("El tipo de normativa no existe en el sistema", undefined, {
-          closeButton: true,
-          timeOut: 4000,
-          progressBar: true
-        });
+      if (!respuesta.data()) {
+        this.mensajesService.mostrarMensaje("info", "El tipo de normativa no existe en el sistema", undefined);
         this.router.navigate(["/tipos-normativas"]);
       }
       this.formulario.controls["nombre"].setValue(respuesta.get("nombre"));
@@ -67,11 +64,7 @@ export class EditComponent implements OnInit {
       this.tiposService.editarTipo(
         this.tipoNormativas
       ).then(_ => {
-        this.toastr.success("Tipo de normativas editado con éxito", undefined, {
-          closeButton: true,
-          timeOut: 4000,
-          progressBar: true
-        });
+        this.mensajesService.mostrarMensaje("success", "Tipo de normativas editado con éxito", undefined);
         this.router.navigate(["/tipos-normativas"]);
       }).catch(error => {
         console.log(error);
