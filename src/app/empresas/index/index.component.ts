@@ -91,11 +91,12 @@ export class IndexComponent implements OnInit {
   }
 
   duplicar (empresa: any) {
-    const empDuplicada = {...empresa, nombre: `copia de ${empresa.nombre}`, urlLogo: ""};
-
-    this.empresasService.crearEmpresa(empDuplicada).then(_ => {
-      this.mensajesService.mostrarMensaje("success", "Empresa creada con éxito", undefined);
-    });
+    if (confirm(`¿Desea duplicar la empresa "${empresa.nombre}"?`)) {
+      const empDuplicada = {...empresa, nombre: `copia de ${empresa.nombre}`, urlLogo: ""};
+      this.empresasService.crearEmpresa(empDuplicada).then(_ => {
+        this.mensajesService.mostrarMensaje("success", "Empresa creada con éxito", undefined);
+      });
+    }
   }
 
   usuarioAdmin(empresa: any) {
