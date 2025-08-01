@@ -35,6 +35,10 @@ export class IndexComponent implements OnInit {
               this.menu.push({logo:"rectangle-list", nombre: "Tipos de Normativas", enlace: "tipos-normativas"});
               this.menu.push({logo:"bookmark", nombre: "Área Legal", enlace: "area-legal"});
             }
+
+            if (this.usuario.tipo == 2) {
+              this.menu.unshift({logo: "users", nombre: "Gestionar Usuarios", enlace: "empresa/gestionar-usuarios"});
+            }
           }
           }
         });
