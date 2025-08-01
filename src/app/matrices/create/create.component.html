@@ -9,7 +9,7 @@
                 </li>
             </ul>
         </div>
-        <div class="card-body">
+        <div *ngIf="!cargando" class="card-body">
             <form [formGroup]="formulario" id="form" class="my-4">
                 <!--Empresa-->
                 <div class="mb-3 me-5 row">
