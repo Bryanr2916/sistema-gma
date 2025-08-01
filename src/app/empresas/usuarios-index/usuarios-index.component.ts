@@ -55,6 +55,8 @@ export class UsuariosIndexComponent implements OnInit {
 
   buscar(event: any) {
     const busquedaMinuscuala = event.toLowerCase();
+    this.usuariosFiltrados = this.usuariosTodos.filter(usuario => 
+      usuario.nombre.toLowerCase().includes(busquedaMinuscuala));
   }
 
   mostrarTipo(tipo: number) {
