@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
+import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
 
 @Component({
@@ -23,13 +24,12 @@ export class GestionarUsuariosComponent implements OnInit {
   };
 
   constructor(private titleService: Title, private usuarioService: UsuarioService,
-    private empresasService:EmpresasService,
+    private empresasService:EmpresasService, private mensajesService: MensajesService,
     private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Empresas");
     this.usuarioService.usuarioActual().subscribe(user => {
-        console.log("user: ", user?.uid);
         const uid = user?.uid;
         if (uid) {
           this.cargarUsuario(uid);
@@ -39,7 +39,6 @@ export class GestionarUsuariosComponent implements OnInit {
 
   cargarUsuario = async (uid: string) => {
     const usuario = await this.usuarioService.usuarioActualFS(uid);
-    console.log("usuario: ", usuario.docs[0].data());
     this.usuario = usuario.docs[0].data;
     this.empresa.id = usuario.docs[0].data()['empresaId'];
 
@@ -59,8 +58,9 @@ export class GestionarUsuariosComponent implements OnInit {
     const reUsuarios = await this.usuarioService.obtenerUsuarioPorEmpresa(this.empresa.id);
 
     if (reUsuarios) {
-      this.usuariosTodos = reUsuarios.docs.map(usDoc => usDoc.data());
-      console.log("usuariosTodos: ", this.usuariosTodos);
+      this.usuariosTodos = reUsuarios.docs.map(usDoc => (
+        {...usDoc.data(), id: usDoc.id}
+      ));
       this.usuariosFiltrados = this.usuariosTodos;
       this.cargando = false;
     }
@@ -99,7 +99,11 @@ export class GestionarUsuariosComponent implements OnInit {
   usarComo(usuario: any) {}
   borrar(usuario: any) {
     if (confirm(`¿Desea eliminar a "${usuario.nombre}"?`)) {
-      console.log("eliminando");
+      this.usuarioService.borrarUsuario(usuario.id).then(_ => {
+        this.usuariosTodos = this.usuariosTodos.filter(us => us.id !== usuario.id);
+        this.usuariosFiltrados = this.usuariosFiltrados.filter(us => us.id !== usuario.id);
+        this.mensajesService.mostrarMensaje("success", "Usuario borrado con éxito", undefined);
+      });
     }
   }
 }

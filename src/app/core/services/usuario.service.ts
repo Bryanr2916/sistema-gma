@@ -86,4 +86,9 @@ export class UsuarioService {
   reestablecerContrasena(correo: string) {
     return sendPasswordResetEmail(this.auth, correo);
   }
+
+  borrarUsuario(id: any) {
+    const usuarioRef = doc(this.firestore, `${this.path}/${id}`);
+    return deleteDoc(usuarioRef);
+  }
 }
