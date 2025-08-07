@@ -6,6 +6,7 @@ import { EditComponent } from './edit/edit.component';
 import { ViewComponent } from './view/view.component';
 import { UsuariosIndexComponent } from './usuarios-index/usuarios-index.component';
 import { UsuariosCreateComponent } from './usuarios-create/usuarios-create.component';
+import { UsuariosEditComponent } from './usuarios-edit/usuarios-edit.component';
 
 const routes: Routes = [
   {path:'',component:IndexComponent},
@@ -14,7 +15,7 @@ const routes: Routes = [
   {path:'ver/:id',component:ViewComponent},
   {path:':id/usuarios',component:UsuariosIndexComponent},
   {path:':id/usuarios/crear',component:UsuariosCreateComponent},
-  {path:':id/usuarios/:idUsuario/editar',component:UsuariosIndexComponent}
+  {path:':id/usuarios/editar/:idUsuario',component:UsuariosEditComponent}
 ];
 
 @NgModule({

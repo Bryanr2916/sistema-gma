@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, user, sendPasswordResetEmail } from '@angular/fire/auth';
+import { Auth, updatePassword ,createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, user, sendPasswordResetEmail } from '@angular/fire/auth';
 import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, query, where, getDocs } from '@angular/fire/firestore';
 import { EncriptadorService } from './encriptador.service';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -58,6 +58,11 @@ export class UsuarioService {
     return collectionData(usuariosRef, {idField: 'id'}) as Observable<any[]>;
   }
 
+  obtenerUsuario(id: any) {
+    const usuarioRef = doc(this.firestore, `${this.path}/${id}`);
+    return getDoc(usuarioRef);
+  }
+
   obtenerUsuarioPorCorreo(correo: string) {
     const usuarioRef = collection(this.firestore, this.path);
     
@@ -78,7 +83,6 @@ export class UsuarioService {
   }
 
   editarUsuario(usuario: any) {
-    console.log("editarUsuario: ", usuario);
     const usuarioref = doc(this.firestore, `${this.path}/${usuario.id}`);
     return updateDoc(usuarioref, usuario);
   }
@@ -90,5 +94,23 @@ export class UsuarioService {
   borrarUsuario(id: any) {
     const usuarioRef = doc(this.firestore, `${this.path}/${id}`);
     return deleteDoc(usuarioRef);
+  }
+
+  // tipos de usuario para un select
+  tiposSelect() {
+    return [
+    {
+      valor: 2,
+      etiqueta: "Administrador"
+    },
+    {
+      valor: 3,
+      etiqueta: "Editor"
+    },
+    {
+      valor: 4,
+      etiqueta: "Lector"
+    }
+  ];
   }
 }

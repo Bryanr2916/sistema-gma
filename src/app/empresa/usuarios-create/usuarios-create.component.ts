@@ -15,20 +15,7 @@ import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
 export class UsuariosCreateComponent implements OnInit {
   empresaId = "";
   formulario: FormGroup = this.fb.group({});
-  tipos = [
-    {
-      valor: 2,
-      etiqueta: "Administrador"
-    },
-    {
-      valor: 3,
-      etiqueta: "Editor"
-    },
-    {
-      valor: 4,
-      etiqueta: "Lector"
-    }
-  ];
+  tipos: any = [];
   usuario = {
     nombre: "",
     correo: "",
@@ -41,6 +28,7 @@ export class UsuariosCreateComponent implements OnInit {
   constructor(private titleService: Title, public fb: FormBuilder, private usuarioService: UsuarioService,
     private mensajesService: MensajesService, private router: Router, private route: ActivatedRoute
   ) {
+    this.tipos = usuarioService.tiposSelect();
     this.definirFormulario();
   }
 
