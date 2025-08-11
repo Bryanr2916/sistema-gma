@@ -66,15 +66,9 @@ export class InicioSesionComponent implements OnInit {
             if (!contrasenaCoincide) {
               this.mensajesService.mostrarMensaje("error", "La contraseña no coincide", "Error al iniciar sesión");
             } else {
-              this.usuarioService.registrar(this.usuario).then(respuesta => {
-                this.usuarioService.obtenerUsuarioPorCorreo(this.usuario.correo).then(oup => {
-                  this.usuarioService.editarUsuario({
-                    id: oup.docs[0].id,
-                    uid: respuesta.user.uid
-                  });
-                });
+              this.usuarioService.registrar(this.usuario).then(_ => {
+                this.mensajesService.mostrarMensaje("success", "Bienvenido(a) a GMA Sistema", undefined);
                 this.router.navigate([""]);
-                this.mensajesService.mostrarMensaje("success", "Bienvenido(a) a GMA Sistema", undefined)
               });
             }
           }

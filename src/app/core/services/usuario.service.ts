@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Auth, updatePassword ,createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, user, sendPasswordResetEmail } from '@angular/fire/auth';
+import { Auth,createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, user, sendPasswordResetEmail } from '@angular/fire/auth';
 import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, query, where, getDocs } from '@angular/fire/firestore';
 import { EncriptadorService } from './encriptador.service';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -15,12 +15,31 @@ export class UsuarioService {
 
   constructor(private auth: Auth, private firestore: Firestore, private encriptador: EncriptadorService) { }
 
-  registrar(usuario: any) {
-    return createUserWithEmailAndPassword(this.auth, usuario.correo, usuario.contrasena);
-  }
+  // el usuario no existe en auth pero sí ha sido agregado a la base de datos
+    async registrar(usuario: any) {
+      const promise = await createUserWithEmailAndPassword(this.auth, usuario.correo, usuario.contrasena);
+      const { uid } = promise.user;
 
-  iniciarSesion(usuario: any) {
-    return signInWithEmailAndPassword(this.auth, usuario.correo, usuario.contrasena);
+      const usuarioFS = await this.obtenerUsuarioPorCorreo(promise.user.email || "");
+      
+      const usuarioActual = {...usuarioFS.docs[0].data(), id: usuarioFS.docs[0].id, uid: uid};
+      await this.editarUsuario(usuarioActual);
+
+      return promise;
+    }
+
+  async iniciarSesion(usuario: any) {
+    const promise = await signInWithEmailAndPassword(this.auth, usuario.correo, usuario.contrasena);
+    const { uid } = promise.user;
+
+    const usuarioFS = await this.usuarioActualFS(uid);
+    const usuarioActual = {...usuarioFS.docs[0].data(), id: usuarioFS.docs[0].id};
+    this.usuarioCache$.next({
+      authUser: promise.user,
+      dbUser: usuarioActual
+    });
+
+    return promise;
   }
 
   cerrarSesion() {
@@ -32,12 +51,19 @@ export class UsuarioService {
     return user(this.auth);
   }
 
+  // todo: borrar usuarioActualFS y utilizar usuarioActualFSS
   usuarioActualFS(uid: string) {
     const usuarioRef = collection(this.firestore, this.path);
     
     const usuarioUID = query(usuarioRef, where("uid", "==", uid));
     return getDocs(usuarioUID);
   }
+
+  usuarioActualFSS(uid: string) {
+    const usuarioRef = collection(this.firestore, this.path);
+    const usuarioUID = query(usuarioRef, where("uid", "==", uid));
+    return collectionData(usuarioUID, { idField: 'id' });
+  };
 
   crearUsuario( usuario:any ) {
     const usuarioRef = collection(this.firestore, this.path);
