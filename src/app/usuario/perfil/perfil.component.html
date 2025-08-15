@@ -1,4 +1,43 @@
-<div class="mt-4 mb-2 mx-2">
-    <h2><i class="g-icon fa-solid fa-user me-1"></i>Perfil</h2>
-    <hr class="border border-success border-1 opacity-75">
+<div class="d-flex justify-content-center align-items-center">
+    <div class="card shadow my-5 border border-dark">
+        <div class="card-header d-flex justify-content-around">
+            <h2><i class="g-icon fa-solid fa-user me-1"></i>Perfil</h2>
+        </div>
+
+        <div class="card-body mb-4 mx-3">
+            <div *ngIf="!cargando">
+                <p><strong>Nombre:</strong> {{usuario.nombre}}</p>
+                <p><strong>Correo:</strong> {{usuario.correo}}</p>
+                <p>
+                    <strong class="me-2">Tipo:</strong>
+                    <span class={{claseTipo(usuario.tipo)}}>
+                        {{mostrarTipo(usuario.tipo)}}
+                    </span>
+                </p>
+                <p *ngIf="usuario.tipo !== 1"><strong>Empresa:</strong> {{nombreEmpresa}}</p>
+                <p *ngIf="usuario.tipo === 1"><strong>Empresa:</strong> {{nombreEmpresa}}</p>
+            </div>
+            <!--loading-->
+            <div *ngIf="cargando" class="d-flex justify-content-center">
+                <div class="spinner-border mt-5 text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-3">
+                    <button type="button" class="btn btn-outline-primary">
+                        <i class="fa-solid fa-pen-to-square fa-lg m-2"></i>Editar Perfil
+                    </button>
+                </div>
+                <div class="col-4">
+                    <button type="button" class="btn btn-outline-success">
+                        <i class="fa-solid fa-key fa-lg m-2"></i>Cambiar contraseña
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
