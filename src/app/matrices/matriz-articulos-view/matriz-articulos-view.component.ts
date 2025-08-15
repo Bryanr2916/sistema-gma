@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 
 @Component({

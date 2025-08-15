@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
 import { compararContrasenas } from 'src/app/core/validators/comparar-contrasenas';
@@ -65,20 +64,31 @@ export class UsuariosCreateComponent implements OnInit {
       );
     }
 
-    crearUsuario() {
+    async crearUsuario() {
       this.formulario.markAllAsTouched();
       if(this.formulario.valid) {
-        this.usuario.nombre = this.formulario.controls["nombre"].value;
-        this.usuario.correo = this.formulario.controls["correo"].value;
-        this.usuario.tipo = Number(this.formulario.controls["tipo"].value);
-        this.usuario.contrasena = this.formulario.controls["contrasena"].value;
-        this.usuario.empresaId = this.empresaId;
 
-        this.usuarioService.crearUsuario(this.usuario).then(_ => {
-          this.mensajesService.mostrarMensaje("success", "Usuario creado con éxito", undefined);
-          this.router.navigate([`/empresas/${this.empresaId}/usuarios`]);
-            });
-          }
+        const esCorreoUnico = await this.validarCorreoUnico();
+        if (esCorreoUnico) {
+          this.usuario.nombre = this.formulario.controls["nombre"].value;
+          this.usuario.correo = this.formulario.controls["correo"].value;
+          this.usuario.tipo = Number(this.formulario.controls["tipo"].value);
+          this.usuario.contrasena = this.formulario.controls["contrasena"].value;
+          this.usuario.empresaId = this.empresaId;
+
+          this.usuarioService.crearUsuario(this.usuario).then(_ => {
+            this.mensajesService.mostrarMensaje("success", "Usuario creado con éxito", undefined);
+            this.router.navigate([`/empresas/${this.empresaId}/usuarios`]);
+              });
+        } else {
+          this.formulario.controls['correo'].setErrors({ correoEnUso: true });
+        }
+      }
+    }
+
+    async validarCorreoUnico () {
+      const respuesta = await this.usuarioService.obtenerUsuarioPorCorreo(this.formulario.controls["correo"].value);
+      return respuesta.empty;
     }
 
     obtenerUrl () {

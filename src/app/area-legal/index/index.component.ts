@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ToastrService } from 'ngx-toastr';
 import { AreaLegalService } from 'src/app/core/services/area-legal.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 

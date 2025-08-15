@@ -38,6 +38,7 @@
                   <div class="d-flex">
                     <small class="text-danger" *ngIf="errorEnControlador('correo', 'required')">Correo requerido</small>
                     <small class="text-danger" *ngIf="errorEnControlador('correo', 'email')">Formato de correo inválido</small>
+                    <small class="text-danger" *ngIf="errorEnControlador('correo', 'correoEnUso')">El correo ya está en uso</small>
                   </div>
                 </div>
               </div>

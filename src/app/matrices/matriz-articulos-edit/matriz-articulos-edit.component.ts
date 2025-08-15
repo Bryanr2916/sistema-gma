@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 import { AreaLegalService } from 'src/app/core/services/area-legal.service';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { MatricesService } from 'src/app/core/services/matrices.service';

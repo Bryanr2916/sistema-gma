@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ToastrService } from 'ngx-toastr';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { NormativaService } from 'src/app/core/services/normativa.service';
 import { TiposNormativasService } from 'src/app/core/services/tipos-normativas.service';

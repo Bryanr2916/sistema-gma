@@ -35,7 +35,6 @@ export class UsuariosCreateComponent implements OnInit {
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Empresas");
     this.usuarioService.usuarioActual().subscribe(user => {
-        console.log("user: ", user?.uid);
         const uid = user?.uid;
         if (uid) {
           this.cargarUsuario(uid);
@@ -45,7 +44,6 @@ export class UsuariosCreateComponent implements OnInit {
 
   cargarUsuario = async (uid: string) => {
     const usuario = await this.usuarioService.usuarioActualFS(uid);
-    console.log("usuario: ", usuario.docs[0].data());
     this.empresaId = usuario.docs[0].data()['empresaId'];
   };
 
@@ -64,9 +62,6 @@ export class UsuariosCreateComponent implements OnInit {
     }
   
     errorEnControlador (controlador: string, error: string) {
-      if (controlador === "contrasena") {
-        console.log("contrasena: ", this.formulario.controls[controlador]);
-      }
       return (
         this.formulario.controls[controlador].hasError(error) && 
         this.formulario.controls[controlador].invalid &&
@@ -74,20 +69,32 @@ export class UsuariosCreateComponent implements OnInit {
       );
     }
 
-    crearUsuario() {
+    async crearUsuario() {
       this.formulario.markAllAsTouched();
       if(this.formulario.valid) {
-        this.usuario.nombre = this.formulario.controls["nombre"].value;
-        this.usuario.correo = this.formulario.controls["correo"].value;
-        this.usuario.tipo = Number(this.formulario.controls["tipo"].value);
-        this.usuario.contrasena = this.formulario.controls["contrasena"].value;
-        this.usuario.empresaId = this.empresaId;
 
-        this.usuarioService.crearUsuario(this.usuario).then(_ => {
-          this.mensajesService.mostrarMensaje("success", "Usuario creado con éxito", undefined);
-          this.router.navigate(["/empresa/gestionar-usuarios"]);
-            });
-          }
+        const esCorreoUnico = await this.validarCorreoUnico();
+
+        if (esCorreoUnico) {
+          this.usuario.nombre = this.formulario.controls["nombre"].value;
+          this.usuario.correo = this.formulario.controls["correo"].value;
+          this.usuario.tipo = Number(this.formulario.controls["tipo"].value);
+          this.usuario.contrasena = this.formulario.controls["contrasena"].value;
+          this.usuario.empresaId = this.empresaId;
+
+          this.usuarioService.crearUsuario(this.usuario).then(_ => {
+            this.mensajesService.mostrarMensaje("success", "Usuario creado con éxito", undefined);
+            this.router.navigate(["/empresa/gestionar-usuarios"]);
+              });
+        } else {
+          this.formulario.controls['correo'].setErrors({ correoEnUso: true });
+        }
+      }
+    }
+
+    async validarCorreoUnico () {
+      const respuesta = await this.usuarioService.obtenerUsuarioPorCorreo(this.formulario.controls["correo"].value);
+      return respuesta.empty;
     }
 
 }
