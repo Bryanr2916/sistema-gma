@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Auth,createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, user, sendPasswordResetEmail } from '@angular/fire/auth';
-import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, query, where, getDocs } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, query, where, getDocs, serverTimestamp } from '@angular/fire/firestore';
 import { EncriptadorService } from './encriptador.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 
@@ -74,7 +74,8 @@ export class UsuarioService {
         uid: usuario.uid,
         tipo: usuario.tipo,
         empresaId: usuario.empresaId,
-        contrasena: this.encriptador.encriptarContrasena(usuario.contrasena)
+        contrasena: this.encriptador.encriptarContrasena(usuario.contrasena),
+        fechaCreacion: serverTimestamp()
       }
     );
   }
@@ -110,7 +111,7 @@ export class UsuarioService {
 
   editarUsuario(usuario: any) {
     const usuarioref = doc(this.firestore, `${this.path}/${usuario.id}`);
-    return updateDoc(usuarioref, usuario);
+    return updateDoc(usuarioref, {...usuario, fechaEdicion: serverTimestamp()});
   }
 
   reestablecerContrasena(correo: string) {

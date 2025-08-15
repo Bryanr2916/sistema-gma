@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, getDocs, query, where } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, getDocs, query, where, serverTimestamp } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -13,7 +13,7 @@ export class MatricesService {
 
   crearMatriz( matriz:any ) {
     const matrizRef = collection(this.firestore, this.path);
-    return addDoc(matrizRef, matriz);
+    return addDoc(matrizRef, {...matriz, fechaCreacion: serverTimestamp()});
   }
 
   obtenerMatrices() {
@@ -33,12 +33,12 @@ export class MatricesService {
 
   editarArticulo(articulo: any) {
     const articuloRef = doc(this.firestore, `${this.articulosPath}/${articulo.id}`);
-    return updateDoc(articuloRef, articulo);
+    return updateDoc(articuloRef, {...articulo, fechaEdicion: serverTimestamp()});
   }
 
   editarMatriz(matriz: any) {
     const matrizRef = doc(this.firestore, `${this.path}/${matriz.id}`);
-    return updateDoc(matrizRef, matriz);
+    return updateDoc(matrizRef, {...matriz, fechaEdicion: serverTimestamp()});
   }
 
   borrarMatriz(id: any) {
@@ -49,7 +49,7 @@ export class MatricesService {
   agregarArticulosAplicables(articulosAplicables: any) {
     const articulosAplicablesRef = collection(this.firestore, this.articulosPath);
 
-    return addDoc(articulosAplicablesRef, articulosAplicables);
+    return addDoc(articulosAplicablesRef, {...articulosAplicables, fechaCreacion: serverTimestamp()});
   }
 
   obtenerArticulosAplicables(matrizId?: string) {

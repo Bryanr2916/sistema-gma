@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage, ref, getDownloadURL, uploadBytesResumable, deleteObject } from '@angular/fire/storage';
-import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, serverTimestamp } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -14,7 +14,7 @@ export class NormativaService {
 
   crearNormativa(normativa: any) {
     const normativaRef = collection(this.firestore, this.path);
-    return addDoc(normativaRef, normativa);
+    return addDoc(normativaRef, {...normativa, fechaCreacion: serverTimestamp()});
   }
 
   obtenerNormativas() {
@@ -29,7 +29,7 @@ export class NormativaService {
 
   editarNormativa(normativa: any) {
     const normativaRef = doc(this.firestore, `${this.path}/${normativa.id}`);
-    return updateDoc(normativaRef, normativa);
+    return updateDoc(normativaRef, {...normativa, fechaEdicion: serverTimestamp()});
   }
 
   borrarNormativa(id: any) {

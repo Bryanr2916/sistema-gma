@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage, ref, getDownloadURL, uploadBytesResumable, deleteObject } from '@angular/fire/storage';
-import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, serverTimestamp } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -14,7 +14,7 @@ export class EmpresasService {
 
   crearEmpresa(empresa: any) {
     const empresaRef = collection(this.firestore, this.path);
-    return addDoc(empresaRef, empresa);
+    return addDoc(empresaRef, {...empresa, fechaCreacion: serverTimestamp()});
   }
 
   obtenerEmpresas() {
@@ -66,7 +66,7 @@ export class EmpresasService {
 
   editarEmpresa(empresa: any) {
     const empresaRef = doc(this.firestore, `${this.path}/${empresa.id}`);
-    return updateDoc(empresaRef, empresa);
+    return updateDoc(empresaRef, {...empresa, fechaEdicion: serverTimestamp()});
   }
 
   borrarEmpresa(id: any) {

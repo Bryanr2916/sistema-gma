@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, serverTimestamp } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class TiposNormativasService {
 
   crearTipo( tipoNormativas:any ) {
     const tipoRef = collection(this.firestore, this.path);
-    return addDoc(tipoRef, tipoNormativas);
+    return addDoc(tipoRef, {...tipoNormativas, fechaCreacion: serverTimestamp()});
   }
 
   obtenerTipos() {
@@ -26,8 +26,8 @@ export class TiposNormativasService {
   }
 
   editarTipo(area: any) {
-    const areaRef = doc(this.firestore, `${this.path}/${area.id}`);
-    return updateDoc(areaRef, area);
+    const tipoRef = doc(this.firestore, `${this.path}/${area.id}`);
+    return updateDoc(tipoRef, {...area, fechaEdicion: serverTimestamp()});
   }
 
   borrarTipo(id: any) {

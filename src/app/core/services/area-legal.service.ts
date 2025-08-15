@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, serverTimestamp, query, orderBy } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -12,12 +12,15 @@ export class AreaLegalService {
 
   crearArea( areaLegal:any ) {
     const areaRef = collection(this.firestore, this.path);
-    return addDoc(areaRef, areaLegal);
+    return addDoc(areaRef, {...areaLegal, fechaCreacion: serverTimestamp()});
   }
 
   obtenerAreas() {
     const areasRef = collection(this.firestore, this.path);
-    return collectionData(areasRef, {idField: 'id'}) as Observable<any[]>;
+
+    //todo: ordenamiento de los demas services y script para actualizar todos los datos
+    const q = query(areasRef, orderBy('fechaCreacion', 'desc'));
+    return collectionData(q, {idField: 'id'}) as Observable<any[]>;
   }
 
   obtenerArea(id: any) {
@@ -27,7 +30,7 @@ export class AreaLegalService {
 
   editarArea(area: any) {
     const areaRef = doc(this.firestore, `${this.path}/${area.id}`);
-    return updateDoc(areaRef, area);
+    return updateDoc(areaRef, {...area, fechaEdicion: serverTimestamp()});
   }
 
   borrarArea(id: any) {
