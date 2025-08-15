@@ -11,6 +11,8 @@ export class MatricesService {
   articulosPath = "articulos";
   constructor(private firestore: Firestore) { }
 
+  // matriz
+
   crearMatriz( matriz:any ) {
     const matrizRef = collection(this.firestore, this.path);
     return addDoc(matrizRef, {...matriz, fechaCreacion: serverTimestamp()});
@@ -26,16 +28,6 @@ export class MatricesService {
     return getDoc(matrizRef);
   }
 
-  obtenerArticuloMatriz(id: any) {
-    const articuloRef = doc(this.firestore, `${this.articulosPath}/${id}`);
-    return getDoc(articuloRef);
-  }
-
-  editarArticulo(articulo: any) {
-    const articuloRef = doc(this.firestore, `${this.articulosPath}/${articulo.id}`);
-    return updateDoc(articuloRef, {...articulo, fechaEdicion: serverTimestamp()});
-  }
-
   editarMatriz(matriz: any) {
     const matrizRef = doc(this.firestore, `${this.path}/${matriz.id}`);
     return updateDoc(matrizRef, {...matriz, fechaEdicion: serverTimestamp()});
@@ -44,6 +36,18 @@ export class MatricesService {
   borrarMatriz(id: any) {
     const matrizRef = doc(this.firestore, `${this.path}/${id}`);
     return deleteDoc(matrizRef);
+  }
+
+  // articulos
+
+  obtenerArticuloMatriz(id: any) {
+    const articuloRef = doc(this.firestore, `${this.articulosPath}/${id}`);
+    return getDoc(articuloRef);
+  }
+
+  editarArticulo(articulo: any) {
+    const articuloRef = doc(this.firestore, `${this.articulosPath}/${articulo.id}`);
+    return updateDoc(articuloRef, {...articulo, fechaEdicion: serverTimestamp()});
   }
 
   agregarArticulosAplicables(articulosAplicables: any) {
@@ -62,5 +66,10 @@ export class MatricesService {
       const articulosMatriz = query(articuloRef);
       return getDocs(articulosMatriz);
     }
+  }
+
+  borrarArticulo(id: any) {
+    const articuloRef = doc(this.firestore, `${this.articulosPath}/${id}`);
+    return deleteDoc(articuloRef);
   }
 }

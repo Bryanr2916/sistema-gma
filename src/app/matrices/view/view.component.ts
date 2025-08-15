@@ -43,7 +43,7 @@ export class ViewComponent implements OnInit {
       const matrizFB = await this.matricesService.obtenerMatriz(this.matriz.id);
       this.matriz.titulo = matrizFB.get("titulo");
 
-      const articulosFB = await this.matricesService.obtenerArticulosAplicables(this.matriz.id);
+      const articulosFB = (await this.matricesService.obtenerArticulosAplicables(this.matriz.id));
       this.articulosAplicablesTodos = articulosFB.docs.map((value) => { return {id: value.id, ...value.data() };});
 
       this.areaLegalService.obtenerAreas().subscribe(areasFB => {

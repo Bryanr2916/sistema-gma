@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatricesService } from 'src/app/core/services/matrices.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 
 @Component({
@@ -26,7 +27,8 @@ export class MatrizArticulosViewComponent implements OnInit {
     private titleService: Title,
     private mensajesService: MensajesService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private matricesService: MatricesService
   ) { }
 
   ngOnInit(): void {
@@ -39,7 +41,10 @@ export class MatrizArticulosViewComponent implements OnInit {
 
   borrarArticulo() {
     if (confirm("¿Desea eliminar el artículo?")) {
-      console.log("eliminando...");
+      this.matricesService.borrarArticulo(this.articulo.id).then(_ => {
+        this.mensajesService.mostrarMensaje("success", "Artículo borrado con éxito", undefined);
+        window.location.reload();
+      });
     }
   }
 
