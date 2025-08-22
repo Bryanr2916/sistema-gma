@@ -46,7 +46,7 @@ export class IndexComponent implements OnInit {
 
   async cargarMatrices() {
     // filtrar matrices por empresa
-    const filtrarMatrices = this.usuario.tipo == 2;
+    const filtrarMatrices = this.usuario.tipo !== 1;
 
     this.matricesService.obtenerMatrices().subscribe(async datos => {
       this.matricesTodas = !filtrarMatrices ?  datos : datos.filter(matriz => matriz.empresa === this.usuario.empresaId);
