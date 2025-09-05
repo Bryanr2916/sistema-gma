@@ -11,7 +11,7 @@ const routes: Routes = [
   { path:'area-legal',
     loadChildren: () => import ('./area-legal/area-legal.module').then( m => m.AreaLegalModule),
     canActivate: [TipoGuard],
-    data: { tipo: 1}
+    data: { tipos: [1]}
   },
   { path:'buscar',
     loadChildren: () => import ('./buscar/buscar.module').then( m => m.BuscarModule),
@@ -20,12 +20,12 @@ const routes: Routes = [
   { path:'empresas',
     loadChildren: () => import ('./empresas/empresas.module').then( m => m.EmpresasModule),
     canActivate: [TipoGuard],
-    data: { tipo: 1}
+    data: { tipos: [1]}
   },
   { path:'empresa',
     loadChildren: () => import ('./empresa/empresa.module').then( m => m.EmpresaModule),
     canActivate: [TipoGuard],
-    data: { tipo: 2}
+    data: { tipos: [2]}
   },
   { path:'matrices',
     loadChildren: () => import ('./matrices/matrices.module').then( m => m.MatricesModule),
@@ -34,12 +34,12 @@ const routes: Routes = [
   { path:'normativas',
     loadChildren: () => import ('./normativas/normativas.module').then( m => m.NormativasModule),
     canActivate: [TipoGuard],
-    data: { tipo: 1}
+    data: { tipos: [1]}
   },
   { path:'tipos-normativas',
     loadChildren: () => import ('./tipos-normativas/tipos-normativas.module').then( m => m.TiposNormativasModule),
     canActivate: [TipoGuard],
-    data: { tipo: 1}
+    data: { tipos: [1]}
   },
   { path:'usuario',
     loadChildren: () => import ('./usuario/usuario.module').then( m => m.UsuarioModule)

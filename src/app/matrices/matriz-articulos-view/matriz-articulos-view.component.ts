@@ -1,8 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { of, switchMap } from 'rxjs';
 import { MatricesService } from 'src/app/core/services/matrices.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
+import { UsuarioService } from 'src/app/core/services/usuario.service';
 
 @Component({
   selector: 'app-matriz-articulos-view',
@@ -22,17 +24,29 @@ export class MatrizArticulosViewComponent implements OnInit {
     {value: "cambiosRecientes", label: "Cambios Recientes"}
   ];
   tab = {value: "general", label: "General"};
+  usuario: any = {};
+  cargando = true;
 
   constructor(
     private titleService: Title,
     private mensajesService: MensajesService,
     private router: Router,
     private route: ActivatedRoute,
-    private matricesService: MatricesService
+    private matricesService: MatricesService,
+    private usuarioService:UsuarioService
   ) { }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Matrices");
+    this.usuarioService.usuarioActual().pipe(
+          switchMap(usuarioActivo => {
+            if (!usuarioActivo) return of(null);
+            return this.usuarioService.usuarioActualFSS(usuarioActivo.uid);
+          })
+        ).subscribe( usuarioActivo => {
+          this.usuario = usuarioActivo ? usuarioActivo[0] : {};
+          this.cargando = false;
+        });
   }
 
   changeTab(activeTab: any) {

@@ -15,7 +15,7 @@ export class TipoGuard implements CanActivate {
   async canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Promise<boolean>{
-    const tipoEsperado = route.data['tipo'];
+    const tiposEsperado = route.data['tipos'];
     const usuario = await firstValueFrom(this.usuarioService.usuarioActual());
     if (!usuario) {
       this.router.navigate(["/usuario/inicio-sesion"]);
@@ -26,7 +26,7 @@ export class TipoGuard implements CanActivate {
     console.log("usuario: ", usuario);
       if (usuarioUID) {
 
-        if (usuarioUID['tipo'] !== tipoEsperado){
+        if (!tiposEsperado.includes(usuarioUID['tipo'])){
           this.toastr.error("Su usuario no tiene permisos para acceder a esta página", "Acceso Denegado", {
             closeButton: true,
             timeOut: 4000,
@@ -34,7 +34,7 @@ export class TipoGuard implements CanActivate {
           });
           this.router.navigate(["/"]);
         }
-        return usuarioUID['tipo'] === tipoEsperado;
+        return tiposEsperado.includes(usuarioUID['tipo']);
       }
       return false;
   }

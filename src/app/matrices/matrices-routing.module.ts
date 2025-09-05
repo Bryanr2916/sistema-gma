@@ -6,6 +6,7 @@ import { ViewComponent } from './view/view.component';
 import { ArticulosAplicablesComponent } from './articulos-aplicables/articulos-aplicables.component';
 import { EditComponent } from './edit/edit.component';
 import { MatrizArticulosEditComponent } from './matriz-articulos-edit/matriz-articulos-edit.component';
+import { TipoGuard } from '../core/guards/tipo.guard';
 
 const routes: Routes = [
   {path:'',component:IndexComponent},
@@ -13,7 +14,10 @@ const routes: Routes = [
   {path:'editar/:id',component:EditComponent},
   {path:'ver/:id',component:ViewComponent},
   {path:'crear-articulos/:id',component:ArticulosAplicablesComponent},
-  {path:'editar-articulo/:id',component:MatrizArticulosEditComponent}
+  {path:'editar-articulo/:id',component:MatrizArticulosEditComponent,
+    canActivate: [TipoGuard],
+    data: {tipos: [1,2,3]}
+  }
 ];
 
 @NgModule({
