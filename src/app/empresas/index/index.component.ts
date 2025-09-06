@@ -99,7 +99,7 @@ export class IndexComponent implements OnInit {
   }
 
   usuarioAdmin(empresa: any) {
-    return this.usuarios.find( usuario => usuario.empresaId === empresa.id)?.correo;
+    return this.usuarios.find( usuario => usuario.empresaId === empresa.id && usuario.tipo === 2)?.correo;
   }
 
 }
