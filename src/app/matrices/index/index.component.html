@@ -11,7 +11,7 @@
               <input (ngModelChange)="buscar($event)" [(ngModel)]="busqueda" [ngModelOptions]="{standalone:true}" type="text" class="form-control border- border-dark" placeholder="Buscar..." aria-label="Username" aria-describedby="basic-addon1">
             </div>
       </li>
-      <li *ngIf="usuario.tipo === 1 || usuario.tipo === 2" class="nav-item mx-2">
+      <li *ngIf="usuario.tipo === 1 || usuario.tipo === 2 || usuario.tipo === 3" class="nav-item mx-2">
         <a class="nav-link active" routerLink="crear"><i class="fa-solid fa-plus"></i> Crear matriz</a>
       </li>
   </ul>
