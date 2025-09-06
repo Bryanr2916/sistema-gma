@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { of, switchMap } from 'rxjs';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
+import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
 
 @Component({
@@ -17,17 +19,23 @@ export class PerfilComponent implements OnInit {
 
   constructor(
     private titleService: Title,
-    private UsuarioService: UsuarioService,
-    private empresasService: EmpresasService
+    private usuarioService: UsuarioService,
+    private empresasService: EmpresasService,
+    private mensajesService: MensajesService
   ) { }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Perfil");
-    this.tipos = this.UsuarioService.tiposSelect();
-    this.UsuarioService.usuarioActual().subscribe(usuario => {
-      if (usuario?.uid) {
-        this.UsuarioService.usuarioActualFSS(usuario?.uid).subscribe(usuarioFB => {
-          this.usuario = usuarioFB[0];
+    this.tipos = this.usuarioService.tiposSelect();
+    
+    this.usuarioService.usuarioActual().pipe(
+          switchMap(usuarioActivo => {
+            if (!usuarioActivo) return of(null);
+            return this.usuarioService.usuarioActualFSS(usuarioActivo.uid);
+          })
+        ).subscribe( usuarioActivo => {
+          this.usuario = usuarioActivo ? usuarioActivo[0] : {};
+          this.cargando = false;
           if (this.usuario.tipo !== 1) {
             this.cargarEmpresa();
           } else {
@@ -35,9 +43,6 @@ export class PerfilComponent implements OnInit {
             this.cargando = false;
           }
         });
-      }
-      
-    })
   }
 
   async cargarEmpresa() {
@@ -72,5 +77,13 @@ export class PerfilComponent implements OnInit {
       default:
         return "Lector"
     }
+  }
+
+  reestablecerContrasena() {
+    this.usuarioService.reestablecerContrasena(this.usuario.correo).then(_ => {
+      this.mensajesService.mostrarMensaje("success", "Correo enviado", "Reestablecer contraseña");
+    }).catch(_ => {
+      this.mensajesService.mostrarMensaje("error", "Correo inválido", "Error");
+    });
   }
 }
