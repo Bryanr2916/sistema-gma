@@ -10,11 +10,28 @@ import { TipoGuard } from '../core/guards/tipo.guard';
 
 const routes: Routes = [
   {path:'',component:IndexComponent},
-  {path:'crear',component:CreateComponent},
-  {path:'editar/:id',component:EditComponent},
+  {
+    path: 'crear',
+    component: CreateComponent,
+    canActivate: [TipoGuard],
+    data: { tipos: [1, 2, 3] }
+  },
+  {
+    path:'editar/:id',
+    component:EditComponent,
+    canActivate: [TipoGuard],
+    data: { tipos: [1, 2, 3] }
+  },
   {path:'ver/:id',component:ViewComponent},
-  {path:'crear-articulos/:id',component:ArticulosAplicablesComponent},
-  {path:'editar-articulo/:id',component:MatrizArticulosEditComponent,
+  {
+    path:'crear-articulos/:id',
+    component:ArticulosAplicablesComponent,
+    canActivate: [TipoGuard],
+    data: { tipos: [1, 2, 3] }
+  },
+  {
+    path:'editar-articulo/:id',
+    component:MatrizArticulosEditComponent,
     canActivate: [TipoGuard],
     data: {tipos: [1,2,3]}
   }
