@@ -5,12 +5,14 @@ import { EmpresaRoutingModule } from './empresa-routing.module';
 import { GestionarUsuariosComponent } from './gestionar-usuarios/gestionar-usuarios.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UsuariosCreateComponent } from './usuarios-create/usuarios-create.component';
+import { UsuariosEditComponent } from './usuarios-edit/usuarios-edit.component';
 
 
 @NgModule({
   declarations: [
     GestionarUsuariosComponent,
-    UsuariosCreateComponent
+    UsuariosCreateComponent,
+    UsuariosEditComponent
   ],
   imports: [
     CommonModule,

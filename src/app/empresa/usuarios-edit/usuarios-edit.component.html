@@ -1,0 +1,71 @@
+<div class="d-flex justify-content-center align-items-center">
+    <div class="card shadow my-5 text-center border border-dark">
+        <div class="card-header d-flex justify-content-around">
+            <h2><i class="g-icon fa-solid fa-user me-1"></i>Editar Usuario</h2>
+            <!--Nav-->
+            <ul class="nav nav-pills mx-5">
+                <li class="nav-item mx-2">
+                    <a class="nav-link active" routerLink="/empresa/gestionar-usuarios"><i class="fa-solid fa-chevron-left"></i> Regresar</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card-body">
+            <!--FORM Usuario-->
+            <form [formGroup]="formulario" id="form" class="my-5">
+                <!--Nombre-->
+                <div class="mb-3 me-5 row">
+                    <label for="inputNombre" class="col-sm-4 col-form-label">
+                        <span class="text-danger">*</span>
+                        Nombre
+                    </label>
+                    <div class="col-sm-8">
+                        <input formControlName="nombre" type="text" class="form-control border border-dark" id="inputNombre">
+                        <div class="d-flex">
+                            <small class="text-danger" *ngIf="errorEnControlador('nombre', 'required')">Nombre requerido</small>
+                        </div>
+                    </div>
+                </div>
+                <!--Correo-->
+                <div class="mb-3 me-5 row">
+                    <label for="inputCorreo" class="col-sm-4 col-form-label">
+                        <span class="text-danger">*</span>
+                        Correo Electrónico
+                    </label>
+                    <div class="col-sm-8">
+                        <input formControlName="correo" type="email" class="form-control border border-dark" id="inputCorreo">
+                        <div class="d-flex">
+                            <small class="text-danger" *ngIf="errorEnControlador('correo', 'required')">Correo requerido</small>
+                            <small class="text-danger" *ngIf="errorEnControlador('correo', 'email')">Formato de correo inválido</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <!--Tipo-->
+                <div class="mb-3 me-5 row">
+                    <label for="inputTipo" class="col-sm-4 col-form-label">
+                        <span class="text-danger">*</span>
+                        Tipo
+                    </label>
+                    <div class="col-sm-8">
+                        <select formControlName="tipo" id="inputTipo" class="form-select border border-dark">
+                            <option value="select-valor-vacio" selected>Seleccione el tipo</option>
+                            <option value={{tipo.valor}} *ngFor="let tipo of tipos">{{tipo.etiqueta}}</option>
+                        </select>
+                        <div class="d-flex">
+                            <small class="text-danger" *ngIf="errorEnControlador('tipo', 'required')">Tipo requerido</small>
+                            <small class="text-danger" *ngIf="errorEnControlador('tipo', 'emptySelect')">Tipo requerido</small>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="card-footer">
+            <!--Acciones-->
+            <div class="mb-3 mx-5 row align-items-center">
+                <button (click)="editarUsuario()" class="btn btn-primary col-sm-3" type="submit">Editar Usuario</button>
+            </div>
+        </div>
+    </div>
+</div>
