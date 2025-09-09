@@ -24,8 +24,17 @@ export class HeaderComponent implements OnInit {
         return this.usuarioService.usuarioActualFSS(usuarioActivo.uid);
       })
     ).subscribe( usuarioActivo => {
-      this.usuario = usuarioActivo ? usuarioActivo[0] : {};
-      this.cargando = false;
+      if (usuarioActivo) {
+        this.usuario = usuarioActivo.length > 0 ? usuarioActivo[0] : {};
+        if (usuarioActivo.length === 0) {
+          this.router.navigate(["usuario/inicio-sesion"])
+        }
+        this.cargando = false;
+      } else {
+        this.usuario = {};
+        this.cargando = false;
+        this.router.navigate(["usuario/inicio-sesion"])
+      }
     });
   }
 
