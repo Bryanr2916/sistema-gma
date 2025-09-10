@@ -38,15 +38,10 @@ export class MatrizArticulosViewComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Matrices");
-    this.usuarioService.usuarioActual().pipe(
-          switchMap(usuarioActivo => {
-            if (!usuarioActivo) return of(null);
-            return this.usuarioService.usuarioActualFSS(usuarioActivo.uid);
-          })
-        ).subscribe( usuarioActivo => {
-          this.usuario = usuarioActivo ? usuarioActivo[0] : {};
-          this.cargando = false;
-        });
+    this.usuarioService.usuarioActual().subscribe(usuario => {
+      this.usuario = usuario;
+      this.cargando = false;
+    });
   }
 
   changeTab(activeTab: any) {

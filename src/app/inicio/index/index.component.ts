@@ -20,23 +20,18 @@ export class IndexComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Inicio");
-    this.usuarioService.usuarioActual().pipe(
-      switchMap(usuarioActivo => {
-        if (!usuarioActivo) return of(null);
-        return this.usuarioService.usuarioActualFSS(usuarioActivo.uid);
-      })
-    ).subscribe( usuarioActivo => {
-      this.usuario = usuarioActivo ? usuarioActivo[0] : {};
+    this.usuarioService.usuarioActual().subscribe(usuario => {
+      this.usuario = usuario;
       this.cargando = false;
       if (this.usuario.tipo == 1) {
-        this.menu.unshift({logo:"briefcase", nombre: "Empresas", enlace: "empresas"});
-        this.menu.push({logo:"book", nombre: "Normativas", enlace: "normativas"});
-        this.menu.push({logo:"rectangle-list", nombre: "Tipos de Normativas", enlace: "tipos-normativas"});
-        this.menu.push({logo:"bookmark", nombre: "Área Legal", enlace: "area-legal"});
+        this.menu.unshift({ logo: "briefcase", nombre: "Empresas", enlace: "empresas" });
+        this.menu.push({ logo: "book", nombre: "Normativas", enlace: "normativas" });
+        this.menu.push({ logo: "rectangle-list", nombre: "Tipos de Normativas", enlace: "tipos-normativas" });
+        this.menu.push({ logo: "bookmark", nombre: "Área Legal", enlace: "area-legal" });
       }
 
       if (this.usuario.tipo == 2) {
-        this.menu.unshift({logo: "users", nombre: "Gestionar Usuarios", enlace: "empresa/gestionar-usuarios"});
+        this.menu.unshift({ logo: "users", nombre: "Gestionar Usuarios", enlace: "empresa/gestionar-usuarios" });
       }
     });
   }

@@ -34,18 +34,11 @@ export class UsuariosCreateComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Empresas");
-    this.usuarioService.usuarioActual().subscribe(user => {
-        const uid = user?.uid;
-        if (uid) {
-          this.cargarUsuario(uid);
-        }
-      });
+    this.usuarioService.usuarioActual().subscribe(usuario => {
+      this.empresaId = usuario?.['empresaId'];
+      console.log("empresa id: ", this.empresaId);
+    });
   }
-
-  cargarUsuario = async (uid: string) => {
-    const usuario = await this.usuarioService.usuarioActualFS(uid);
-    this.empresaId = usuario.docs[0].data()['empresaId'];
-  };
 
   definirFormulario() {
       this.formulario = this.fb.group({

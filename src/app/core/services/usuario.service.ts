@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Auth,createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, user, sendPasswordResetEmail } from '@angular/fire/auth';
+import { Auth,createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, user, sendPasswordResetEmail, User } from '@angular/fire/auth';
 import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, query, where, getDocs, serverTimestamp } from '@angular/fire/firestore';
 import { EncriptadorService } from './encriptador.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -47,7 +47,7 @@ export class UsuarioService {
     return signOut(this.auth);
   }
 
-  usuarioActual() {
+  usuarioAuthActual() {
     return user(this.auth);
   }
 
@@ -64,6 +64,20 @@ export class UsuarioService {
     const usuarioUID = query(usuarioRef, where("uid", "==", uid));
     return collectionData(usuarioUID, { idField: 'id' });
   };
+
+  usuarioActual() {
+    const usuarioAuth = user(this.auth);
+    return usuarioAuth.pipe(switchMap((user: User | null) => {
+      if (user === null) return of(null);
+      
+      const usuarioRef = collection(this.firestore, this.path);
+      const usuarioUID = query(usuarioRef, where("uid", "==", user.uid));
+
+      return collectionData(usuarioUID, { idField: 'id' }).pipe(
+        map(users => users[0] ?? null)
+      );
+    }));
+  }
 
   crearUsuario( usuario:any ) {
     const usuarioRef = collection(this.firestore, this.path);

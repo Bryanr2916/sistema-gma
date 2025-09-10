@@ -15,7 +15,7 @@ export class UsuarioGuard implements CanActivate {
   async canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Promise<boolean>{
-    const usuario = await firstValueFrom(this.usuarioService.usuarioActual());
+    const usuario = await firstValueFrom(this.usuarioService.usuarioAuthActual());
     if (!usuario) {
       this.router.navigate(["/usuario/inicio-sesion"]);
       return false;

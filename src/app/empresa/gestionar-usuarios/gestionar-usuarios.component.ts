@@ -17,7 +17,7 @@ export class GestionarUsuariosComponent implements OnInit {
   ths = ["#","Nombre", "Correo", "Tipo", "Acciones"];
   usuariosTodos:any[] = [];
   usuariosFiltrados:any[] = [];
-  usuario = {};
+  usuario: any = {};
   empresa = {
     id: "",
     nombre: ""
@@ -29,21 +29,13 @@ export class GestionarUsuariosComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Empresas");
-    this.usuarioService.usuarioActual().subscribe(user => {
-        const uid = user?.uid;
-        if (uid) {
-          this.cargarUsuario(uid);
-        }
-      });
+    this.usuarioService.usuarioActual().subscribe(usuario => {
+      this.usuario = usuario;
+      this.empresa.id = usuario?.['empresaId'];
+
+      this.cargarDatos();
+    });
   }
-
-  cargarUsuario = async (uid: string) => {
-    const usuario = await this.usuarioService.usuarioActualFS(uid);
-    this.usuario = usuario.docs[0].data;
-    this.empresa.id = usuario.docs[0].data()['empresaId'];
-
-    this.cargarDatos();
-  };
 
   cargarDatos = async () => {
     const reEmpresa = await this.empresasService.obtenerEmpresa(this.empresa.id);

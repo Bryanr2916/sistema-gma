@@ -45,29 +45,17 @@ export class CreateComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Matrices");
-    this.usuarioService.usuarioActual().subscribe( usuarioActivo => {
-      if (usuarioActivo) { 
-        this.usuarioService.usuarioActualFS(usuarioActivo.uid).then(respuesta => {
-          const usuarioFS = respuesta.docs[0];
-          if (usuarioFS) {
-            const usuarioUID = respuesta.docs[0].data();
-            if (usuarioUID) {
-              this.usuario = usuarioUID
-              this.empresaService.obtenerEmpresas().subscribe(datos => {
-                this.empresas = datos;
-                if (this.usuario.tipo === 2) {
-                  this.formulario.get("empresa")?.disable();
-                  const empresa = this.empresas.find(emp => emp.id === this.usuario.empresaId);
-                  this.formulario.get("empresa")?.setValue(empresa.id);
-                }
-                this.cargando = false;
-              });
-            }
-          }
-        });
-      } else {
-        this.usuario.correo = "";
-      }
+    this.usuarioService.usuarioActual().subscribe(usuario => {
+      this.usuario = usuario;
+      this.empresaService.obtenerEmpresas().subscribe(datos => {
+        this.empresas = datos;
+        if (this.usuario.tipo === 2) {
+          this.formulario.get("empresa")?.disable();
+          const empresa = this.empresas.find(emp => emp.id === this.usuario.empresaId);
+          this.formulario.get("empresa")?.setValue(empresa.id);
+        }
+        this.cargando = false;
+      });
     });
   }
 

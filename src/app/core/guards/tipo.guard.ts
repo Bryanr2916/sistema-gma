@@ -16,14 +16,15 @@ export class TipoGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Promise<boolean>{
     const tiposEsperado = route.data['tipos'];
-    const usuario = await firstValueFrom(this.usuarioService.usuarioActual());
+    const usuario = await firstValueFrom(this.usuarioService.usuarioAuthActual());
     if (!usuario) {
       this.router.navigate(["/usuario/inicio-sesion"]);
       return false;
     }
+
+    
     const respuesta = await this.usuarioService.usuarioActualFS(usuario?.uid || "");
     const usuarioUID = respuesta.docs[0].data();
-    console.log("usuario: ", usuario);
       if (usuarioUID) {
 
         if (!tiposEsperado.includes(usuarioUID['tipo'])){

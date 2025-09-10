@@ -37,9 +37,8 @@ export class IndexComponent implements OnInit {
   }
 
   async cargarUsuario() {
-    this.usuarioService.usuarioActual().subscribe( async datos => {
-      const usuarioFS = await this.usuarioService.usuarioActualFS(datos?.uid || "");
-      this.usuario = usuarioFS.docs[0].data();
+    this.usuarioService.usuarioActual().subscribe(usuario => {
+      this.usuario = usuario;
       this.cargarMatrices();
     });
   }

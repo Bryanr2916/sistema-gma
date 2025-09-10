@@ -52,35 +52,23 @@ export class EditComponent implements OnInit {
       this.matriz.id = params["id"];
     });
 
-    this.usuarioService.usuarioActual().subscribe( usuarioActivo => {
-      if (usuarioActivo) { 
-        this.usuarioService.usuarioActualFS(usuarioActivo.uid).then(respuesta => {
-          const usuarioFS = respuesta.docs[0];
-          if (usuarioFS) {
-            const usuarioUID = respuesta.docs[0].data();
-            if (usuarioUID) {
-              this.usuario = usuarioUID
-              this.empresaService.obtenerEmpresas().subscribe(datos => {
-                this.empresas = datos;
-                if (this.usuario.tipo === 2) {
-                  this.formulario.get("empresa")?.disable();
-                } 
+    this.usuarioService.usuarioActual().subscribe(usuario => {
+      this.usuario = usuario;
+      this.empresaService.obtenerEmpresas().subscribe(datos => {
+        this.empresas = datos;
+        if (this.usuario.tipo === 2) {
+          this.formulario.get("empresa")?.disable();
+        }
 
-                this.matricesService.obtenerMatriz(this.matriz.id).then(respuesta => {
-                  this.formulario.controls["titulo"].setValue(respuesta.get("titulo"));
-                  this.formulario.controls["empresa"].setValue(respuesta.get("empresa"));
-                  this.matriz.titulo = respuesta.get("titulo");
-                  this.matriz.empresa = respuesta.get("empresa");
-                });
-
-                this.cargando = false;
-              });
-            }
-          }
+        this.matricesService.obtenerMatriz(this.matriz.id).then(respuesta => {
+          this.formulario.controls["titulo"].setValue(respuesta.get("titulo"));
+          this.formulario.controls["empresa"].setValue(respuesta.get("empresa"));
+          this.matriz.titulo = respuesta.get("titulo");
+          this.matriz.empresa = respuesta.get("empresa");
         });
-      } else {
-        this.usuario.correo = "";
-      }
+
+        this.cargando = false;
+      });
     });
   }
 

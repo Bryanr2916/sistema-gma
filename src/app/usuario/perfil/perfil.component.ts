@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { of, switchMap } from 'rxjs';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
@@ -28,21 +27,16 @@ export class PerfilComponent implements OnInit {
     this.titleService.setTitle("GMA Sistema - Perfil");
     this.tipos = this.usuarioService.tiposSelect();
     
-    this.usuarioService.usuarioActual().pipe(
-          switchMap(usuarioActivo => {
-            if (!usuarioActivo) return of(null);
-            return this.usuarioService.usuarioActualFSS(usuarioActivo.uid);
-          })
-        ).subscribe( usuarioActivo => {
-          this.usuario = usuarioActivo ? usuarioActivo[0] : {};
-          this.cargando = false;
-          if (this.usuario.tipo !== 1) {
-            this.cargarEmpresa();
-          } else {
-            this.nombreEmpresa = "GMA Sistema";
-            this.cargando = false;
-          }
-        });
+    this.usuarioService.usuarioActual().subscribe(usuario => {
+      this.usuario = usuario;
+      this.cargando = false;
+      if (this.usuario.tipo !== 1) {
+        this.cargarEmpresa();
+      } else {
+        this.nombreEmpresa = "GMA Sistema";
+        this.cargando = false;
+      }
+    });
   }
 
   async cargarEmpresa() {
