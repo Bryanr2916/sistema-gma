@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AreaLegalService } from 'src/app/core/services/area-legal.service';
 import { MatricesService } from 'src/app/core/services/matrices.service';
+import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { NormativaService } from 'src/app/core/services/normativa.service';
+import { UsuarioService } from 'src/app/core/services/usuario.service';
 
 @Component({
   selector: 'app-view',
@@ -13,20 +15,24 @@ import { NormativaService } from 'src/app/core/services/normativa.service';
 export class ViewComponent implements OnInit {
 
   cargando = true;
-  matriz = {id: "", titulo: "" };
+  matriz: any = {id: "", titulo: "" };
   areaSeleccionada = {id: ""};
   articulosAplicablesTodos: any[] = [];
   articulosAplicablesFiltro: any[] = [];
   areasLegales:any[] = [];
   areasAplicables:any[] = [];
   normativas:any[] = [];
+  usuario:any = {};
 
   constructor(
     private titleService: Title, 
     private route: ActivatedRoute,
     private matricesService: MatricesService,
     private areaLegalService: AreaLegalService,
-    private normativaService:NormativaService
+    private normativaService:NormativaService,
+    private usuarioService:UsuarioService,
+    private mensajesService: MensajesService,
+    private router: Router
   ) { }
 
     ngOnInit(): void {
@@ -35,13 +41,23 @@ export class ViewComponent implements OnInit {
       this.matriz.id = params["id"];
     });
 
-    this.getMatrizData();
+    this.usuarioService.usuarioActual().subscribe(usuario => {
+      this.usuario = usuario;
+      this.getMatrizData();
+    });
   }
 
   async getMatrizData () {
     try {
       const matrizFB = await this.matricesService.obtenerMatriz(this.matriz.id);
-      this.matriz.titulo = matrizFB.get("titulo");
+      console.log("matrizFB: ", matrizFB.get("empresa"), this.usuario);
+      this.matriz = {...this.matriz, ...matrizFB.data()};
+
+      // si la empresa del usuario es diferente a la empresa de la matriz se redirecciona
+      if (this.usuario.empresaId !== this.matriz.empresa && this.usuario.tipo !== 1) {
+        this.mensajesService.mostrarMensaje("error", "Su usuario no tiene permisos para acceder a esta página", "Acceso Denegado");
+        this.router.navigate(["/"]);
+      };
 
       const articulosFB = (await this.matricesService.obtenerArticulosAplicables(this.matriz.id));
       this.articulosAplicablesTodos = articulosFB.docs.map((value) => { return {id: value.id, ...value.data() };});

@@ -36,7 +36,6 @@ export class IndexComponent implements OnInit {
 
    borrar(area: any) {
     if (confirm(`¿Desea eliminar el área "${area.nombre}"?`)) {
-      console.log("borrando" + area);
       this.areaLegalService.borrarArea(area.id).then(_ => {
         this.mensajesService.mostrarMensaje("success", "Área borrada con éxito", undefined);
       });
