@@ -36,7 +36,6 @@ export class UsuariosCreateComponent implements OnInit {
     this.titleService.setTitle("GMA Sistema - Empresas");
     this.usuarioService.usuarioActual().subscribe(usuario => {
       this.empresaId = usuario?.['empresaId'];
-      console.log("empresa id: ", this.empresaId);
     });
   }
 

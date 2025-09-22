@@ -104,7 +104,6 @@ export class EditComponent implements OnInit {
   async borrarImagenActual() {
     if (this.empresa.urlLogo !== "") {
       const result = await this.empresasService.borrarArchivo(this.empresa.urlLogo);
-      console.log("result: ", result);
     }
   }
 

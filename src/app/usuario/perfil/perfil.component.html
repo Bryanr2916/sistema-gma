@@ -14,8 +14,8 @@
                         {{mostrarTipo(usuario.tipo)}}
                     </span>
                 </p>
-                <p *ngIf="usuario.tipo !== 1"><strong>Empresa:</strong> {{nombreEmpresa}}</p>
-                <p *ngIf="usuario.tipo === 1"><strong>Empresa:</strong> {{nombreEmpresa}}</p>
+                <p *ngIf="usuario.tipo !== tiposUsuario.adminSistema"><strong>Empresa:</strong> {{nombreEmpresa}}</p>
+                <p *ngIf="usuario.tipo === tiposUsuario.adminSistema"><strong>Empresa:</strong> {{nombreEmpresa}}</p>
             </div>
             <!--loading-->
             <div *ngIf="cargando" class="d-flex justify-content-center">

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TIPOS_USUARIO } from 'src/app/core/services/constantes';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { MatricesService } from 'src/app/core/services/matrices.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
@@ -56,7 +57,7 @@ export class EditComponent implements OnInit {
       this.usuario = usuario;
       this.empresaService.obtenerEmpresas().subscribe(datos => {
         this.empresas = datos;
-        if (this.usuario.tipo === 2) {
+        if (this.usuario.tipo === TIPOS_USUARIO.admin) {
           this.formulario.get("empresa")?.disable();
         }
 
@@ -89,8 +90,7 @@ export class EditComponent implements OnInit {
 
       this.matricesService.editarMatriz(
         this.matriz
-      ).then(data => {
-        console.log(data);
+      ).then(_ => {
         this.mensajesService.mostrarMensaje("success", "Matriz editada con éxito", undefined);
         this.router.navigate(["/matrices"]);
       }).catch(error => {

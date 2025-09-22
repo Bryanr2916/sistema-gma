@@ -46,7 +46,6 @@ export class EmpresasService {
           break;
       }
     }, (error) => {
-      // Handle unsuccessful uploads
       console.log(error);
       reject(error);
       urlArchivo = error.message;

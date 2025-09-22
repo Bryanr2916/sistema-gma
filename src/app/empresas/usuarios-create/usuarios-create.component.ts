@@ -54,9 +54,6 @@ export class UsuariosCreateComponent implements OnInit {
     }
   
     errorEnControlador (controlador: string, error: string) {
-      if (controlador === "contrasena") {
-        console.log("contrasena: ", this.formulario.controls[controlador]);
-      }
       return (
         this.formulario.controls[controlador].hasError(error) && 
         this.formulario.controls[controlador].invalid &&

@@ -21,7 +21,7 @@
         <p>{{articulo[tab.value]}}</p>
       </div>
     </div>
-    <div class="card-footer" *ngIf="usuario.tipo !== 4">
+    <div class="card-footer" *ngIf="usuario.tipo !== tiposUsuario.lector">
       <!--Acciones-->
       <div>
         <a (click)="editarArticulo()"><i class="b-icon fa-solid fa-pen-to-square fa-lg m-2"></i>

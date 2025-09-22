@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of, switchMap } from 'rxjs';
+import { TIPOS_USUARIO } from 'src/app/core/services/constantes';
 import { MatricesService } from 'src/app/core/services/matrices.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
@@ -15,6 +15,7 @@ export class MatrizArticulosViewComponent implements OnInit {
 
   @Input() articulo: any;
   @Input() normativa: any;
+  tiposUsuario = TIPOS_USUARIO;
   tabs = [
     {value: "general", label: "General"},
     {value: "articulos", label: "Artículos"},

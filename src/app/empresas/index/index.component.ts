@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { TIPOS_USUARIO } from 'src/app/core/services/constantes';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { EncriptadorService } from 'src/app/core/services/encriptador.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
@@ -99,7 +100,7 @@ export class IndexComponent implements OnInit {
   }
 
   usuarioAdmin(empresa: any) {
-    return this.usuarios.find( usuario => usuario.empresaId === empresa.id && usuario.tipo === 2)?.correo;
+    return this.usuarios.find( usuario => usuario.empresaId === empresa.id && usuario.tipo === TIPOS_USUARIO.admin)?.correo;
   }
 
 }

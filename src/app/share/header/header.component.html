@@ -11,7 +11,7 @@
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <!--Empresas-->
 
-          <li *ngIf="usuario.tipo == 2" class="nav-item dropdown">
+          <li *ngIf="usuario.tipo == tiposUsuario.admin" class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="fa-solid fa-briefcase me-1"></i>Empresa
             </a>
@@ -20,7 +20,7 @@
             </ul>
           </li>
 
-          <li *ngIf="usuario.tipo == 1" class="nav-item">
+          <li *ngIf="usuario.tipo == tiposUsuario.adminSistema" class="nav-item">
             <a class="nav-link" routerLink="empresas"><i class="fa-solid fa-briefcase me-1"></i>Empresas</a>
           </li>
           <!--Matrices-->
@@ -28,7 +28,7 @@
             <a class="nav-link" aria-current="page" routerLink="matrices"><i class="fa-solid fa-table-cells me-1"></i>Matrices</a>
           </li>
           <!--Normativas-->
-          <li *ngIf="usuario.tipo == 1" class="nav-item dropdown">
+          <li *ngIf="usuario.tipo == tiposUsuario.adminSistema" class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="fa-solid fa-book me-1"></i>Normativas
             </a>
@@ -38,7 +38,7 @@
             </ul>
           </li>
           <!--Area Legal-->
-          <li *ngIf="usuario.tipo == 1" class="nav-item">
+          <li *ngIf="usuario.tipo == tiposUsuario.adminSistema" class="nav-item">
             <a class="nav-link" routerLink="area-legal"><i class="fa-solid fa-bookmark me-1"></i>Área Legal</a>
           </li>
           

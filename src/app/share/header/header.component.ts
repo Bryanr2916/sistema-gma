@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { of, switchMap } from 'rxjs';
+import { TIPOS_USUARIO } from 'src/app/core/services/constantes';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
 
@@ -10,6 +10,7 @@ import { UsuarioService } from 'src/app/core/services/usuario.service';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
+  tiposUsuario = TIPOS_USUARIO;
   cargando = true;
   usuario: any = {};
   constructor(

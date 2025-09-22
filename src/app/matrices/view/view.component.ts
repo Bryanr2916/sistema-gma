@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AreaLegalService } from 'src/app/core/services/area-legal.service';
+import { TIPOS_USUARIO } from 'src/app/core/services/constantes';
 import { MatricesService } from 'src/app/core/services/matrices.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { NormativaService } from 'src/app/core/services/normativa.service';
@@ -50,11 +51,10 @@ export class ViewComponent implements OnInit {
   async getMatrizData () {
     try {
       const matrizFB = await this.matricesService.obtenerMatriz(this.matriz.id);
-      console.log("matrizFB: ", matrizFB.get("empresa"), this.usuario);
       this.matriz = {...this.matriz, ...matrizFB.data()};
 
       // si la empresa del usuario es diferente a la empresa de la matriz se redirecciona
-      if (this.usuario.empresaId !== this.matriz.empresa && this.usuario.tipo !== 1) {
+      if (this.usuario.empresaId !== this.matriz.empresa && this.usuario.tipo !== TIPOS_USUARIO.adminSistema) {
         this.mensajesService.mostrarMensaje("error", "Su usuario no tiene permisos para acceder a esta página", "Acceso Denegado");
         this.router.navigate(["/"]);
       };

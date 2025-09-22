@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { of, switchMap } from 'rxjs';
+import { TIPOS_USUARIO } from 'src/app/core/services/constantes';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
 
 @Component({
@@ -23,14 +24,14 @@ export class IndexComponent implements OnInit {
     this.usuarioService.usuarioActual().subscribe(usuario => {
       this.usuario = usuario;
       this.cargando = false;
-      if (this.usuario.tipo == 1) {
+      if (this.usuario.tipo == TIPOS_USUARIO.adminSistema) {
         this.menu.unshift({ logo: "briefcase", nombre: "Empresas", enlace: "empresas" });
         this.menu.push({ logo: "book", nombre: "Normativas", enlace: "normativas" });
         this.menu.push({ logo: "rectangle-list", nombre: "Tipos de Normativas", enlace: "tipos-normativas" });
         this.menu.push({ logo: "bookmark", nombre: "Área Legal", enlace: "area-legal" });
       }
 
-      if (this.usuario.tipo == 2) {
+      if (this.usuario.tipo == TIPOS_USUARIO.admin) {
         this.menu.unshift({ logo: "users", nombre: "Gestionar Usuarios", enlace: "empresa/gestionar-usuarios" });
       }
     });

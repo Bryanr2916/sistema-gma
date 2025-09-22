@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { TIPOS_USUARIO } from 'src/app/core/services/constantes';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
@@ -10,7 +11,7 @@ import { UsuarioService } from 'src/app/core/services/usuario.service';
   styleUrls: ['./perfil.component.scss']
 })
 export class PerfilComponent implements OnInit {
-
+  tiposUsuario = TIPOS_USUARIO;
   cargando = true;
   usuario: any = {};
   nombreEmpresa = ""
@@ -30,7 +31,7 @@ export class PerfilComponent implements OnInit {
     this.usuarioService.usuarioActual().subscribe(usuario => {
       this.usuario = usuario;
       this.cargando = false;
-      if (this.usuario.tipo !== 1) {
+      if (this.usuario.tipo !== TIPOS_USUARIO.adminSistema) {
         this.cargarEmpresa();
       } else {
         this.nombreEmpresa = "GMA Sistema";
@@ -41,7 +42,6 @@ export class PerfilComponent implements OnInit {
 
   async cargarEmpresa() {
     const empresaFB = await this.empresasService.obtenerEmpresa(this.usuario.empresaId);
-    console.log("empresa: ", empresaFB);
     if (empresaFB.exists()) {
       this.nombreEmpresa = empresaFB.data()["nombre"];
     }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { TIPOS_USUARIO } from 'src/app/core/services/constantes';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { MatricesService } from 'src/app/core/services/matrices.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
@@ -11,6 +12,7 @@ import { UsuarioService } from 'src/app/core/services/usuario.service';
   styleUrls: ['./index.component.scss']
 })
 export class IndexComponent implements OnInit {
+  tiposUsuario = TIPOS_USUARIO;
   cargando = true;
   busqueda = "";
   empresas:any[] = [];
@@ -45,7 +47,7 @@ export class IndexComponent implements OnInit {
 
   async cargarMatrices() {
     // filtrar matrices por empresa
-    const filtrarMatrices = this.usuario.tipo !== 1;
+    const filtrarMatrices = this.usuario.tipo !== TIPOS_USUARIO.adminSistema;
 
     this.matricesService.obtenerMatrices().subscribe(async datos => {
       this.matricesTodas = !filtrarMatrices ?  datos : datos.filter(matriz => matriz.empresa === this.usuario.empresaId);
@@ -67,7 +69,6 @@ export class IndexComponent implements OnInit {
 
   buscar(event: any) {
     const busquedaMinuscuala = event.toLowerCase();
-    console.log(this.matricesTodas[0]);
     this.matricesFiltradas = this.matricesTodas.filter(matriz => 
       matriz.titulo.toLowerCase().includes(busquedaMinuscuala) ||
       this.nombreEmpresa(matriz.empresa).includes(busquedaMinuscuala));

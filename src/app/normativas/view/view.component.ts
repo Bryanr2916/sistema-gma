@@ -43,7 +43,6 @@ export class ViewComponent implements OnInit {
       this.normativa.id = params["id"];
     });
     this.normativaService.obtenerNormativa(this.normativa.id).then(respuesta => {
-      console.log("respuesta: ", respuesta);
       this.normativa.titulo = respuesta.get("titulo");
       this.normativa.tipoId = respuesta.get("tipoId");
       this.tiposService.obtenerTipo(this.normativa.tipoId).then(rTipo => {
