@@ -28,6 +28,7 @@ export class HeaderComponent implements OnInit {
   cerrarSesion() {
     if (confirm("¿Desea cerrar sesión?")) {
       this.usuarioService.cerrarSesion().then(() => {
+        this.usuario = {};
         this.mensajesService.mostrarMensaje("success", "Ha cerrado sesión de forma exitosa", undefined);
         this.router.navigate(["usuario/inicio-sesion"])
       }).catch(error => console.log(error));
@@ -35,7 +36,7 @@ export class HeaderComponent implements OnInit {
   }
 
   usuarioVacio() {
-    return Object.keys(this.usuario).length === 0;
+    return !this.usuario || Object.keys(this.usuario).length === 0;
   }
 
 }

@@ -4,6 +4,7 @@ import * as admin from "firebase-admin";
 
 admin.initializeApp();
 const db = admin.firestore();
+const auth = admin.auth();
 
 export const matrizBorrarArticulos = onDocumentDeleted("matrices/{matrizId}", async (event) => {
     const { matrizId } = event.params;
@@ -26,4 +27,21 @@ export const matrizBorrarArticulos = onDocumentDeleted("matrices/{matrizId}", as
     const response = await batch.commit();
     logger.info(`Se borraron ${articulosSnap.size} artículos relacionados con matriz ${matrizId}`);
     return response;
-})
+});
+
+export const borrarUsuarioAuth = onDocumentDeleted("usuarios/{usuarioId}", async (event) => {
+  const usuarioEliminado = event.data?.data();
+
+  if (!usuarioEliminado) return;
+
+  const uid = usuarioEliminado["uid"];
+
+  if (!uid) return;
+
+  try {
+    const response = await auth.deleteUser(uid);
+    return response;
+  } catch(_) {
+    return;
+  }
+});
