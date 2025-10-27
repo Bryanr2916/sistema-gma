@@ -6,6 +6,7 @@ import { TIPOS_USUARIO } from 'src/app/core/services/constantes';
 import { MatricesService } from 'src/app/core/services/matrices.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { NormativaService } from 'src/app/core/services/normativa.service';
+import { TiposNormativasService } from 'src/app/core/services/tipos-normativas.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
 
 @Component({
@@ -20,8 +21,10 @@ export class ViewComponent implements OnInit {
   areaSeleccionada = {id: ""};
   articulosAplicablesTodos: any[] = [];
   articulosAplicablesFiltro: any[] = [];
+  tiposFiltro: any[] = [];
   areasLegales:any[] = [];
   areasAplicables:any[] = [];
+  tiposNormativas: any[] = [];
   normativas:any[] = [];
   usuario:any = {};
 
@@ -31,6 +34,7 @@ export class ViewComponent implements OnInit {
     private matricesService: MatricesService,
     private areaLegalService: AreaLegalService,
     private normativaService:NormativaService,
+    private tiposNormativasService: TiposNormativasService,
     private usuarioService:UsuarioService,
     private mensajesService: MensajesService,
     private router: Router
@@ -61,6 +65,7 @@ export class ViewComponent implements OnInit {
 
       const articulosFB = (await this.matricesService.obtenerArticulosAplicables(this.matriz.id));
       this.articulosAplicablesTodos = articulosFB.docs.map((value) => { return {id: value.id, ...value.data() };});
+      console.log("this.articulosAplicablesTodos: ", this.articulosAplicablesTodos);
 
       this.areaLegalService.obtenerAreas().subscribe(areasFB => {
         this.areasLegales = areasFB;
@@ -74,6 +79,10 @@ export class ViewComponent implements OnInit {
 
       this.normativaService.obtenerNormativas().subscribe(normativasFB => {
         this.normativas = normativasFB;
+      });
+
+      this.tiposNormativasService.obtenerTipos().subscribe(tiposFB => {
+        this.tiposNormativas = tiposFB;
         this.cargando = false;
       });
     } catch(error) {
@@ -83,14 +92,43 @@ export class ViewComponent implements OnInit {
 
   seleccionarAreaLegal() {
     this.articulosAplicablesFiltro = this.articulosAplicablesTodos.filter(articulo => articulo.areaLegalId === this.areaSeleccionada.id);
+
+    this.articulosAplicablesFiltro = this.articulosAplicablesFiltro.map(aa => {
+      const normativaInfo = this.obtenerNormativa(aa.normativaId);
+      const tipo = this.obtenerTipoNormativa(normativaInfo.tipoId);
+      return {...aa, tipoNormativa: tipo};
+    });
+
+    this.tiposFiltro = [...new Set(this.articulosAplicablesFiltro.map(aa => aa.tipoNormativa))];
+    this.tiposFiltro = this.tiposFiltro.sort((a, b) => {
+      const prioridades = ["Leyes", "Decretos", "Reglamentos"];
+
+      const prioridadA = prioridades.indexOf(a.nombre);
+      const prioridadB = prioridades.indexOf(b.nombre);
+
+      if (prioridadA !== -1 || prioridadB !== -1) {
+        if (prioridadA === -1) return 1;
+        if (prioridadB === -1) return -1;
+        return prioridadA - prioridadB;
+      }
+
+      return a.nombre.localeCompare(b.nombre);
+    });
   }
 
   obtenerNormativa(id: string) {
     return this.normativas.find(normativa => normativa.id === id);
   }
 
+  obtenerTipoNormativa(id: string) {
+    return this.tiposNormativas.find(tipo => tipo.id === id);
+  }
+
   obtenerCantidadArticulos(areaId: string) {
     return this.articulosAplicablesTodos.filter(aa => aa.areaLegalId === areaId).length;
   }
 
+  obtenerArticulosPorTipoNormativa(tipoId: string) {  
+    return this.articulosAplicablesFiltro.filter(aa => aa.tipoNormativa.id === tipoId);
+  }
 }

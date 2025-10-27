@@ -30,8 +30,21 @@
                    </div>
                </form>
                <!--Articulos Aplicables-->
-               <div *ngIf="articulosAplicablesFiltro.length !==0">
-                <app-matriz-articulos-view [normativa]="obtenerNormativa(articulo.normativaId)" [articulo]="articulo" *ngFor="let articulo of articulosAplicablesFiltro"></app-matriz-articulos-view>
+               <div class="accordion" id="articulos-accordion" *ngIf="articulosAplicablesFiltro.length !==0">
+                <div class="accordion-item" *ngFor="let tipo of tiposFiltro; index as i">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse' + i"  [attr.aria-controls]="'collapse' + i"
+                            aria-expanded="true" aria-controls="collapseOne">
+                            {{tipo.nombre}}
+                        </button>
+                    </h2>
+                    <div [id]="'collapse' + i" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <app-matriz-articulos-view [normativa]="obtenerNormativa(articulo.normativaId)" [articulo]="articulo"
+                                *ngFor="let articulo of obtenerArticulosPorTipoNormativa(tipo.id)"></app-matriz-articulos-view>
+                        </div>
+                    </div>
+                </div>
                </div>
             </div>
             <!--No hay resultados-->
