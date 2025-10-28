@@ -72,24 +72,6 @@ export class IndexComponent implements OnInit {
     }
   }
 
-  async usarComo (empresa: any) {
-    const usuarioAdmin = this.usuarios.find( usuario => usuario.empresaId === empresa.id);
-    if (usuarioAdmin) {
-      if (confirm(`Al aceptar se cerrará la sesión actual e iniciará sesión como ${usuarioAdmin.correo}`)){
-        this.usuarioService.iniciarSesion({
-          correo: usuarioAdmin.correo, contrasena: this.encriptador.desencriptarContrasena(usuarioAdmin.contrasena)
-        }).then( _ => {
-          this.router.navigate([""]);
-          this.mensajesService.mostrarMensaje("success", "Bienvenido(a) a GMA Sistema", undefined);
-        }).catch(_ => {
-          this.mensajesService.mostrarMensaje("error", "No se pudo iniciar sesión", undefined);
-        }); 
-      }
-    } else {
-      this.mensajesService.mostrarMensaje("error", "No se encontró administrador", undefined);
-    }
-  }
-
   duplicar (empresa: any) {
     if (confirm(`¿Desea duplicar la empresa "${empresa.nombre}"?`)) {
       const empDuplicada = {...empresa, nombre: `copia de ${empresa.nombre}`, urlLogo: ""};
