@@ -12,7 +12,10 @@
       <div *ngIf="tab.value === 'general'" class="contenedor-articulos my-3">
         <p><strong>Número:</strong> {{normativa.numero}}</p>
         <p><strong>Número de artículos:</strong> {{articulo.numeroArticulos}}</p>
-        <p><strong>Descargar Normativa: </strong> <a target="_blank" href={{normativa.urlArchivo}}>{{normativa.titulo}}</a></p>
+        <p><strong>Descargar Normativa: </strong>
+          <a *ngIf="normativa.urlArchivo" target="_blank" href={{normativa.urlArchivo}}>{{normativa.titulo}}</a>
+          <span *ngIf="!normativa.urlArchivo" class="badge text-bg-danger">No hay archivo</span>
+        </p>
         <p><strong>Fecha de publicación de normativa:</strong> {{normativa.fecha}}</p>
         <p><strong>Entidad:</strong> {{normativa.entidad}}</p>
       </div>
