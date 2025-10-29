@@ -10,6 +10,7 @@ import { UsuariosIndexComponent } from './usuarios-index/usuarios-index.componen
 import { UsuariosCreateComponent } from './usuarios-create/usuarios-create.component';
 import { ShareModule } from '../share/share.module';
 import { UsuariosEditComponent } from './usuarios-edit/usuarios-edit.component';
+import { UsuariosViewComponent } from './usuarios-view/usuarios-view.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { UsuariosEditComponent } from './usuarios-edit/usuarios-edit.component';
     ViewComponent,
     UsuariosIndexComponent,
     UsuariosCreateComponent,
-    UsuariosEditComponent
+    UsuariosEditComponent,
+    UsuariosViewComponent
   ],
   imports: [
     CommonModule,

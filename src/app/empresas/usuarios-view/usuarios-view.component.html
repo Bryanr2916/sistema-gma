@@ -1,0 +1,24 @@
+<div class="d-flex justify-content-center align-items-center">
+    <div class="card shadow my-5 border border-dark">
+        <div class="card-header d-flex justify-content-around">
+            <h2><i class="g-icon fa-solid fa-user me-1"></i>Usuario</h2>
+            <!--Nav-->
+            <ul class="nav nav-pills mx-5">
+                <li class="nav-item mx-2">
+                    <a class="nav-link active" routerLink={{obtenerUrl()}}><i class="fa-solid fa-chevron-left"></i> Regresar</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body mb-4 mx-3">
+            <p><strong>Nombre:</strong> {{usuario.nombre}}</p>
+            <p><strong>Correo:</strong> {{usuario.correo}}</p>
+            <p>
+                <strong class="me-2">Tipo:</strong>
+                <span class={{claseTipo(usuario.tipo)}}>
+                    {{mostrarTipo(usuario.tipo)}}
+                </span>
+            </p>
+            <p><strong>Empresa:</strong> {{empresa.nombre}}</p>
+        </div>
+    </div>
+</div>

@@ -6,13 +6,15 @@ import { GestionarUsuariosComponent } from './gestionar-usuarios/gestionar-usuar
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UsuariosCreateComponent } from './usuarios-create/usuarios-create.component';
 import { UsuariosEditComponent } from './usuarios-edit/usuarios-edit.component';
+import { UsuariosViewComponent } from './usuarios-view/usuarios-view.component';
 
 
 @NgModule({
   declarations: [
     GestionarUsuariosComponent,
     UsuariosCreateComponent,
-    UsuariosEditComponent
+    UsuariosEditComponent,
+    UsuariosViewComponent
   ],
   imports: [
     CommonModule,
