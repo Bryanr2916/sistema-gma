@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AreaLegalService } from 'src/app/core/services/area-legal.service';
+import { ESTADOS_ARTICULO } from 'src/app/core/services/constantes';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { MatricesService } from 'src/app/core/services/matrices.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
@@ -16,13 +17,14 @@ import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
 })
 export class ArticulosAplicablesComponent implements OnInit {
 
+  estados = ESTADOS_ARTICULO;
   formulario: FormGroup = this.fb.group({});
   cargando = true;
   matriz = {titulo: "", empresa: ""};
   empresa = {nombre: "", paises: [] as any []};
   areasLegales: any[] = [];
   normativas:any[] = [];
-  articulosAplicables = {
+  articulosAplicables: any = {
     matrizId: "",
     normativaId: "",
     areaLegalId: "",
@@ -45,6 +47,7 @@ export class ArticulosAplicablesComponent implements OnInit {
     this.formulario = this.fb.group({
       normativaId: ["", [Validators.required, seleccionVacia()]],
       areaLegalId: ["", [Validators.required, seleccionVacia()]],
+      estado: ["", [Validators.required, seleccionVacia()]],
       numeroArticulos: ["", [Validators.required]],
       articulos: ["", []],
       tramites: ["", []],
@@ -102,6 +105,7 @@ export class ArticulosAplicablesComponent implements OnInit {
       this.articulosAplicables.cumplimiento = this.formulario.controls["cumplimiento"].value;
       this.articulosAplicables.aspectosAmbientales = this.formulario.controls["aspectosAmbientales"].value;
       this.articulosAplicables.cambiosRecientes = this.formulario.controls["cambiosRecientes"].value;
+      this.articulosAplicables.estado = Number.parseInt(this.formulario.controls["estado"].value);
 
       this.matricesService.agregarArticulosAplicables(this.articulosAplicables).then(_ => {
         this.mensajesService.mostrarMensaje("success", "Artículos aplicables creados con éxito", undefined);

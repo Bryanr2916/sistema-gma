@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TIPOS_USUARIO } from 'src/app/core/services/constantes';
+import { ESTADOS_ARTICULO, TIPOS_USUARIO } from 'src/app/core/services/constantes';
 import { MatricesService } from 'src/app/core/services/matrices.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
@@ -16,6 +16,7 @@ export class MatrizArticulosViewComponent implements OnInit {
   @Input() articulo: any;
   @Input() normativa: any;
   tiposUsuario = TIPOS_USUARIO;
+  estados = ESTADOS_ARTICULO;
   tabs = [
     {value: "general", label: "General"},
     {value: "articulos", label: "Artículos"},
@@ -60,5 +61,11 @@ export class MatrizArticulosViewComponent implements OnInit {
 
   editarArticulo() {
     this.router.navigate([`/matrices/editar-articulo/${this.articulo.id}`]);
+  }
+
+  estadoActual() {
+    const estado = this.estados.find(e => e.value === this.articulo.estado);
+    if (!estado) return this.estados[4];
+    return estado;
   }
 }

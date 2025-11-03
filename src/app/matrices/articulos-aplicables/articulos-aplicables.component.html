@@ -60,6 +60,23 @@
                         </div>
                     </div>
                 </div>
+                <!--Estado-->
+                <div class="mb-3 me-5 row">
+                    <label for="inputEstado" class="col-sm-4 col-form-label">
+                        <span class="text-danger">*</span>
+                        Estado
+                    </label>
+                    <div class="col-sm-8">
+                        <select formControlName="estado" id="inputEstado" class="form-select border border-dark">
+                            <option value="select-valor-vacio" selected>Seleccione el estado</option>
+                            <option *ngFor="let estado of estados" value="{{estado.value}}">{{estado.label}}</option>
+                        </select>
+                        <div class="d-flex">
+                            <small class="text-danger" *ngIf="errorEnControlador('estado', 'required')">Estado es requerido</small>
+                            <small class="text-danger" *ngIf="errorEnControlador('estado', 'emptySelect')">Estado es requerido</small>
+                        </div>
+                    </div>
+                </div>
                 <!--Número Artículos-->
                 <div class="mb-3 me-5 row">
                     <label for="inputNumeroArticulos" class="col-sm-4 col-form-label">Número Artículos</label>
