@@ -28,6 +28,7 @@ export class MatrizArticulosViewComponent implements OnInit {
   tab = {value: "general", label: "General"};
   usuario: any = {};
   cargando = true;
+  reqs: any[] = [];
 
   constructor(
     private titleService: Title,
@@ -40,10 +41,18 @@ export class MatrizArticulosViewComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Matrices");
+
+    if (this.normativa.requerimientos) {
+      this.tabs.push({ value: "requerimientos", label: "Requerimientos" });
+    }
     this.usuarioService.usuarioActual().subscribe(usuario => {
       this.usuario = usuario;
       this.cargando = false;
     });
+
+    this.reqs = this.articulo.requerimientos
+    ? this.articulo.requerimientos.filter((req: any) => this.normativa.requerimientos.map((req: any) => req.id).includes(req))
+    : [];
   }
 
   changeTab(activeTab: any) {
@@ -67,5 +76,34 @@ export class MatrizArticulosViewComponent implements OnInit {
     const estado = this.estados.find(e => e.value === this.articulo.estado);
     if (!estado) return this.estados[4];
     return estado;
+  }
+
+  cantidadReq() {
+    if (!this.reqs) return 0;
+
+    return this.reqs.filter((req: any) => {
+      const existe = this.normativa.requerimientos.find((nr: any) => nr.id === req);
+      return !!existe;
+    }).length;
+  }
+
+  reqCumple(id: string) {
+    return this.reqs.map((req: any) => req).includes(id);
+  }
+
+  reqCheck(event: any, id: string) {
+    const check = event.target.checked;
+
+    if (check) {
+      this.reqs.push(id);
+    } else {
+      this.reqs = this.reqs.filter(req => req !== id);
+    }
+  }
+
+  actualizarReqs() {
+    this.matricesService.editarArticulo({...this.articulo, requerimientos: this.reqs}).then(_ => {
+      this.mensajesService.mostrarMensaje("success", "Requerimientos Actualizados", undefined);
+    });
   }
 }

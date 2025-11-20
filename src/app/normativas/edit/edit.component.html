@@ -125,6 +125,37 @@
                       </div>
                     </div>
                 </div>
+                <!--Agregar Requerimientos-->
+                <div class="mb-3 me-5 row">
+                  <label for="inputRequerimientos" class="col-sm-4 col-form-label ">Requerimientos</label>
+                  <div class="col-sm-8">
+                    <div class="input-group mb-3">
+                      <input (keydown)="agregarReqConEnter($event)" formControlName="nuevoReq" type="text" class="form-control border border-dark"
+                        placeholder="Agrega un requerimiento" aria-label="requerimientos" aria-describedby="button-addon2">
+                      <button (click)="agregarRequerimiento()" class="btn btn-outline-primary" type="button" id="button-addon2">
+                        <i class="fa-solid fa-plus"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <!--Mostrar Requerimientos-->
+                <div class="mb-3 me-5 row">
+                  <div *ngIf="requerimientos.length > 0">
+                    <div class="input-group mb-3" *ngFor="let req of requerimientos; index as i; trackBy: trackByIndex">
+                      <input [(ngModel)]="requerimientos[i].value" [ngModelOptions]="{standalone: true}" type="text" class="form-control" aria-label="Text input with checkbox">
+                      <div class="input-group-text">
+                        <button (click)="eliminarRequerimiento(i)" class="btn btn-outline-danger" type="button" id="button-addon2">
+                          <i class="fa-solid fa-minus"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="requerimientos.length === 0">
+                    <div class="alert alert-secondary" role="alert">
+                      <p class="lead"><i class="b-icon fa-solid fa-book me-1"></i> No hay requerimientos para esta normativa</p>
+                    </div>
+                  </div>
+                </div>
             </form>
         </div>
         <div class="card-footer">

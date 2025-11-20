@@ -17,7 +17,7 @@ export class EditComponent implements OnInit {
 
   formulario: FormGroup = this.fb.group({});
   archivo:any = null;
-  normativa = {
+  normativa: any = {
     id: "",
     titulo: "",
     tipoId: "",
@@ -30,6 +30,7 @@ export class EditComponent implements OnInit {
     comentarios: "",
     urlArchivo: ""
   }
+  requerimientos: any[] = [];
   tipos:any[] = [];
   paises = this.paisesService.paises;
 
@@ -58,6 +59,7 @@ export class EditComponent implements OnInit {
         enlace: ["", []],
         comentarios: ["", []],
         urlArchivo: ["", []],
+        nuevoReq: ["", []]
       });
     }
 
@@ -90,6 +92,7 @@ export class EditComponent implements OnInit {
       this.normativa.enlace = respuesta.get("enlace");
       this.normativa.comentarios = respuesta.get("comentarios");
       this.normativa.urlArchivo = respuesta.get("urlArchivo");
+      this.requerimientos = respuesta.get("requerimientos") || [];
       this.tiposService.obtenerTipos().subscribe(datos => {
         this.tipos = datos;
       });
@@ -123,6 +126,7 @@ export class EditComponent implements OnInit {
       this.normativa.entidad = this.formulario.controls["entidad"].value;
       this.normativa.enlace = this.formulario.controls["enlace"].value;
       this.normativa.comentarios = this.formulario.controls["comentarios"].value;
+      this.normativa.requerimientos = this.requerimientos.map(req => ({ ...req, value: req.value.trim() })).filter(req => req.value !== "");
 
       if (this.archivo) {
         this.borrarArchivonActual().then(_ => {
@@ -144,5 +148,38 @@ export class EditComponent implements OnInit {
 
   cargarArchivo(event: any) {
     this.archivo = event.target.files[0];
+  }
+
+  agregarReqConEnter(event: any) {
+    if (event.key === "Enter") {
+      this.agregarRequerimiento();
+    }
+  }
+
+  agregarRequerimiento() {
+    const reqValue = this.formulario.controls["nuevoReq"].value;
+
+    if (reqValue === "") return;
+
+    this.formulario.controls["nuevoReq"].setValue("");
+    this.requerimientos.push({ id: this.generarId(), value: reqValue });
+  }
+
+  actualizarRequerimiento(event: any, index: number) {
+    this.requerimientos[index] = event.target.value;
+  }
+
+  eliminarRequerimiento(index: number) {
+    this.requerimientos.splice(index, 1);
+  }
+
+  // para que el input no pierda el foco
+  trackByIndex(index: number) {
+    return index;
+  }
+
+  // para los reqs
+  generarId(): string {
+    return crypto.randomUUID();
   }
 }

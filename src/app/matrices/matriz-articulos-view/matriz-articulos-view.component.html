@@ -20,9 +20,24 @@
         <p><strong>Entidad:</strong> {{normativa.entidad}}</p>
         <p><strong>Estado:</strong> <span class="badge mx-2" [ngClass]="'text-bg-' + estadoActual().clase">{{estadoActual().label}}</span></p>
       </div>
-      <div *ngIf="tab.value !== 'general'" class="contenedor-articulos my-3">
+      <div *ngIf="tab.value !== 'general' && tab.value !== 'requerimientos'" class="contenedor-articulos my-3">
         <p><strong>{{tab.label}}:</strong></p>
         <p>{{articulo[tab.value]}}</p>
+      </div>
+      <div *ngIf="tab.value === 'requerimientos'" class="contenedor-articulos my-3">
+        <p class="lead">{{ cantidadReq() }} / {{ normativa.requerimientos.length }}</p>
+        <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="50" aria-valuemin="0"
+          aria-valuemax="100">
+          <div class="progress-bar" [style.width]="cantidadReq() * 100 / normativa.requerimientos.length + '%'"></div>
+        </div>
+        <p><strong>{{tab.label}}:</strong></p>
+        <div class="form-check" *ngFor="let req of normativa.requerimientos; index as i">
+          <input (change)="reqCheck($event, req.id)" class="form-check-input" type="checkbox" value="" id="checkChecked" [checked]="reqCumple(req.id)" [disabled]="usuario.tipo === tiposUsuario.lector">
+          <label class="form-check-label" for="checkChecked">
+            {{req.value}}
+          </label>
+        </div>
+        <button *ngIf="usuario.tipo !== tiposUsuario.lector" (click)="actualizarReqs()" type="button" class="btn btn-primary my-3">Actualizar</button>
       </div>
     </div>
     <div class="card-footer" *ngIf="usuario.tipo !== tiposUsuario.lector">
