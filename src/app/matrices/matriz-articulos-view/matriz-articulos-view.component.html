@@ -18,7 +18,7 @@
         </p>
         <p><strong>Fecha de publicación de normativa:</strong> {{normativa.fecha}}</p>
         <p><strong>Entidad:</strong> {{normativa.entidad}}</p>
-        <p><strong>Estado:</strong> <span class="badge mx-2" [ngClass]="'text-bg-' + estadoActual().clase">{{estadoActual().label}}</span></p>
+        <p><strong>Estado:</strong> <span class="badge mx-2 border border-2" [ngClass]="'text-bg-' + estadoActual().clase">{{estadoActual().label}}</span></p>
       </div>
       <div *ngIf="tab.value !== 'general' && tab.value !== 'requerimientos'" class="contenedor-articulos my-3">
         <p><strong>{{tab.label}}:</strong></p>
