@@ -154,4 +154,26 @@ export class UsuarioService {
     }
   ];
   }
+
+  // tipos de usuario para un select
+  tiposSelectPerfil() {
+    return [
+      {
+        valor: 1,
+        etiqueta: "Administrador del Sistema"
+      },
+      {
+        valor: 2,
+        etiqueta: "Administrador"
+      },
+      {
+        valor: 3,
+        etiqueta: "Editor"
+      },
+      {
+        valor: 4,
+        etiqueta: "Lector"
+      }
+    ];
+  }
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 import { TIPOS_USUARIO } from 'src/app/core/services/constantes';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
@@ -21,7 +22,8 @@ export class PerfilComponent implements OnInit {
     private titleService: Title,
     private usuarioService: UsuarioService,
     private empresasService: EmpresasService,
-    private mensajesService: MensajesService
+    private mensajesService: MensajesService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -79,5 +81,9 @@ export class PerfilComponent implements OnInit {
     }).catch(_ => {
       this.mensajesService.mostrarMensaje("error", "Correo inválido", "Error");
     });
+  }
+
+  editarPerfil() {
+    this.router.navigate(["/usuario/perfil-edit"]);
   }
 }

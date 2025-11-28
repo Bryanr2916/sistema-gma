@@ -6,13 +6,15 @@ import { PerfilComponent } from './perfil/perfil.component';
 import { InicioSesionComponent } from './inicio-sesion/inicio-sesion.component';
 import { ReestablecerContrasenaComponent } from './reestablecer-contrasena/reestablecer-contrasena.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PerfilEditComponent } from './perfil-edit/perfil-edit.component';
 
 
 @NgModule({
   declarations: [
     PerfilComponent,
     InicioSesionComponent,
-    ReestablecerContrasenaComponent
+    ReestablecerContrasenaComponent,
+    PerfilEditComponent
   ],
   imports: [
     CommonModule,
