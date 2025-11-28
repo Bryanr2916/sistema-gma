@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
+import { EncriptadorService } from 'src/app/core/services/encriptador.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
 
@@ -25,7 +26,7 @@ export class GestionarUsuariosComponent implements OnInit {
 
   constructor(private titleService: Title, private usuarioService: UsuarioService,
     private empresasService:EmpresasService, private mensajesService: MensajesService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute, private encriptadorService: EncriptadorService, private router: Router) { }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Empresas");
@@ -88,7 +89,30 @@ export class GestionarUsuariosComponent implements OnInit {
     }
   }
 
-  usarComo(usuario: any) {}
+  // iniciar sesión o registrar
+  realizarAccion(uid: string, datos: any) {
+    if (uid !== "") return this.usuarioService.iniciarSesion(datos);
+    return this.usuarioService.registrar(datos);
+  }
+
+  usarComo(usuario: any) {
+    if (confirm(`Al aceptar se cerrará la sesión actual e iniciará sesión como "${usuario.correo}"`)) {
+      console.log("usuario: ", usuario);
+      this.realizarAccion(
+        usuario.uid,
+        {
+          correo: usuario.correo,
+          contrasena: this.encriptadorService.desencriptarContrasena(usuario.contrasena)
+        }
+      ).then(_ => {
+        this.mensajesService.mostrarMensaje("success", "Bienvenido(a) a GMA Sistema", undefined);
+        this.router.navigate([""]);
+      }).catch(_ => {
+        this.mensajesService.mostrarMensaje("error", "No se pudo iniciar sesión", undefined);
+      });
+    }
+  }
+ 
   borrar(usuario: any) {
     if (confirm(`¿Desea eliminar a "${usuario.nombre}"?`)) {
       this.usuarioService.borrarUsuario(usuario.id).then(_ => {
