@@ -48,6 +48,10 @@
           <li *ngIf="usuario.correo" class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="fa-solid fa-circle-user me-1"></i>{{this.usuario.correo !== "" ? this.usuario.correo : "Usuario"}}
+              <br />
+              <i *ngIf="!empresa?.urlLogo" class="fa-solid fa-briefcase me-1"></i>
+              <img *ngIf="empresa?.urlLogo" src={{empresa.urlLogo}} alt="empresa-logo" class="empresa-logo me-1">
+              <span class="me-2" *ngIf="empresa">{{this.empresa.nombre}}</span>
             </a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" routerLink="usuario/perfil"><i class="g-icon fa-solid fa-user me-1"></i>Perfil</a></li>
