@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { getDownloadURL } from '@firebase/storage';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { NormativaService } from 'src/app/core/services/normativa.service';
 import { PaisesService } from 'src/app/core/services/paises.service';
@@ -32,6 +33,8 @@ export class CreateComponent implements OnInit {
   requerimientos:any[] = [];
   tipos:any[] = [];
   paises = this.paisesService.paises;
+  cargandoArchivo = false;
+  progresoArchivo = 0;
 
   constructor(private titleService: Title, private paisesService: PaisesService,
     private tiposService:TiposNormativasService, private normativaService:NormativaService,
@@ -86,10 +89,23 @@ export class CreateComponent implements OnInit {
       this.normativa.requerimientos = this.requerimientos.map(req => ({...req, value: req.value.trim()})).filter(req => req.value !== "");
 
       if (this.archivo) {
-        this.normativaService.subirArchivo(this.archivo).then( respuesta => {
-          this.normativa.urlArchivo = respuesta;
-          this.crearNormativaFB();
-        });
+        this.cargandoArchivo = true;
+        const tareaSubirArchivo = this.normativaService.subirArchivoAlt(this.archivo);
+        tareaSubirArchivo.on('state_changed', 
+            (snapshot) => {
+              this.progresoArchivo = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            }, (error) => {
+              this.cargandoArchivo = false;
+              this.mensajesService.mostrarMensaje("error", "El archivo no pudo ser subido", undefined);
+              console.log(error);
+            }, () => {
+              getDownloadURL(tareaSubirArchivo.snapshot.ref).then((downloadURL) => {
+                this.cargandoArchivo = false;
+                this.mensajesService.mostrarMensaje("success", "Archivo subido con éxito", undefined);
+                this.normativa.urlArchivo = downloadURL;
+                this.crearNormativaFB();
+              });
+            });
       } else {
         this.crearNormativaFB();
       }
@@ -141,5 +157,4 @@ export class CreateComponent implements OnInit {
   generarId(): string {
     return crypto.randomUUID();
   }
-
 }

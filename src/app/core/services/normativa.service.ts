@@ -37,6 +37,13 @@ export class NormativaService {
     return deleteDoc(normativaRef);
   }
 
+  // para manejar el progress en el componente usado
+  subirArchivoAlt(archivo: any) {
+    const archivoRef = ref(this.storage, `normativas/archivos/${archivo.name}`);
+    const tareaSubirArchivo = uploadBytesResumable(archivoRef, archivo);
+    return tareaSubirArchivo;
+  }
+
   subirArchivo(archivo: any) {
     let urlArchivo = "";
     const archivoRef = ref(this.storage, `normativas/archivos/${archivo.name}`);

@@ -130,6 +130,7 @@ export class EditComponent implements OnInit {
 
       if (this.archivo) {
         this.borrarArchivonActual().then(_ => {
+          this.editarNormativaFB();
         });
       } else {
         this.editarNormativaFB();
