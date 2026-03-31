@@ -159,6 +159,13 @@
             </form>
         </div>
         <div class="card-footer">
+          <div *ngIf="cargandoArchivo" class="my-3 mx-5 row align-items-center">
+            <span class="lead">Subiendo archivo... {{ progresoArchivo | number:'1.0-0' }}%</span>
+            <div class="progress" role="progressbar" aria-label="Progreso de subida del archivo"
+              [attr.aria-valuenow]="progresoArchivo" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar" [style.width.%]="progresoArchivo"></div>
+            </div>
+          </div>
             <!--Acciones-->
             <div class="mb-3 mx-5 row align-items-center">
                 <button (click)="editarNormativa()" class="btn btn-primary col-sm-3" type="submit">Editar normativa</button>

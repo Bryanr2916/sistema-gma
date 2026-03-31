@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { getDownloadURL } from '@firebase/storage';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { NormativaService } from 'src/app/core/services/normativa.service';
 import { PaisesService } from 'src/app/core/services/paises.service';
@@ -33,6 +34,8 @@ export class EditComponent implements OnInit {
   requerimientos: any[] = [];
   tipos:any[] = [];
   paises = this.paisesService.paises;
+  cargandoArchivo = false;
+  progresoArchivo = 0;
 
   constructor(
     private titleService: Title,
@@ -129,9 +132,38 @@ export class EditComponent implements OnInit {
       this.normativa.requerimientos = this.requerimientos.map(req => ({ ...req, value: req.value.trim() })).filter(req => req.value !== "");
 
       if (this.archivo) {
-        this.borrarArchivonActual().then(_ => {
-          this.editarNormativaFB();
-        });
+        this.progresoArchivo = 0;
+        this.cargandoArchivo = true;
+        this.borrarArchivonActual()
+          .then(() => {
+            const tareaSubirArchivo = this.normativaService.subirArchivoAlt(this.archivo);
+            tareaSubirArchivo.on(
+              'state_changed',
+              (snapshot) => {
+                this.progresoArchivo = snapshot.totalBytes > 0
+                  ? (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                  : 0;
+              },
+              (error) => {
+                this.cargandoArchivo = false;
+                this.mensajesService.mostrarMensaje('error', 'El archivo no pudo ser subido', undefined);
+                console.log(error);
+              },
+              () => {
+                getDownloadURL(tareaSubirArchivo.snapshot.ref).then((downloadURL) => {
+                  this.cargandoArchivo = false;
+                  this.mensajesService.mostrarMensaje('success', 'Archivo subido con éxito', undefined);
+                  this.normativa.urlArchivo = downloadURL;
+                  this.editarNormativaFB();
+                });
+              }
+            );
+          })
+          .catch((err) => {
+            this.cargandoArchivo = false;
+            this.mensajesService.mostrarMensaje('error', 'No se pudo preparar la subida del archivo', undefined);
+            console.log(err);
+          });
       } else {
         this.editarNormativaFB();
       }

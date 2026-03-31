@@ -89,11 +89,14 @@ export class CreateComponent implements OnInit {
       this.normativa.requerimientos = this.requerimientos.map(req => ({...req, value: req.value.trim()})).filter(req => req.value !== "");
 
       if (this.archivo) {
+        this.progresoArchivo = 0;
         this.cargandoArchivo = true;
         const tareaSubirArchivo = this.normativaService.subirArchivoAlt(this.archivo);
         tareaSubirArchivo.on('state_changed', 
             (snapshot) => {
-              this.progresoArchivo = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              this.progresoArchivo = snapshot.totalBytes > 0
+                ? (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                : 0;
             }, (error) => {
               this.cargandoArchivo = false;
               this.mensajesService.mostrarMensaje("error", "El archivo no pudo ser subido", undefined);
