@@ -3,12 +3,13 @@ import { Auth,createUserWithEmailAndPassword, signInWithEmailAndPassword, signOu
 import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, query, where, getDocs, serverTimestamp } from '@angular/fire/firestore';
 import { EncriptadorService } from './encriptador.service';
 import { BehaviorSubject, map, Observable, of, switchMap } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
-  path = "usuarios";
+  path = environment.production ? "usuarios" : "usuarios-dev";
 
   // todo: usar usuarioCache para optimizar llamados a la db
   private usuarioCache$ = new BehaviorSubject<any | null>(null); // Cache user data

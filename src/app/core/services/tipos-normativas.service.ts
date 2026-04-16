@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, serverTimestamp } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TiposNormativasService {
 
-  path = "tipos-normativas";
+  path = environment.production ? "tipos-normativas" : "tipos-normativas-dev";
   constructor(private firestore: Firestore) { }
 
   crearTipo( tipoNormativas:any ) {

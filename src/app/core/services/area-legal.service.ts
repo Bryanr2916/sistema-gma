@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, serverTimestamp, query, orderBy } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AreaLegalService {
 
-  path = "area-legal";
+  path = environment.production ? "area-legal" : "area-legal-dev";
   constructor(private firestore: Firestore) { }
 
   crearArea( areaLegal:any ) {

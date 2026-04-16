@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, getDocs, query, where, serverTimestamp } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MatricesService {
-
-  path = "matrices";
-  articulosPath = "articulos";
+  path = environment.production ? "matrices" : "matrices-dev";
+  articulosPath = environment.production ? "articulos" : "articulos-dev";
   constructor(private firestore: Firestore) { }
 
   // matriz

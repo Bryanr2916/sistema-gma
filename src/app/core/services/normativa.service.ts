@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { Storage, ref, getDownloadURL, uploadBytesResumable, deleteObject } from '@angular/fire/storage';
 import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, serverTimestamp } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NormativaService {
 
-  path = "normativas";
+  path = environment.production ? "normativas" : "normativas-dev";
 
   constructor(private storage: Storage, private firestore: Firestore) { }
 
