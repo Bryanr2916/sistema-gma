@@ -104,5 +104,17 @@ export class FirestoreFieldService {
     const constraints = whereClauses.map(([field, op, value]) => where(field, op, value));
     return query(colRef, ...constraints);
   }
+
+  /**
+   * Ejemplo de uso
+   * Agrega o modifica un campo de primer nivel en todos (o algunos) documentos.
+   * setCampoMasivo(campo: string, valor: unknown, opts?: BulkFieldUpdateOptions) {
+   *  return this.firestoreField.setFieldBulk(this.path, campo, valor, opts);
+   * }
+   * Elimina un campo de primer nivel en todos (o algunos) documentos.
+   * borrarCampoMasivo(campo: string, opts?: BulkFieldUpdateOptions) {
+   *  return this.firestoreField.deleteFieldBulk(this.path, campo, opts);
+   * }
+   */
 }
 
