@@ -40,7 +40,8 @@ export class NormativaService {
 
   // para manejar el progress en el componente usado
   subirArchivoAlt(archivo: any) {
-    const archivoRef = ref(this.storage, `normativas/archivos/${archivo.name}`);
+    const urlPath = environment.production ? `normativas/archivos/${archivo.name}` : `normativas/archivos-dev/${archivo.name}`;
+    const archivoRef = ref(this.storage, urlPath);
     const tareaSubirArchivo = uploadBytesResumable(archivoRef, archivo);
     return tareaSubirArchivo;
   }

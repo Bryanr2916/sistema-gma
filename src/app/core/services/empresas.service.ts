@@ -29,8 +29,9 @@ export class EmpresasService {
   }
 
   subirArchivo(archivo: any) {
+    const urlPath = environment.production ? `empresas/logos/${archivo.name}` : `empresas/logos-dev/${archivo.name}`;
     let urlArchivo = "";
-    const archivoRef = ref(this.storage, `empresas/logos/${archivo.name}`);
+    const archivoRef = ref(this.storage, urlPath);
     const tareaSubirArchivo = uploadBytesResumable(archivoRef, archivo);
 
     return new Promise<string> ((resolve, reject) => {
