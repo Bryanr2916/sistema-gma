@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { of, switchMap } from 'rxjs';
 import { TIPOS_USUARIO } from 'src/app/core/services/constantes';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
 
@@ -12,10 +11,11 @@ import { UsuarioService } from 'src/app/core/services/usuario.service';
 export class IndexComponent implements OnInit {
   cargando = true;
   usuario: any = {};
-  menu = [
+  private readonly menuBase = [
     {logo:"table-cells", nombre: "Matrices", enlace: "matrices"},
     {logo:"user", nombre: "Perfil de Usuario", enlace: "usuario/perfil"}
   ];
+  menu = [...this.menuBase];
 
   constructor(private titleService: Title, private usuarioService: UsuarioService) { }
 
@@ -24,16 +24,20 @@ export class IndexComponent implements OnInit {
     this.usuarioService.usuarioActual().subscribe(usuario => {
       this.usuario = usuario;
       this.cargando = false;
+
+      const menuActualizado = [...this.menuBase];
       if (this.usuario.tipo == TIPOS_USUARIO.adminSistema) {
-        this.menu.unshift({ logo: "briefcase", nombre: "Empresas", enlace: "empresas" });
-        this.menu.push({ logo: "book", nombre: "Normativas", enlace: "normativas" });
-        this.menu.push({ logo: "rectangle-list", nombre: "Tipos de Normativas", enlace: "tipos-normativas" });
-        this.menu.push({ logo: "bookmark", nombre: "Área Legal", enlace: "area-legal" });
+        menuActualizado.unshift({ logo: "briefcase", nombre: "Empresas", enlace: "empresas" });
+        menuActualizado.push({ logo: "book", nombre: "Normativas", enlace: "normativas" });
+        menuActualizado.push({ logo: "rectangle-list", nombre: "Tipos de Normativas", enlace: "tipos-normativas" });
+        menuActualizado.push({ logo: "bookmark", nombre: "Área Legal", enlace: "area-legal" });
       }
 
       if (this.usuario.tipo == TIPOS_USUARIO.admin) {
-        this.menu.unshift({ logo: "users", nombre: "Gestionar Usuarios", enlace: "empresa/gestionar-usuarios" });
+        menuActualizado.unshift({ logo: "users", nombre: "Gestionar Usuarios", enlace: "empresa/gestionar-usuarios" });
       }
+
+      this.menu = menuActualizado;
     });
   }
 
