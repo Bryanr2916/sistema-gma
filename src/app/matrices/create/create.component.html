@@ -12,7 +12,7 @@
         <div *ngIf="!cargando" class="card-body">
             <form [formGroup]="formulario" id="form" class="my-4">
                 <!--Empresa-->
-                <div class="mb-3 me-5 row">
+                <div id="fieldEmpresa" class="mb-3 me-5 row">
                     <label for="inputEmpresa" class="col-sm-4 col-form-label">
                         <span class="text-danger">*</span>
                         Empresa
@@ -29,7 +29,7 @@
                     </div>
                 </div>
                 <!--Título-->
-                <div class="mb-3 me-5 row">
+                <div id="fieldTitulo" class="mb-3 me-5 row">
                     <label for="inputTitulo" class="col-sm-4 col-form-label">
                         <span class="text-danger">*</span>
                         Título

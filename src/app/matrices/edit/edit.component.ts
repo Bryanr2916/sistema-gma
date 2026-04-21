@@ -96,6 +96,28 @@ export class EditComponent implements OnInit {
       }).catch(error => {
         console.log(error);
       });
+    } else {
+      this.scrollCampoRequeridoInvalido();
     }
+  }
+
+  private scrollCampoRequeridoInvalido() {
+    const camposRequeridosEnOrden = [
+      { control: 'empresa', elementoId: 'fieldEmpresa' },
+      { control: 'titulo', elementoId: 'fieldTitulo' },
+    ];
+
+    const primerCampoInvalido = [...camposRequeridosEnOrden]
+      .find(({ control }) => this.formulario.controls[control]?.invalid);
+
+    if (!primerCampoInvalido) {
+      return;
+    }
+
+    const elemento = document.getElementById(primerCampoInvalido.elementoId);
+    elemento?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    const input = elemento?.querySelector('input, select, textarea') as HTMLElement;
+    input?.focus();
   }
 }

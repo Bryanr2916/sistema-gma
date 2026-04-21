@@ -81,6 +81,8 @@ export class UsuariosCreateComponent implements OnInit {
         } else {
           this.formulario.controls['correo'].setErrors({ correoEnUso: true });
         }
+      } else {
+        this.scrollCampoRequeridoInvalido();
       }
     }
 
@@ -89,4 +91,28 @@ export class UsuariosCreateComponent implements OnInit {
       return respuesta.empty;
     }
 
+
+
+  private scrollCampoRequeridoInvalido() {
+    const camposRequeridosEnOrden = [
+      { control: 'nombre', elementoId: 'fieldNombre' },
+      { control: 'correo', elementoId: 'fieldCorreo' },
+      { control: 'tipo', elementoId: 'fieldTipo' },
+      { control: 'contrasena', elementoId: 'fieldContrasena' },
+      { control: 'repContrasena', elementoId: 'fieldRepContrasena' }
+    ];
+
+    const primerCampoInvalido = [...camposRequeridosEnOrden]
+      .find(({ control }) => this.formulario.controls[control]?.invalid);
+
+    if (!primerCampoInvalido) {
+      return;
+    }
+
+    const elemento = document.getElementById(primerCampoInvalido.elementoId);
+    elemento?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    const input = elemento?.querySelector('input, select, textarea') as HTMLElement;
+    input?.focus();
+  }
 }

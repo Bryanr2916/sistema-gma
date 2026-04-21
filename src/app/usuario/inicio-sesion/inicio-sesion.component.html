@@ -6,7 +6,7 @@
         <div class="card-body">
             <form [formGroup]="formulario" id="form" class="my-4" novalidate (ngSubmit)="iniciarSesion()">
                 <!--Usuario-->
-                <div class="mb-3 me-5 row">
+                <div id="fieldCorreo" class="mb-3 me-5 row">
                     <label for="staticEmail" class="col-sm-4 col-form-label">
                       <span class="text-danger">*</span>
                       Correo electrónico
@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <!--Contraseña-->
-                <div class="mb-3 me-5 row">
+                <div id="fieldContrasena" class="mb-3 me-5 row">
                     <label for="inputPassword" class="col-sm-4 col-form-label">
                       <span class="text-danger">*</span>
                       Contraseña

@@ -113,7 +113,30 @@ export class ArticulosAplicablesComponent implements OnInit {
       }).catch(error => {
         console.log(error);
       });
+    } else {
+      this.scrollCampoRequeridoInvalido();
     }
   }
 
+  private scrollCampoRequeridoInvalido() {
+    const camposRequeridosEnOrden = [
+      { control: 'normativaId', elementoId: 'fieldNormativa' },
+      { control: 'areaLegalId', elementoId: 'fieldAreaLegal' },
+      { control: 'estado', elementoId: 'fieldEstado' },
+      { control: 'numeroArticulos', elementoId: 'fieldNumeroArticulos' }
+    ];
+
+    const primerCampoInvalido = [...camposRequeridosEnOrden]
+      .find(({ control }) => this.formulario.controls[control]?.invalid);
+
+    if (!primerCampoInvalido) {
+      return;
+    }
+
+    const elemento = document.getElementById(primerCampoInvalido.elementoId);
+    elemento?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    const input = elemento?.querySelector('input, select, textarea') as HTMLElement;
+    input?.focus();
+  }
 }

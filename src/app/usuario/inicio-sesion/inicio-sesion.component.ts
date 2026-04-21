@@ -74,7 +74,28 @@ export class InicioSesionComponent implements OnInit {
   
         });
       });
+    } else {
+      this.scrollCampoRequeridoInvalido();
     }
   }
 
+  private scrollCampoRequeridoInvalido() {
+    const camposRequeridosEnOrden = [
+      { control: 'correo', elementoId: 'fieldCorreo' },
+      { control: 'contrasena', elementoId: 'fieldContrasena' }
+    ];
+
+    const primerCampoInvalido = [...camposRequeridosEnOrden]
+      .find(({ control }) => this.formulario.controls[control]?.invalid);
+
+    if (!primerCampoInvalido) {
+      return;
+    }
+
+    const elemento = document.getElementById(primerCampoInvalido.elementoId);
+    elemento?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    const input = elemento?.querySelector('input, select, textarea') as HTMLElement;
+    input?.focus();
+  }
 }

@@ -167,6 +167,8 @@ export class EditComponent implements OnInit {
       } else {
         this.editarNormativaFB();
       }
+    } else {
+      this.scrollCampoRequeridoInvalido();
     }
   }
 
@@ -214,5 +216,28 @@ export class EditComponent implements OnInit {
   // para los reqs
   generarId(): string {
     return crypto.randomUUID();
+  }
+
+  private scrollCampoRequeridoInvalido() {
+    const camposRequeridosEnOrden = [
+      { control: 'titulo', elementoId: 'fieldTitulo' },
+      { control: 'tipoId', elementoId: 'fieldTipo' },
+      { control: 'numero', elementoId: 'fieldNumero' },
+      { control: 'fecha', elementoId: 'fieldFecha' },
+      { control: 'pais', elementoId: 'fieldPais' }
+    ];
+
+    const primerCampoInvalido = [...camposRequeridosEnOrden]
+      .find(({ control }) => this.formulario.controls[control]?.invalid);
+
+    if (!primerCampoInvalido) {
+      return;
+    }
+
+    const elemento = document.getElementById(primerCampoInvalido.elementoId);
+    elemento?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    const input = elemento?.querySelector('input, select, textarea') as HTMLElement;
+    input?.focus();
   }
 }

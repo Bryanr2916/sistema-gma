@@ -84,12 +84,34 @@ export class UsuariosEditComponent implements OnInit {
         this.usuarioService.editarUsuario(this.usuario).then(_ => {
           this.mensajesService.mostrarMensaje("success", "Usuario editado con éxito", undefined);
           this.router.navigate([`/empresas/${this.empresaId}/usuarios`]);
-            });
-          }
+        });
+      } else {
+        this.scrollCampoRequeridoInvalido();
+      }
     }
 
     obtenerUrl () {
       return `/empresas/${this.empresaId}/usuarios`;
     }
 
+  private scrollCampoRequeridoInvalido() {
+    const camposRequeridosEnOrden = [
+      { control: 'nombre', elementoId: 'fieldNombre' },
+      { control: 'correo', elementoId: 'fieldCorreo' },
+      { control: 'tipo', elementoId: 'fieldTipo' }
+    ];
+
+    const primerCampoInvalido = [...camposRequeridosEnOrden]
+      .find(({ control }) => this.formulario.controls[control]?.invalid);
+
+    if (!primerCampoInvalido) {
+      return;
+    }
+
+    const elemento = document.getElementById(primerCampoInvalido.elementoId);
+    elemento?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    const input = elemento?.querySelector('input, select, textarea') as HTMLElement;
+    input?.focus();
+  }
 }

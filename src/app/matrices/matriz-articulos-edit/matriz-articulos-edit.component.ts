@@ -99,6 +99,8 @@ export class MatrizArticulosEditComponent implements OnInit {
         this.mensajesService.mostrarMensaje("success", "Artículo editado con éxito", undefined);
         this.router.navigate(["/matrices"]);
       });
+    } else {
+      this.scrollCampoRequeridoInvalido();
     }
   };
 
@@ -137,4 +139,25 @@ export class MatrizArticulosEditComponent implements OnInit {
     });
   };
 
+  private scrollCampoRequeridoInvalido() {
+    const camposRequeridosEnOrden = [
+      { control: 'normativaId', elementoId: 'fieldNormativa' },
+      { control: 'areaLegalId', elementoId: 'fieldAreaLegal' },
+      { control: 'estado', elementoId: 'fieldEstado' },
+      { control: 'numeroArticulos', elementoId: 'fieldNumeroArticulos' }
+    ];
+
+    const primerCampoInvalido = [...camposRequeridosEnOrden]
+      .find(({ control }) => this.formulario.controls[control]?.invalid);
+
+    if (!primerCampoInvalido) {
+      return;
+    }
+
+    const elemento = document.getElementById(primerCampoInvalido.elementoId);
+    elemento?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    const input = elemento?.querySelector('input, select, textarea') as HTMLElement;
+    input?.focus();
+  }
 }

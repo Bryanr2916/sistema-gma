@@ -18,7 +18,7 @@
         <div class="card-body">
             <form [formGroup]="formulario" id="form" class="my-4">
                 <!--Matriz-->
-                <div class="mb-3 me-5 row">
+                <div id="fieldNumeroArticulos" class="mb-3 me-5 row">
                         <h3 class="col-12">Matriz:
                             <span class="text-muted">
                                 {{matriz.titulo}}
@@ -27,7 +27,7 @@
                         </h3>
                 </div>
                 <!--Normativa-->
-                <div class="mb-3 me-5 row">
+                <div id="fieldNormativa" class="mb-3 me-5 row">
                     <label for="inputNormativa" class="col-sm-4 col-form-label">
                         <span class="text-danger">*</span>
                         Normativa
@@ -44,7 +44,7 @@
                     </div>
                 </div>
                 <!--Areas legales-->
-                <div class="mb-3 me-5 row">
+                <div id="fieldAreaLegal" class="mb-3 me-5 row">
                     <label for="inputAreasLegales" class="col-sm-4 col-form-label">
                         <span class="text-danger">*</span>
                         Áreas Legales
@@ -61,7 +61,7 @@
                     </div>
                 </div>
                 <!--Estado-->
-                <div class="mb-3 me-5 row">
+                <div id="fieldEstado" class="mb-3 me-5 row">
                     <label for="inputEstado" class="col-sm-4 col-form-label">
                         <span class="text-danger">*</span>
                         Estado

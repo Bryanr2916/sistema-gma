@@ -50,7 +50,29 @@ export class ReestablecerContrasenaComponent implements OnInit {
       }).catch(error => {
         this.mensajesService.mostrarMensaje("error", "Correo inválido", "Error");
       });
+    } else {
+      this.scrollCampoRequeridoInvalido();
     }
   }
 
+
+
+  private scrollCampoRequeridoInvalido() {
+    const camposRequeridosEnOrden = [
+      { control: 'correo', elementoId: 'fieldCorreo' }
+    ];
+
+    const primerCampoInvalido = [...camposRequeridosEnOrden]
+      .find(({ control }) => this.formulario.controls[control]?.invalid);
+
+    if (!primerCampoInvalido) {
+      return;
+    }
+
+    const elemento = document.getElementById(primerCampoInvalido.elementoId);
+    elemento?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    const input = elemento?.querySelector('input, select, textarea') as HTMLElement;
+    input?.focus();
+  }
 }
