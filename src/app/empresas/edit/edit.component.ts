@@ -142,6 +142,9 @@ export class EditComponent implements OnInit {
 
     const elemento = document.getElementById(primerCampoInvalido.elementoId);
     elemento?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    const input = elemento?.querySelector('input') as HTMLInputElement;
+    input?.focus();
   }
 
   editarEmpresaFB() {
