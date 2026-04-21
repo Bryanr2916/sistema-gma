@@ -71,7 +71,28 @@ export class CreateComponent implements OnInit {
       } else {
         this.crearEmpresaFB();
       }
+    } else {
+      this.scrollCampoRequeridoInvalido();
     }
+  }
+
+  private scrollCampoRequeridoInvalido() {
+    const camposRequeridosEnOrden = [
+      { control: 'nombre', elementoId: 'fieldNombre' },
+      { control: 'correo', elementoId: 'fieldCorreo' },
+      { control: 'telefono', elementoId: 'fieldTelefono' },
+      { control: 'paises', elementoId: 'fieldPaises' }
+    ];
+
+    const primerCampoInvalido = [...camposRequeridosEnOrden]
+      .find(({ control }) => this.formulario.controls[control]?.invalid);
+
+    if (!primerCampoInvalido) {
+      return;
+    }
+
+    const elemento = document.getElementById(primerCampoInvalido.elementoId);
+    elemento?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
   //crear empresa
