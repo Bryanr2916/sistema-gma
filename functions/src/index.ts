@@ -29,6 +29,29 @@ export const matrizBorrarArticulos = onDocumentDeleted("matrices/{matrizId}", as
     return response;
 });
 
+export const matrizBorrarArticulosDev = onDocumentDeleted("matrices-dev/{matrizId}", async (event) => {
+  const { matrizId } = event.params;
+  logger.info(`Matriz eliminada: ${matrizId}, borrando artículos relacionados...`);
+
+  const articulosSnap = await db
+    .collection("articulos-dev")
+    .where("matrizId", "==", matrizId)
+    .get();
+
+  if (articulosSnap.empty) {
+    logger.info("No hay artículos relacionados.");
+    return;
+  }
+
+  // Batch para eliminarlos
+  const batch = db.batch();
+  articulosSnap.docs.forEach((doc) => batch.delete(doc.ref));
+
+  const response = await batch.commit();
+  logger.info(`Se borraron ${articulosSnap.size} artículos relacionados con matriz ${matrizId}`);
+  return response;
+});
+
 export const borrarUsuarioAuth = onDocumentDeleted("usuarios/{usuarioId}", async (event) => {
   const usuarioEliminado = event.data?.data();
 
@@ -42,6 +65,23 @@ export const borrarUsuarioAuth = onDocumentDeleted("usuarios/{usuarioId}", async
     const response = await auth.deleteUser(uid);
     return response;
   } catch(_) {
+    return;
+  }
+});
+
+export const borrarUsuarioAuthDev = onDocumentDeleted("usuarios-dev/{usuarioId}", async (event) => {
+  const usuarioEliminado = event.data?.data();
+
+  if (!usuarioEliminado) return;
+
+  const uid = usuarioEliminado["uid"];
+
+  if (!uid) return;
+
+  try {
+    const response = await auth.deleteUser(uid);
+    return response;
+  } catch (_) {
     return;
   }
 });
