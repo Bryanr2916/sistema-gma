@@ -5,6 +5,7 @@ import * as admin from "firebase-admin";
 admin.initializeApp();
 const db = admin.firestore();
 const auth = admin.auth();
+const bucket = admin.storage().bucket();
 
 export const matrizBorrarArticulos = onDocumentDeleted("matrices/{matrizId}", async (event) => {
     const { matrizId } = event.params;
@@ -84,4 +85,46 @@ export const borrarUsuarioAuthDev = onDocumentDeleted("usuarios-dev/{usuarioId}"
   } catch (_) {
     return;
   }
+});
+
+export const normativaBorrarArchivo = onDocumentDeleted("normativas/{normativaId}", async (event) => {
+  const normativaEliminada = event.data?.data();
+
+  if (!normativaEliminada) return;
+
+  const urlArchivo = normativaEliminada["urlArchivo"];
+
+  if (!urlArchivo) return;
+
+  const url = decodeURIComponent(urlArchivo);
+  const filename = url.split('/o/')[1].split('?')[0];
+
+  try {
+    const response = await bucket.file(filename).delete();
+    return response;
+  } catch (_) {
+    return;
+  }
+
+});
+
+export const normativaBorrarArchivoDev = onDocumentDeleted("normativas-dev/{normativaId}", async (event) => {
+  const normativaEliminada = event.data?.data();
+
+  if (!normativaEliminada) return;
+
+  const urlArchivo = normativaEliminada["urlArchivo"];
+
+  if (!urlArchivo) return;
+
+  const url = decodeURIComponent(urlArchivo);
+  const filename = url.split('/o/')[1].split('?')[0];
+
+  try {
+    const response = await bucket.file(filename).delete();
+    return response;
+  } catch (_) {
+    return;
+  }
+
 });

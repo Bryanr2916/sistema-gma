@@ -45,12 +45,6 @@ export class IndexComponent implements OnInit {
       String(normativa.numero).includes(busquedaMinuscuala));
   }
 
-  async borrarArchivoActual(urlArchivo: string) {
-    if (urlArchivo !== "") {
-      await this.normativaService.borrarArchivo(urlArchivo);
-    }
-  }
-
   borrarNormativaFB(normativa: any) {
     this.normativaService.borrarNormativa(normativa.id).then(_ => {
       this.mensajesService.mostrarMensaje("success", "Normativa borrada con éxito", undefined);
@@ -60,14 +54,7 @@ export class IndexComponent implements OnInit {
   borrar(normativa: any) {
     
     if (confirm(`¿Desea eliminar la normativa "${this.truncarTexto.transform(normativa.titulo, 68, true)}"?`)) {
-
-      if (normativa.urlArchivo) {
-        this.borrarArchivoActual(normativa.urlArchivo).then(_ => {
-          this.borrarNormativaFB(normativa);
-        });
-      } else {
-        this.borrarNormativaFB(normativa);
-      };
+      this.borrarNormativaFB(normativa);
     }
   }
 
