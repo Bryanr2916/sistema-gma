@@ -149,7 +149,7 @@ export const empresaBorrarLogo = onDocumentDeleted("empresas/{empresaId}", async
   }
 });
 
-export const empresaBorrarLogoDev = onDocumentDeleted("empresas/{empresaId}", async (event) => {
+export const empresaBorrarLogoDev = onDocumentDeleted("empresas-dev/{empresaId}", async (event) => {
   const empresaEliminada = event.data?.data();
 
   if (!empresaEliminada) return;
