@@ -47,12 +47,6 @@ export class IndexComponent implements OnInit {
       empresa.nombre.toLowerCase().includes(busquedaMinuscuala));
   }
 
-  async borrarImagenActual(urlLogo: string) {
-    if (urlLogo !== "") {
-      await this.empresasService.borrarArchivo(urlLogo);
-    }
-  }
-
   borrarEmpresaFB(empresa: any) {
     this.empresaService.borrarEmpresa(empresa.id).then(_ => {
       this.mensajesService.mostrarMensaje("success", "Empresa borrada con éxito", undefined);
@@ -61,14 +55,7 @@ export class IndexComponent implements OnInit {
 
   borrar(empresa: any) {
     if (confirm(`¿Desea eliminar la empresa "${empresa.nombre}"?`)) {
-
-      if (empresa.urlLogo) {
-        this.borrarImagenActual(empresa.urlLogo).then(_ => {
-          this.borrarEmpresaFB(empresa);
-        });
-      } else {
-        this.borrarEmpresaFB(empresa);
-      }
+      this.borrarEmpresaFB(empresa);
     }
   }
 

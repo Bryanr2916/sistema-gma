@@ -128,3 +128,43 @@ export const normativaBorrarArchivoDev = onDocumentDeleted("normativas-dev/{norm
   }
 
 });
+
+export const empresaBorrarLogo = onDocumentDeleted("empresas/{empresaId}", async (event) => {
+  const empresaEliminada = event.data?.data();
+
+  if (!empresaEliminada) return;
+
+  const urlLogo = empresaEliminada["urlLogo"];
+
+  if (!urlLogo) return;
+
+  const url = decodeURIComponent(urlLogo);
+  const filename = url.split('/o/')[1].split('?')[0];
+
+  try {
+    const response = await bucket.file(filename).delete();
+    return response;
+  } catch (_) {
+    return;
+  }
+});
+
+export const empresaBorrarLogoDev = onDocumentDeleted("empresas/{empresaId}", async (event) => {
+  const empresaEliminada = event.data?.data();
+
+  if (!empresaEliminada) return;
+
+  const urlLogo = empresaEliminada["urlLogo"];
+
+  if (!urlLogo) return;
+
+  const url = decodeURIComponent(urlLogo);
+  const filename = url.split('/o/')[1].split('?')[0];
+
+  try {
+    const response = await bucket.file(filename).delete();
+    return response;
+  } catch (_) {
+    return;
+  }
+});
