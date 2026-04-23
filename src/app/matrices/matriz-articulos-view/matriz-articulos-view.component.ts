@@ -42,7 +42,7 @@ export class MatrizArticulosViewComponent implements OnInit {
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Matrices");
 
-    if (this.normativa.requerimientos) {
+    if (this.normativa.requerimientos?.length > 0) {
       this.tabs.push({ value: "requerimientos", label: "Requerimientos" });
     }
     this.usuarioService.usuarioActual().subscribe(usuario => {
