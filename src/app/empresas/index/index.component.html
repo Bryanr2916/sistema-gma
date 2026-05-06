@@ -2,7 +2,14 @@
     <h2><i class="g-icon fa-solid fa-briefcase me-1"></i>Empresas</h2>
     <hr class="border border-success border-1 opacity-75">
 
-    <div class="content-container">
+    <!--loading-->
+    <div *ngIf="cargando" class="d-flex justify-content-center">
+        <div class="spinner-border mt-5 text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <div *ngIf="!cargando" class="content-container">
         <!--Nav-->
     <ul class="nav nav-pills mt-4">
         <li class="nav-item">
@@ -15,14 +22,8 @@
           <a class="nav-link active" aria-current="page" routerLink="crear"><i class="fa-solid fa-plus"></i> Crear una empresa</a>
         </li>
     </ul>
-    <!--loading-->
-    <div *ngIf="cargando" class="d-flex justify-content-center">
-        <div class="spinner-border mt-5 text-primary" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
-    </div>
     <!--Tabla-->
-    <div *ngIf="empresasFiltradas.length > 0 && !cargando" class="table-responsive mb-4 mt-2">
+    <div *ngIf="empresasFiltradas.length > 0" class="table-responsive mb-4 mt-2">
         <table class="table table-light table-striped table-hover shadow table-bordered">
             <thead>
               <tr class="table-success">
@@ -62,7 +63,7 @@
     </div>
 
     <!--No hay registro-->
-    <div *ngIf="empresasTodas.length === 0 && !cargando" class="my-4">
+    <div *ngIf="empresasTodas.length === 0" class="my-4">
         <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No hay empresas registradas</h4>
       </div>
     </div>    
