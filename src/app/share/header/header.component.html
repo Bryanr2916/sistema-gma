@@ -27,6 +27,11 @@
           <li class="nav-item">
             <a class="nav-link" aria-current="page" routerLink="matrices"><i class="fa-solid fa-table-cells me-1"></i>Matrices</a>
           </li>
+
+          <!--Riesgos ambientales-->
+          <li *ngIf="usuario.tipo == tiposUsuario.admin || usuario.tipo == tiposUsuario.editor" class="nav-item">
+            <a class="nav-link" aria-current="page" routerLink="riesgos-ambientales"><i class="fa-solid fa-recycle me-1"></i>Riesgos Ambientales</a>
+          </li>
           <!--Normativas-->
           <li *ngIf="usuario.tipo == tiposUsuario.adminSistema" class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

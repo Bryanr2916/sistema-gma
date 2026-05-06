@@ -1,0 +1,98 @@
+<div class="mt-4 mb-2 mx-2">
+
+    <div class="d-flex align-items-center gap-2">
+        <h2 class="mb-0">
+            <i class="g-icon fa-solid fa-recycle me-1"></i>
+            Matriz de riesgos ambientales
+        </h2>
+    
+        <p *ngIf="guardando" class="text-primary mb-0 mt-0 ms-3">
+            Guardando...
+            <span class="spinner-border spinner-border-sm ms-1 text-primary" role="status"></span>
+        </p>
+    </div>
+
+    <hr class="border border-success border-1 opacity-75">
+
+    <!--loading-->
+    <div *ngIf="cargando" class="d-flex justify-content-center">
+        <div class="spinner-border mt-5 text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <div *ngIf="!cargando" class="container-fluid">
+        <!--table-->
+        <div class="table-responsive mb-4 mt-2">
+            <table class="table table-light table-striped table-hover shadow table-bordered">
+                <thead>
+                    <tr class="table-success">                        
+                        <th>
+                            <!--
+                            <input class="form-check-input border border-dark" type="checkbox" value="" id="checkDefault">
+                            -->
+                        </th>
+                        <th scope="col" *ngFor="let th of ths">{{th}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let riesgo of riesgos.riesgo; index as i">
+                        <th>
+                            <input [checked]="filaSeleccionada === i" (click)="seleccionarFila($event, i)" class="form-check-input border border-dark" type="checkbox" value="" id="checkDefault">
+                        </th>
+                        <th scope="row">{{ i + 1}}</th>
+                        <td>
+                            <input [(ngModel)]="riesgos.riesgo[i].actividad" [ngModelOptions]="{standalone: true}" (ngModelChange)="detectarCambiosInput()" />
+                        </td>
+                        <td>
+                            <input [(ngModel)]="riesgos.riesgo[i].aspectoAmbiental" [ngModelOptions]="{standalone: true}" (ngModelChange)="detectarCambiosInput()"/>
+                        </td>
+                        <td>
+                            <input [(ngModel)]="riesgos.riesgo[i].impacto" [ngModelOptions]="{standalone: true}" (ngModelChange)="detectarCambiosInput()" />
+                        </td>
+                        <td>
+                            <input [(ngModel)]="riesgos.riesgo[i].p" [ngModelOptions]="{standalone: true}" type="number" max="5" min="1" (ngModelChange)="detectarCambiosInput()" />
+                        </td>
+                        <td>
+                            <input [(ngModel)]="riesgos.riesgo[i].s" [ngModelOptions]="{standalone: true}" type="number" max="5" min="1" (ngModelChange)="detectarCambiosInput()"/>
+                        </td>
+                        <td>
+                            <span class="badge text-bg-info">
+                                {{riesgo.p * riesgo.s}}
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <p>
+                                <span class="badge" [ngClass]="'text-bg-' + calcularClasificacion(riesgo.p * riesgo.s).clase">
+                                    {{calcularClasificacion(riesgo.p * riesgo.s).label}}
+                                </span>
+                            </p>
+                        </td>
+                        <td>
+                            <input [(ngModel)]="riesgos.riesgo[i].control" [ngModelOptions]="{standalone: true}" (ngModelChange)="detectarCambiosInput()"/>
+                        </td>
+                        <td>
+                            <input [(ngModel)]="riesgos.riesgo[i].accion" [ngModelOptions]="{standalone: true}" (ngModelChange)="detectarCambiosInput()"/>
+                        </td>
+                    </tr>
+                </tbody>
+                <caption>
+                    <button (click)="agregarFila()" class="btn btn-primary" type="button" id="button-addon2">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                </caption>
+            </table>
+
+            <div [ngClass]="filaSeleccionada !== -1 ? 'active' : ''" class="table-actions border border-dark" >
+                <a (click)="borrarFila()"><i class="r-icon fa-solid fa-trash fa-lg me-2"></i>
+                    <span class="hidden-tooltip">Borrar</span>
+                </a>
+                <div class="vr text-success"></div>
+                <a (click)="duplicarFila()"><i class="g-icon fa-regular fa-copy fa-lg me-2"></i>
+                    <span class="hidden-tooltip">Duplicar</span>
+                </a>
+            </div>
+            
+        </div>
+    </div>
+</div>

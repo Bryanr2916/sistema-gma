@@ -13,3 +13,9 @@ export const ESTADOS_ARTICULO = [
     { key: "no-aplica", value: 5, label: "No Aplica", clase: "secondary" },
     { key: "de-conocimiento", value: 6, label: "De Conocimiento", clase: "info" }
 ];
+
+export const RANGO_RIESGOS = [
+    { key: "bajo", max: 4, label: "Bajo", clase: "success"},
+    { key: "medio", max: 9, label: "Medio", clase: "warning" },
+    { key: "alto", max: Infinity, label: "Alto", clase: "danger" }
+];

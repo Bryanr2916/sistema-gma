@@ -37,6 +37,10 @@ export class IndexComponent implements OnInit {
         menuActualizado.unshift({ logo: "users", nombre: "Gestionar Usuarios", enlace: "empresa/gestionar-usuarios" });
       }
 
+      if (this.usuario.tipo == TIPOS_USUARIO.admin || this.usuario.tipo === TIPOS_USUARIO.editor) {
+        menuActualizado.push({ logo: "recycle", nombre: "Riesgos Ambientales", enlace: "riesgos-ambientales" })
+      }
+
       this.menu = menuActualizado;
     });
   }
