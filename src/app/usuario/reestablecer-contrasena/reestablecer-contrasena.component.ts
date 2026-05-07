@@ -43,7 +43,7 @@ export class ReestablecerContrasenaComponent implements OnInit {
 
   reestablecerContrasenna () {
     this.formulario.markAllAsTouched();
-    if (this.formulario.valid) {
+    if (this.formulario.valid && confirm("¿Desea restablecer su contraseña?\nRecibirá un correo para hacerlo.")) {
       this.correo = this.formulario.controls["correo"].value;
       this.usuarioService.reestablecerContrasena(this.correo).then(respuesta => {
         this.mensajesService.mostrarMensaje("success", "Correo enviado", "Reestablecer contraseña");

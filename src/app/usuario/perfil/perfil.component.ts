@@ -76,11 +76,13 @@ export class PerfilComponent implements OnInit {
   }
 
   reestablecerContrasena() {
-    this.usuarioService.reestablecerContrasena(this.usuario.correo).then(_ => {
-      this.mensajesService.mostrarMensaje("success", "Correo enviado", "Reestablecer contraseña");
-    }).catch(_ => {
-      this.mensajesService.mostrarMensaje("error", "Correo inválido", "Error");
-    });
+    if (confirm("¿Desea restablecer su contraseña?\nRecibirá un correo para hacerlo.")) {
+      this.usuarioService.reestablecerContrasena(this.usuario.correo).then(_ => {
+        this.mensajesService.mostrarMensaje("success", "Correo enviado", "Reestablecer contraseña");
+      }).catch(_ => {
+        this.mensajesService.mostrarMensaje("error", "Correo inválido", "Error");
+      });
+    }
   }
 
   editarPerfil() {
