@@ -59,14 +59,29 @@
                 </tr>
             </tbody>
         </table>
-    </div>
-    <!--No hay resultados-->
-    <div *ngIf="normativasFiltradas.length === 0 && normativasTodas.length > 0" class="my-4">
-        <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No se encontraron resultados</h4>
+
+        <nav *ngIf="totalPaginas > 1" aria-label="Paginación de normativas">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" [class.disabled]="paginaActual === 1">
+                    <button type="button" class="page-link" [disabled]="paginaActual === 1" (click)="paginaAnterior()" aria-label="Anterior">&laquo;</button>
+                </li>
+                <ng-container *ngFor="let el of elementosPaginacion">
+                    <li *ngIf="el.tipo === 'ellipsis'" class="page-item disabled">
+                        <span class="page-link">…</span>
+                    </li>
+                    <li *ngIf="el.tipo === 'pagina'" class="page-item" [class.active]="el.num === paginaActual">
+                        <button type="button" class="page-link" (click)="irAPagina(el.num)">{{ el.num }}</button>
+                    </li>
+                </ng-container>
+                <li class="page-item" [class.disabled]="paginaActual === totalPaginas">
+                    <button type="button" class="page-link" [disabled]="paginaActual === totalPaginas" (click)="paginaSiguiente()" aria-label="Siguiente">&raquo;</button>
+                </li>
+            </ul>
+        </nav>
     </div>
 
     <!--No hay registro-->
-    <div *ngIf="normativasTodas.length === 0" class="my-4">
+    <div *ngIf="totalRegistros === 0" class="my-4">
         <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No hay normativas registradas</h4>
       </div>
     </div>

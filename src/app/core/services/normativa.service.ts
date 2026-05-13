@@ -1,6 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Storage, ref, getDownloadURL, uploadBytesResumable, deleteObject } from '@angular/fire/storage';
-import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, serverTimestamp } from '@angular/fire/firestore';
+import {
+  Firestore,
+  addDoc,
+  collection,
+  collectionData,
+  doc,
+  deleteDoc,
+  getDoc,
+  getDocs,
+  getCountFromServer,
+  updateDoc,
+  serverTimestamp,
+  query,
+  limit,
+  orderBy,
+  startAfter,
+  type QueryDocumentSnapshot,
+} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -18,9 +35,48 @@ export class NormativaService {
     return addDoc(normativaRef, {...normativa, fechaCreacion: serverTimestamp()});
   }
 
-  obtenerNormativas() {
+  obtenerNormativas(cantidad: number = 20) {
     const normativasRef = collection(this.firestore, this.path);
-    return collectionData(normativasRef, {idField: 'id'}) as Observable<any[]>;
+
+    const q = query(
+      normativasRef,
+      orderBy("fechaCreacion", "desc"),
+      limit(cantidad));
+
+    return collectionData(q, { idField: 'id' }) as Observable<any[]>;
+  }
+
+  /** Conteo total de documentos en la colección (para paginación). */
+  async contarNormativas(): Promise<number> {
+    const normativasRef = collection(this.firestore, this.path);
+    const snapshot = await getCountFromServer(normativasRef);
+    return snapshot.data().count;
+  }
+
+  /**
+   * Una página de normativas ordenadas por fechaCreacion descendente.
+   * @param tamanoPagina Tamaño de página (p. ej. 20).
+   * @param cursorAnterior Último documento de la página anterior; null para la primera página.
+   */
+  async obtenerNormativasPagina(
+    tamanoPagina: number,
+    cursorAnterior: QueryDocumentSnapshot | null
+  ): Promise<{ items: any[]; ultimoDoc: QueryDocumentSnapshot | null }> {
+    const normativasRef = collection(this.firestore, this.path);
+    const constraints = [
+      orderBy('fechaCreacion', 'desc'),
+      limit(tamanoPagina),
+    ];
+    const q =
+      cursorAnterior === null
+        ? query(normativasRef, ...constraints)
+        : query(normativasRef, ...constraints, startAfter(cursorAnterior));
+
+    const snap = await getDocs(q);
+    const items = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    const ultimoDoc =
+      snap.docs.length > 0 ? snap.docs[snap.docs.length - 1] : null;
+    return { items, ultimoDoc };
   }
 
   obtenerNormativa(id: any) {
