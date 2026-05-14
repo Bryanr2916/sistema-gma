@@ -16,6 +16,7 @@ export class UsuariosEditComponent implements OnInit {
   empresaId = "";
   formulario: FormGroup = this.fb.group({});
   tipos: any = [];
+  usuarioActual: any = {};
   usuario: any = {
     id: "",
     nombre: "",
@@ -34,8 +35,12 @@ export class UsuariosEditComponent implements OnInit {
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Empresas");
     this.route.params.subscribe(params => {
-      this.usuario.id = params["id"];
-      this.obtenerUsuario();
+
+      this.usuarioService.usuarioActual().subscribe(usuario => {
+        this.usuarioActual = usuario;
+        this.usuario.id = params["id"];
+        this.obtenerUsuario();
+      });
     });
   }
 
@@ -47,7 +52,12 @@ export class UsuariosEditComponent implements OnInit {
     this.formulario.controls["correo"].setValue(reUsuario.get("correo"));
     this.formulario.controls["tipo"].setValue(reUsuario.get("tipo"));
 
-    this.formulario.controls["correo"].disable(); 
+    this.formulario.controls["correo"].disable();
+
+    if (this.usuarioActual.id === this.usuario.id) {
+      this.formulario.controls["tipo"].disable();
+    }
+
   }
 
   definirFormulario() {

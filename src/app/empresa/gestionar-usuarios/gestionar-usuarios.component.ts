@@ -95,9 +95,12 @@ export class GestionarUsuariosComponent implements OnInit {
     return this.usuarioService.registrar(datos);
   }
 
+  esUsuarioActual(usuario: any) {
+    return this.usuario.id === usuario.id;
+  }
+
   usarComo(usuario: any) {
     if (confirm(`Al aceptar se cerrará la sesión actual e iniciará sesión como "${usuario.correo}"`)) {
-      console.log("usuario: ", usuario);
       this.realizarAccion(
         usuario.uid,
         {
