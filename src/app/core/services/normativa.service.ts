@@ -27,7 +27,7 @@ import { environment } from 'src/environments/environment';
 })
 export class NormativaService {
 
-  path = environment.production ? "normativas-dev" : "normativas";
+  path = environment.production ? "normativas" : "normativas-dev";
 
   constructor(private storage: Storage, private firestore: Firestore) { }
 
