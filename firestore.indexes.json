@@ -1,21 +1,4 @@
 {
-  "indexes": [
-    {
-      "collectionGroup": "normativas",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "fechaCreacion", "order": "DESCENDING" },
-        { "fieldPath": "__name__", "order": "DESCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "normativas-dev",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "fechaCreacion", "order": "DESCENDING" },
-        { "fieldPath": "__name__", "order": "DESCENDING" }
-      ]
-    }
-  ],
+  "indexes": [],
   "fieldOverrides": []
 }

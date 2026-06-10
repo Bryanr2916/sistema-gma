@@ -7,7 +7,6 @@ import {
   collectionData,
   doc,
   deleteDoc,
-  documentId,
   getDoc,
   getDocs,
   getCountFromServer,
@@ -28,15 +27,12 @@ import { environment } from 'src/environments/environment';
 })
 export class NormativaService {
 
-  path = environment.production ? "normativas" : "normativas-dev";
+  path = environment.production ? "normativas-dev" : "normativas";
 
   constructor(private storage: Storage, private firestore: Firestore) { }
 
   private constraintsListado() {
-    return [
-      orderBy('fechaCreacion', 'desc'),
-      orderBy(documentId(), 'desc'),
-    ];
+    return [orderBy('fechaCreacion', 'desc')];
   }
 
   private mapDoc(d: QueryDocumentSnapshot): any {
