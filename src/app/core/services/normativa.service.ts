@@ -7,6 +7,7 @@ import {
   collectionData,
   doc,
   deleteDoc,
+  documentId,
   getDoc,
   getDocs,
   getCountFromServer,
@@ -14,6 +15,7 @@ import {
   serverTimestamp,
   query,
   limit,
+  limitToLast,
   orderBy,
   startAfter,
   type QueryDocumentSnapshot,
@@ -29,6 +31,17 @@ export class NormativaService {
   path = environment.production ? "normativas" : "normativas-dev";
 
   constructor(private storage: Storage, private firestore: Firestore) { }
+
+  private constraintsListado() {
+    return [
+      orderBy('fechaCreacion', 'desc'),
+      orderBy(documentId(), 'desc'),
+    ];
+  }
+
+  private mapDoc(d: QueryDocumentSnapshot): any {
+    return { id: d.id, ...d.data() };
+  }
 
   crearNormativa(normativa: any) {
     const normativaRef = collection(this.firestore, this.path);
@@ -63,17 +76,86 @@ export class NormativaService {
     cursorAnterior: QueryDocumentSnapshot | null
   ): Promise<{ items: any[]; ultimoDoc: QueryDocumentSnapshot | null }> {
     const normativasRef = collection(this.firestore, this.path);
-    const constraints = [
-      orderBy('fechaCreacion', 'desc'),
-      limit(tamanoPagina),
-    ];
+    const constraints = [...this.constraintsListado(), limit(tamanoPagina)];
     const q =
       cursorAnterior === null
         ? query(normativasRef, ...constraints)
         : query(normativasRef, ...constraints, startAfter(cursorAnterior));
 
     const snap = await getDocs(q);
-    const items = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    const items = snap.docs.map((d) => this.mapDoc(d));
+    const ultimoDoc =
+      snap.docs.length > 0 ? snap.docs[snap.docs.length - 1] : null;
+    return { items, ultimoDoc };
+  }
+
+  /**
+   * Obtiene varias páginas consecutivas en una sola consulta a Firestore.
+   * @param cursorInicio Cursor de la página `paginaInicio`; null si se parte del inicio.
+   * @param paginaInicio Número de la última página ya resuelta (0 = inicio de colección).
+   * @param paginaDestino Página final a incluir en el rango.
+   */
+  async obtenerRangoPaginas(
+    cursorInicio: QueryDocumentSnapshot | null,
+    paginaInicio: number,
+    paginaDestino: number,
+    tamanoPagina: number
+  ): Promise<Map<number, { items: any[]; ultimoDoc: QueryDocumentSnapshot | null }>> {
+    const resultado = new Map<
+      number,
+      { items: any[]; ultimoDoc: QueryDocumentSnapshot | null }
+    >();
+    const paginasFaltantes = paginaDestino - paginaInicio;
+    if (paginasFaltantes <= 0) {
+      return resultado;
+    }
+
+    const normativasRef = collection(this.firestore, this.path);
+    const constraints = [
+      ...this.constraintsListado(),
+      limit(paginasFaltantes * tamanoPagina),
+    ];
+    const q =
+      cursorInicio === null
+        ? query(normativasRef, ...constraints)
+        : query(normativasRef, ...constraints, startAfter(cursorInicio));
+
+    const snap = await getDocs(q);
+    const docs = snap.docs;
+
+    for (let i = 0; i < paginasFaltantes; i++) {
+      const pagina = paginaInicio + i + 1;
+      const inicio = i * tamanoPagina;
+      const chunk = docs.slice(inicio, inicio + tamanoPagina);
+      if (chunk.length === 0) {
+        break;
+      }
+      resultado.set(pagina, {
+        items: chunk.map((d) => this.mapDoc(d)),
+        ultimoDoc: chunk[chunk.length - 1],
+      });
+    }
+
+    return resultado;
+  }
+
+  /** Última página del listado (documentos más antiguos) en una sola consulta. */
+  async obtenerUltimaPagina(
+    tamanoPagina: number,
+    totalRegistros: number,
+    totalPaginas: number
+  ): Promise<{ items: any[]; ultimoDoc: QueryDocumentSnapshot | null }> {
+    const tamanoUltimaPagina =
+      totalRegistros - (totalPaginas - 1) * tamanoPagina;
+    const normativasRef = collection(this.firestore, this.path);
+    const q = query(
+      normativasRef,
+      ...this.constraintsListado(),
+      limitToLast(tamanoUltimaPagina)
+    );
+
+    const snap = await getDocs(q);
+    const items = snap.docs.map((d) => this.mapDoc(d));
     const ultimoDoc =
       snap.docs.length > 0 ? snap.docs[snap.docs.length - 1] : null;
     return { items, ultimoDoc };

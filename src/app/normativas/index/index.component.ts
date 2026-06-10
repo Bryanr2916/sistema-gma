@@ -34,6 +34,9 @@ export class IndexComponent implements OnInit {
   /** Último documento de cada página ya resuelta (clave = número de página, base 1). */
   private ultimoDocPorPagina = new Map<number, QueryDocumentSnapshot>();
 
+  /** Items cacheados por página para evitar consultas al revisitar. */
+  private itemsPorPagina = new Map<number, any[]>();
+
   constructor(private titleService: Title, private mensajesService: MensajesService,
     private normativaService: NormativaService, private tiposService: TiposNormativasService,
     private truncarTexto: TruncarTextoPipe
@@ -63,11 +66,9 @@ export class IndexComponent implements OnInit {
       this.totalRegistros = total;
       this.totalPaginas = total === 0 ? 0 : Math.ceil(total / this.TAMANO_PAGINA);
       this.ultimoDocPorPagina.clear();
+      this.itemsPorPagina.clear();
       this.paginaActual = 1;
-      if (primera.items.length > 0 && primera.ultimoDoc) {
-        this.ultimoDocPorPagina.set(1, primera.ultimoDoc);
-      }
-      this.normativasFiltradas = primera.items;
+      this.aplicarPagina(1, primera.items, primera.ultimoDoc);
     } catch (e) {
       console.error(e);
       this.totalRegistros = 0;
@@ -78,24 +79,45 @@ export class IndexComponent implements OnInit {
     }
   }
 
-  /**
-   * Garantiza que exista `ultimoDocPorPagina` para las páginas 1 … paginaDestino - 1
-   * (lecturas intermedias sin actualizar la vista).
-   */
-  private async asegurarCursorsHastaPagina(paginaDestino: number): Promise<void> {
-    for (let p = 1; p < paginaDestino; p++) {
-      if (!this.ultimoDocPorPagina.has(p)) {
-        const cursorAnt = p === 1 ? null : this.ultimoDocPorPagina.get(p - 1)!;
-        const { items, ultimoDoc } = await this.normativaService.obtenerNormativasPagina(
-          this.TAMANO_PAGINA,
-          cursorAnt
-        );
-        if (items.length === 0 || !ultimoDoc) {
-          break;
-        }
-        this.ultimoDocPorPagina.set(p, ultimoDoc);
+  private aplicarPagina(
+    n: number,
+    items: any[],
+    ultimoDoc: QueryDocumentSnapshot | null
+  ): void {
+    this.normativasFiltradas = items;
+    this.paginaActual = n;
+    this.itemsPorPagina.set(n, items);
+    if (ultimoDoc) {
+      this.ultimoDocPorPagina.set(n, ultimoDoc);
+    } else {
+      this.ultimoDocPorPagina.delete(n);
+    }
+  }
+
+  private paginaAnclaMasCercana(destino: number): {
+    pagina: number;
+    cursor: QueryDocumentSnapshot | null;
+  } {
+    for (let p = destino - 1; p >= 1; p--) {
+      const cursor = this.ultimoDocPorPagina.get(p);
+      if (cursor) {
+        return { pagina: p, cursor };
       }
     }
+    return { pagina: 0, cursor: null };
+  }
+
+  private guardarRangoPaginas(
+    paginas: Map<number, { items: any[]; ultimoDoc: QueryDocumentSnapshot | null }>
+  ): void {
+    paginas.forEach((data, pagina) => {
+      this.itemsPorPagina.set(pagina, data.items);
+      if (data.ultimoDoc) {
+        this.ultimoDocPorPagina.set(pagina, data.ultimoDoc);
+      } else {
+        this.ultimoDocPorPagina.delete(pagina);
+      }
+    });
   }
 
   async irAPagina(n: number, forzar = false): Promise<void> {
@@ -109,24 +131,60 @@ export class IndexComponent implements OnInit {
       return;
     }
 
+    if (!forzar && this.itemsPorPagina.has(n)) {
+      this.normativasFiltradas = this.itemsPorPagina.get(n)!;
+      this.paginaActual = n;
+      return;
+    }
+
     this.cargando = true;
     try {
-      await this.asegurarCursorsHastaPagina(n);
-      const cursorAnt =
-        n === 1 ? null : this.ultimoDocPorPagina.get(n - 1) ?? null;
-      if (n > 1 && cursorAnt == null) {
+      if (n === this.totalPaginas && this.totalPaginas > 1) {
+        const ultima = await this.normativaService.obtenerUltimaPagina(
+          this.TAMANO_PAGINA,
+          this.totalRegistros,
+          this.totalPaginas
+        );
+        this.aplicarPagina(n, ultima.items, ultima.ultimoDoc);
         return;
       }
-      const { items, ultimoDoc } = await this.normativaService.obtenerNormativasPagina(
-        this.TAMANO_PAGINA,
-        cursorAnt
+
+      if (n === 1) {
+        const primera = await this.normativaService.obtenerNormativasPagina(
+          this.TAMANO_PAGINA,
+          null
+        );
+        this.aplicarPagina(n, primera.items, primera.ultimoDoc);
+        return;
+      }
+
+      if (
+        !forzar &&
+        n === this.paginaActual + 1 &&
+        this.ultimoDocPorPagina.has(n - 1)
+      ) {
+        const { items, ultimoDoc } = await this.normativaService.obtenerNormativasPagina(
+          this.TAMANO_PAGINA,
+          this.ultimoDocPorPagina.get(n - 1)!
+        );
+        this.aplicarPagina(n, items, ultimoDoc);
+        return;
+      }
+
+      const { pagina: paginaAncla, cursor: cursorAncla } =
+        this.paginaAnclaMasCercana(n);
+      const paginas = await this.normativaService.obtenerRangoPaginas(
+        cursorAncla,
+        paginaAncla,
+        n,
+        this.TAMANO_PAGINA
       );
-      this.normativasFiltradas = items;
-      this.paginaActual = n;
-      if (ultimoDoc) {
-        this.ultimoDocPorPagina.set(n, ultimoDoc);
-      } else {
-        this.ultimoDocPorPagina.delete(n);
+      this.guardarRangoPaginas(paginas);
+
+      const destino = paginas.get(n);
+      if (destino) {
+        this.normativasFiltradas = destino.items;
+        this.paginaActual = n;
       }
     } finally {
       this.cargando = false;
@@ -200,11 +258,13 @@ export class IndexComponent implements OnInit {
         this.paginaActual = 1;
         this.normativasFiltradas = [];
         this.ultimoDocPorPagina.clear();
+        this.itemsPorPagina.clear();
       } else {
         if (this.paginaActual > this.totalPaginas) {
           this.paginaActual = this.totalPaginas;
         }
         this.ultimoDocPorPagina.clear();
+        this.itemsPorPagina.clear();
         await this.irAPagina(this.paginaActual, true);
       }
     } catch (e) {
