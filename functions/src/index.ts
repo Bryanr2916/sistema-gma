@@ -168,3 +168,41 @@ export const empresaBorrarLogoDev = onDocumentDeleted("empresas-dev/{empresaId}"
     return;
   }
 });
+
+export const permisoBorrarArchivo = onDocumentDeleted("permisos/{permisoId}", async (event) =>{
+  const permisoEliminado = event.data?.data();
+
+  if (!permisoEliminado) return;
+
+  const urlArchivo = permisoEliminado["urlArchivo"];
+
+  if (!urlArchivo) return;
+
+  const url = decodeURIComponent(urlArchivo);
+  const filename = url.split('/o/')[1].split('?')[0];
+  try {
+    const response = await bucket.file(filename).delete();
+    return response;
+  } catch (_) {
+    return;
+  }
+});
+
+export const permisoBorrarArchivoDev = onDocumentDeleted("permisos-dev/{permisoId}", async (event) => {
+  const permisoEliminado = event.data?.data();
+
+  if (!permisoEliminado) return;
+
+  const urlArchivo = permisoEliminado["urlArchivo"];
+
+  if (!urlArchivo) return;
+
+  const url = decodeURIComponent(urlArchivo);
+  const filename = url.split('/o/')[1].split('?')[0];
+  try {
+    const response = await bucket.file(filename).delete();
+    return response;
+  } catch (_) {
+    return;
+  }
+});

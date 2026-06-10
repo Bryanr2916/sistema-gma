@@ -51,6 +51,12 @@ const routes: Routes = [
     canActivate: [TipoGuard],
     data: { tipos: [TIPOS_USUARIO.admin, TIPOS_USUARIO.editor]}
   },
+  {
+    path: 'permisos',
+    loadChildren: () => import('./permisos/permisos.module').then(m => m.PermisosModule),
+    canActivate: [TipoGuard],
+    data: { tipos: [TIPOS_USUARIO.admin, TIPOS_USUARIO.editor] }
+  },
   {path:'**',component:PaginaNoEncontradaComponent, canActivate: [UsuarioGuard]}
 ];
 

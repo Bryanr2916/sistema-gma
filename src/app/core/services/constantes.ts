@@ -19,3 +19,22 @@ export const RANGO_RIESGOS = [
     { key: "medio", max: 9, label: "Medio", clase: "warning" },
     { key: "alto", max: Infinity, label: "Alto", clase: "danger" }
 ];
+
+export const ESTADOS_PERMISO = [
+    { key: "vigente", label: "Vigente", clase: "success" },
+    { key: "proximo", label: "Próximo a vencer", clase: "warning" },
+    { key: "vencido", label: "Vencido", clase: "danger" },
+    { key: "renovacion", label: "Renovación en proceso", clase: "info" },
+    { key: "suspendido", label: "Suspendido", clase: "secondary" },
+];
+
+export const TIPOS_PERMISO = [
+    { key: "permiso", label: "Permiso" },
+    { key: "licencia", label: "Licencia" },
+    { key: "contrato", label: "Contrato" },
+    { key: "poliza", label: "Póliza" },
+    { key: "certificacion", label: "Certificación" },
+    { key: "inspeccion", label: "Inspección" },
+    { key: "tramite", label: "Trámite" },
+    { key: "otro", label: "Otro" },
+];

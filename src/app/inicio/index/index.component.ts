@@ -38,7 +38,8 @@ export class IndexComponent implements OnInit {
       }
 
       if (this.usuario.tipo == TIPOS_USUARIO.admin || this.usuario.tipo === TIPOS_USUARIO.editor) {
-        menuActualizado.push({ logo: "recycle", nombre: "Riesgos Ambientales", enlace: "riesgos-ambientales" })
+        menuActualizado.push({ logo: "recycle", nombre: "Riesgos Ambientales", enlace: "riesgos-ambientales" });
+        menuActualizado.push({ logo: "bell", nombre: "Permisos", enlace: "permisos" })
       }
 
       this.menu = menuActualizado;
