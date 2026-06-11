@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { debounceTime, Subject } from 'rxjs';
+import { debounceTime, Subject, timestamp } from 'rxjs';
 import { RANGO_RIESGOS } from 'src/app/core/services/constantes';
+import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { RiesgosService } from 'src/app/core/services/riesgos.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
 
@@ -38,13 +39,16 @@ export class ViewComponent implements OnInit {
     riesgo: []
   };
 
+  nombreArchivo = "";
+
   cargando = true;
   guardando = false;
 
   constructor(
     private titleService: Title,
     private riesgosService: RiesgosService,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private empresasService: EmpresasService,
   ) { }
 
   ngOnInit(): void {
@@ -65,6 +69,12 @@ export class ViewComponent implements OnInit {
 
   cargarDatos = async () => {
     const reRiesgo = await this.riesgosService.obtenerRiesgoPorEmpresaId(this.empresa.id);
+    const reEmpresa = await this.empresasService.obtenerEmpresa(this.empresa.id);
+
+    const nombreEmpresa = (reEmpresa.get("nombre") as string).toLocaleLowerCase().replace(" ", "_");
+    const numero = Date.now();
+
+    this.nombreArchivo = nombreEmpresa + "_matriz_riesgos_" + numero;
 
     if (reRiesgo.docs.length === 0) {
       // crear riesgo si no existe
@@ -145,5 +155,43 @@ export class ViewComponent implements OnInit {
     }
 
     return this.rangos[2];
+  }
+
+  descargarMatriz() {
+
+    const encabezados = Object.values(this.ths);
+    encabezados.shift();
+
+    const filas = this.riesgos.riesgo.map((r: any) => [
+      r.actividad,
+      r.aspectoAmbiental,
+      r.impacto,
+      r.p,
+      r.s,
+      r.p * r.s,
+      this.calcularClasificacion(r.p * r.s).label,
+      r.control,
+      r.accion
+    ]);
+
+    const contenido = [
+      encabezados.join(';'),
+      ...filas.map((fila: any) => fila.join(';'))
+    ].join('\n');
+
+
+    const blob = new Blob(
+      ['\uFEFF' + contenido],
+      { type: 'text/csv;charset=utf-8;' }
+    );
+
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${this.nombreArchivo}.csv`;
+    link.click();
+
+    window.URL.revokeObjectURL(url);
   }
 }

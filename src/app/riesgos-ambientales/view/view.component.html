@@ -22,6 +22,12 @@
     </div>
 
     <div *ngIf="!cargando" class="container-fluid">
+        <!--Nav-->
+        <ul class="nav nav-pills my-4">
+            <li class="nav-item">
+                <a class="nav-link active" (click)="descargarMatriz()"><i class="fa-solid fa-download"></i> Descargar CSV</a>
+            </li>
+        </ul>
         <!--table-->
         <div class="table-responsive mb-4 mt-2">
             <table class="table table-light table-striped table-hover shadow table-bordered">
