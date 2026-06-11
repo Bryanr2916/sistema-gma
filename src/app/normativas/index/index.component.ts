@@ -20,7 +20,8 @@ export class IndexComponent implements OnInit {
 
   readonly TAMANO_PAGINA = 20;
 
-  cargando = true;
+  cargandoInicial = true;
+  cargandoListado = false;
   busqueda = "";
   tipos: any[] = [];
   acciones = ["Editar |", "Borrar"];
@@ -37,6 +38,18 @@ export class IndexComponent implements OnInit {
   /** Items cacheados por página para evitar consultas al revisitar. */
   private itemsPorPagina = new Map<number, any[]>();
 
+  /** Dataset completo cacheado para búsqueda global. */
+  private normativasTodasCache: any[] | null = null;
+
+  /** Resultados filtrados del término de búsqueda actual. */
+  private resultadosBusqueda: any[] = [];
+
+  private debounceBusqueda?: ReturnType<typeof setTimeout>;
+
+  get enModoBusqueda(): boolean {
+    return this.busqueda.trim().length > 0;
+  }
+
   constructor(private titleService: Title, private mensajesService: MensajesService,
     private normativaService: NormativaService, private tiposService: TiposNormativasService,
     private truncarTexto: TruncarTextoPipe
@@ -47,17 +60,21 @@ export class IndexComponent implements OnInit {
     this.tiposService.obtenerTipos().subscribe({
       next: (datos) => {
         this.tipos = datos;
-        void this.inicializarListado();
+        void this.inicializarListado(true);
       },
       error: (err) => {
         console.error(err);
-        this.cargando = false;
+        this.cargandoInicial = false;
       }
     });
   }
 
-  private async inicializarListado(): Promise<void> {
-    this.cargando = true;
+  private async inicializarListado(esCargaInicial = false): Promise<void> {
+    if (esCargaInicial) {
+      this.cargandoInicial = true;
+    } else {
+      this.cargandoListado = true;
+    }
     try {
       const [total, primera] = await Promise.all([
         this.normativaService.contarNormativas(),
@@ -75,7 +92,11 @@ export class IndexComponent implements OnInit {
       this.totalPaginas = 0;
       this.normativasFiltradas = [];
     } finally {
-      this.cargando = false;
+      if (esCargaInicial) {
+        this.cargandoInicial = false;
+      } else {
+        this.cargandoListado = false;
+      }
     }
   }
 
@@ -131,13 +152,18 @@ export class IndexComponent implements OnInit {
       return;
     }
 
+    if (this.enModoBusqueda) {
+      this.aplicarPaginaBusqueda(n);
+      return;
+    }
+
     if (!forzar && this.itemsPorPagina.has(n)) {
       this.normativasFiltradas = this.itemsPorPagina.get(n)!;
       this.paginaActual = n;
       return;
     }
 
-    this.cargando = true;
+    this.cargandoListado = true;
     try {
       if (n === this.totalPaginas && this.totalPaginas > 1) {
         const ultima = await this.normativaService.obtenerUltimaPagina(
@@ -187,7 +213,7 @@ export class IndexComponent implements OnInit {
         this.paginaActual = n;
       }
     } finally {
-      this.cargando = false;
+      this.cargandoListado = false;
     }
   }
 
@@ -237,8 +263,76 @@ export class IndexComponent implements OnInit {
     return out;
   }
 
-  buscar(_event: any): void {
-    // La búsqueda global quedará para una iteración futura con consultas en servidor.
+  buscar(_valor: string): void {
+    clearTimeout(this.debounceBusqueda);
+    this.debounceBusqueda = setTimeout(() => void this.ejecutarBusqueda(), 300);
+  }
+
+  private aplicarPaginaBusqueda(n: number): void {
+    this.paginaActual = n;
+    const inicio = (n - 1) * this.TAMANO_PAGINA;
+    this.normativasFiltradas = this.resultadosBusqueda.slice(
+      inicio,
+      inicio + this.TAMANO_PAGINA
+    );
+  }
+
+  private filtrarNormativas(normativas: any[], termino: string): any[] {
+    return normativas.filter(
+      (n) =>
+        String(n.numero ?? '').toLowerCase().includes(termino) ||
+        String(n.titulo ?? '').toLowerCase().includes(termino)
+    );
+  }
+
+  private async ejecutarBusqueda(): Promise<void> {
+    const term = this.busqueda.trim().toLowerCase();
+    if (!term) {
+      await this.salirModoBusqueda();
+      return;
+    }
+
+    const necesitaFetch = this.normativasTodasCache === null;
+    if (necesitaFetch) {
+      this.cargandoListado = true;
+    }
+    try {
+      if (necesitaFetch) {
+        this.normativasTodasCache =
+          await this.normativaService.obtenerTodasNormativasListado();
+      }
+      this.resultadosBusqueda = this.filtrarNormativas(
+        this.normativasTodasCache!,
+        term
+      );
+      this.totalRegistros = this.resultadosBusqueda.length;
+      this.totalPaginas =
+        this.totalRegistros === 0
+          ? 0
+          : Math.ceil(this.totalRegistros / this.TAMANO_PAGINA);
+      if (this.totalPaginas > 0) {
+        this.aplicarPaginaBusqueda(1);
+      } else {
+        this.paginaActual = 1;
+        this.normativasFiltradas = [];
+      }
+    } catch (e) {
+      console.error(e);
+      this.resultadosBusqueda = [];
+      this.totalRegistros = 0;
+      this.totalPaginas = 0;
+      this.normativasFiltradas = [];
+    } finally {
+      if (necesitaFetch) {
+        this.cargandoListado = false;
+      }
+    }
+  }
+
+  private async salirModoBusqueda(): Promise<void> {
+    this.normativasTodasCache = null;
+    this.resultadosBusqueda = [];
+    await this.inicializarListado(false);
   }
 
   borrarNormativaFB(normativa: any): void {
@@ -249,7 +343,18 @@ export class IndexComponent implements OnInit {
   }
 
   private async recargarTrasBorrado(): Promise<void> {
-    this.cargando = true;
+    this.normativasTodasCache = null;
+    if (this.enModoBusqueda) {
+      const paginaPrevia = this.paginaActual;
+      await this.ejecutarBusqueda();
+      if (this.totalPaginas > 0) {
+        const pagina = Math.min(paginaPrevia, this.totalPaginas);
+        this.aplicarPaginaBusqueda(pagina);
+      }
+      return;
+    }
+
+    this.cargandoListado = true;
     try {
       this.totalRegistros = await this.normativaService.contarNormativas();
       this.totalPaginas =
@@ -270,7 +375,7 @@ export class IndexComponent implements OnInit {
     } catch (e) {
       console.error(e);
     } finally {
-      this.cargando = false;
+      this.cargandoListado = false;
     }
   }
 

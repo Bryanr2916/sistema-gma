@@ -62,6 +62,14 @@ export class NormativaService {
     return snapshot.data().count;
   }
 
+  /** Todas las normativas del listado (para búsqueda global en cliente). */
+  async obtenerTodasNormativasListado(): Promise<any[]> {
+    const normativasRef = collection(this.firestore, this.path);
+    const q = query(normativasRef, ...this.constraintsListado());
+    const snap = await getDocs(q);
+    return snap.docs.map((d) => this.mapDoc(d));
+  }
+
   /**
    * Una página de normativas ordenadas por fechaCreacion descendente.
    * @param tamanoPagina Tamaño de página (p. ej. 20).
