@@ -6,6 +6,7 @@ import { getDownloadURL } from '@firebase/storage';
 import { ESTADOS_PERMISO, TIPOS_PERMISO } from 'src/app/core/services/constantes';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { PermisosService } from 'src/app/core/services/permisos.service';
+import { UsuarioService } from 'src/app/core/services/usuario.service';
 import { fechaMinima } from 'src/app/core/validators/fecha-minima';
 import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
 
@@ -16,6 +17,7 @@ import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
 })
 export class CreateComponent implements OnInit {
 
+  empresaId = "";
   formulario: FormGroup = this.fb.group({});
   archivo: any = null;
   permiso: any = {
@@ -36,6 +38,7 @@ export class CreateComponent implements OnInit {
     private titleService: Title,
     public fb: FormBuilder,
     private permisosService:PermisosService,
+    private usuarioService: UsuarioService,
     private mensajesService: MensajesService,
     private router: Router
   ) {
@@ -64,6 +67,9 @@ export class CreateComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Permisos");
+    this.usuarioService.usuarioActual().subscribe(usuario => {
+      this.empresaId = usuario?.['empresaId'];
+    });
   }
 
   cargarArchivo(event: any) {
@@ -81,6 +87,7 @@ export class CreateComponent implements OnInit {
   crearPermiso() {
     this.formulario.markAllAsTouched();
     if (this.formulario.valid) {
+      this.permiso.empresaId = this.empresaId;
       this.permiso.nombre = this.formulario.controls["nombre"].value;
       this.permiso.tipo = this.formulario.controls["tipo"].value;
       this.permiso.fechaVencimiento = this.formulario.controls["fechaVencimiento"].value;

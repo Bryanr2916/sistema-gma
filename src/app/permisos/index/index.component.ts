@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ESTADOS_PERMISO, TIPOS_PERMISO } from 'src/app/core/services/constantes';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { PermisosService } from 'src/app/core/services/permisos.service';
+import { UsuarioService } from 'src/app/core/services/usuario.service';
 
 @Component({
   selector: 'app-index',
@@ -12,6 +13,8 @@ import { PermisosService } from 'src/app/core/services/permisos.service';
 })
 export class IndexComponent implements OnInit {
 
+  private unsubscribe?: () => void;
+  empresaId = "";
   cargando = true;
   busqueda = "";
   ths = ["#", "Nombre", "Tipo", "Vence", "Días restantes", "Archivo", "Estado"];
@@ -24,17 +27,30 @@ export class IndexComponent implements OnInit {
   constructor(
     private titleService: Title,
     private permisosService: PermisosService,
+    private usuarioService: UsuarioService,
     private mensajesService: MensajesService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Permisos");
-    this.permisosService.obtenerPermisos().subscribe(datos => {
-      this.permisosTodos = datos;
-      this.permisosFiltrados = this.permisosTodos;
-      this.cargando = false;
+    this.usuarioService.usuarioActual().subscribe(usuario => {
+      this.empresaId = usuario?.['empresaId'];
+
+      this.unsubscribe =
+        this.permisosService.obtenerPermisos(
+          this.empresaId,
+          permisos => {
+            this.permisosTodos = permisos;
+            this.permisosFiltrados = permisos;
+            this.cargando = false;
+          }
+        );
     });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe?.();
   }
 
   buscar(event: any) {
@@ -99,7 +115,7 @@ export class IndexComponent implements OnInit {
   duplicarFila(){
     if (this.filaSeleccionada !== -1) {
       if (confirm("¿Desea duplicar el permiso?\nEl archivo adjunto no será duplicado")) {
-        const permiso = {...this.permisosFiltrados[this.filaSeleccionada], urlArchivo: ""};
+        const permiso = {...this.permisosFiltrados[this.filaSeleccionada], urlArchivo: "", empresaId: this.empresaId};
 
         this.permisosService.crearPermiso(permiso).then(_ => {
           this.mensajesService.mostrarMensaje("success", "Permiso duplicado con éxito", undefined);

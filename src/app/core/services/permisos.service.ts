@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, deleteDoc, doc, Firestore, getDoc, serverTimestamp, updateDoc } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, deleteDoc, doc, Firestore, getDoc, getDocs, onSnapshot, query, serverTimestamp, updateDoc, where } from '@angular/fire/firestore';
 import { Storage, deleteObject, getDownloadURL, ref, uploadBytesResumable } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -18,9 +18,25 @@ export class PermisosService {
     return addDoc(permisoRef, {...permiso, fechaCreacion: serverTimestamp()});
   }
 
-  obtenerPermisos() {
+  obtenerPermisos(
+    empresaId: string,
+    callback: (permisos: any[]) => void
+  ) {
     const permisosRef = collection(this.firestore, this.path);
-    return collectionData(permisosRef, {idField: 'id'}) as Observable<any[]>;
+
+    const q = query(
+      permisosRef,
+      where("empresaId", "==", empresaId)
+    );
+
+    return onSnapshot(q , snapshot => {
+      const permisos = snapshot.docs.map(doc => ({
+        ...doc.data(),
+        id: doc.id
+      }));
+
+      callback(permisos);
+    });
   }
   
   obtenerPermiso(id: any) {
