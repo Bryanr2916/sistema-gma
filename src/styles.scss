@@ -30,6 +30,34 @@ table {
     font-size: 12px;
 }
 
+/* Contenedor de páginas con card centrada (login, formularios) */
+.gma-page-center {
+    padding-inline: 0.75rem;
+    padding-bottom: 3rem;
+}
+
+/* Panel de formulario: mobile-first, sin min-width en base */
+.card.gma-card-panel {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+    .card.gma-card-panel {
+        width: auto;
+        max-width: none;
+        min-width: 720px;
+        flex-shrink: 0;
+    }
+}
+
+@media (min-width: 992px) {
+    .card.gma-card-panel--wide {
+        min-width: 920px;
+    }
+}
+
 /* Table Portrait*/
 @media (min-width: 600px) {
     .content-container {
