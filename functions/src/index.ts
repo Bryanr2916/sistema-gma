@@ -206,3 +206,55 @@ export const permisoBorrarArchivoDev = onDocumentDeleted("permisos-dev/{permisoI
     return;
   }
 });
+
+export const empresaBorrarMatrices = onDocumentDeleted("empresas/{empresaId}", async (event) => {
+  const { empresaId } = event.params;
+  logger.info(`Empresa eliminada: ${empresaId}, borrando matrices relacionados...`);
+  const empresaEliminada = event.data?.data();
+
+  if (!empresaEliminada) return;
+
+  const matricesSnap = await db
+  .collection("matrices")
+  .where("empresa", "==", empresaId)
+  .get();
+
+  if (matricesSnap.empty) {
+    logger.info("No hay matrices relacionadas.");
+    return;
+  }
+
+  // Batch para eliminarlos
+  const batch = db.batch();
+  matricesSnap.docs.forEach((doc) => batch.delete(doc.ref));
+
+  const response = await batch.commit();
+  logger.info(`Se borraron ${matricesSnap.size} matrices relacionadas con empresa ${empresaId}`);
+  return response;
+});
+
+export const empresaBorrarMatricesDev = onDocumentDeleted("empresas-dev/{empresaId}", async (event) => {
+  const { empresaId } = event.params;
+  logger.info(`Empresa eliminada: ${empresaId}, borrando matrices relacionados...`);
+  const empresaEliminada = event.data?.data();
+
+  if (!empresaEliminada) return;
+
+  const matricesSnap = await db
+    .collection("matrices-dev")
+    .where("empresa", "==", empresaId)
+    .get();
+
+  if (matricesSnap.empty) {
+    logger.info("No hay matrices relacionadas.");
+    return;
+  }
+
+  // Batch para eliminarlos
+  const batch = db.batch();
+  matricesSnap.docs.forEach((doc) => batch.delete(doc.ref));
+
+  const response = await batch.commit();
+  logger.info(`Se borraron ${matricesSnap.size} matrices relacionadas con empresa ${empresaId}`);
+  return response;
+});
