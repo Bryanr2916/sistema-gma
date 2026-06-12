@@ -41,6 +41,10 @@ export class IndexComponent implements OnInit {
   async cargarUsuario() {
     this.usuarioService.usuarioActual().subscribe(usuario => {
       this.usuario = usuario;
+
+      if (this.usuario.tipo !== this.tiposUsuario.adminSistema) {
+        this.ths = this.ths.filter(th => th !== "Empresa");
+      }
       this.cargarMatrices();
     });
   }

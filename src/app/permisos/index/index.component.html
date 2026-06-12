@@ -72,16 +72,13 @@
 
             <!-- Acciones -->
             <div [ngClass]="filaSeleccionada !== -1 ? 'active' : ''" class="table-actions border border-dark">
-                <a (click)="borrarFila()"><i class="r-icon fa-solid fa-trash fa-lg me-2"></i>
-                    <span class="hidden-tooltip">Borrar</span>
+                <a (click)="borrarFila()"><i class="r-icon fa-solid fa-trash fa-lg me-2"></i> Borrar
                 </a>
                 <div class="vr text-success"></div>
-                <a (click)="editarFila()"><i class="b-icon fa-solid fa-pen-to-square fa-lg me-2"></i>
-                    <span class="hidden-tooltip">Editar</span>
+                <a (click)="editarFila()"><i class="b-icon fa-solid fa-pen-to-square fa-lg me-2"></i> Editar
                 </a>
                 <div class="vr text-success"></div>
-                <a (click)="duplicarFila()"><i class="g-icon fa-regular fa-copy fa-lg me-2"></i>
-                    <span class="hidden-tooltip">Duplicar</span>
+                <a (click)="duplicarFila()"><i class="g-icon fa-regular fa-copy fa-lg me-2"></i> Duplicar
                 </a>
             </div>
         </div>
