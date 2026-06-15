@@ -1,4 +1,4 @@
-import { onDocumentDeleted } from 'firebase-functions/v2/firestore';
+import { onDocumentDeleted, onDocumentUpdated } from 'firebase-functions/v2/firestore';
 import * as logger from "firebase-functions/logger";
 import * as admin from "firebase-admin";
 
@@ -257,4 +257,50 @@ export const empresaBorrarMatricesDev = onDocumentDeleted("empresas-dev/{empresa
   const response = await batch.commit();
   logger.info(`Se borraron ${matricesSnap.size} matrices relacionadas con empresa ${empresaId}`);
   return response;
+});
+
+export const empresaActualizarLogo = onDocumentUpdated("empresas/{empresaId}", async (event) => {
+  const empresaAntes = event.data?.before.data();
+  const empresaDespues = event.data?.after.data();
+
+  if (!empresaAntes || ! empresaDespues) return;
+
+  if (empresaAntes["urlLogo"] === empresaDespues["urlLogo"]) return;
+
+  const urlLogo = empresaAntes["urlLogo"];
+
+  if (!urlLogo) return;
+
+  const url = decodeURIComponent(urlLogo);
+  const filename = url.split('/o/')[1].split('?')[0];
+
+  try {
+    const response = await bucket.file(filename).delete();
+    return response;
+  } catch (_) {
+    return;
+  }
+});
+
+export const empresaActualizarLogoDev = onDocumentUpdated("empresas-dev/{empresaId}", async (event) => {
+  const empresaAntes = event.data?.before.data();
+  const empresaDespues = event.data?.after.data();
+
+  if (!empresaAntes || !empresaDespues) return;
+
+  if (empresaAntes["urlLogo"] === empresaDespues["urlLogo"]) return;
+
+  const urlLogo = empresaAntes["urlLogo"];
+
+  if (!urlLogo) return;
+
+  const url = decodeURIComponent(urlLogo);
+  const filename = url.split('/o/')[1].split('?')[0];
+
+  try {
+    const response = await bucket.file(filename).delete();
+    return response;
+  } catch (_) {
+    return;
+  }
 });
