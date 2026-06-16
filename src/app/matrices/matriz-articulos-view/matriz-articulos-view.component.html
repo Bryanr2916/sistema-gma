@@ -16,7 +16,7 @@
           <a *ngIf="normativa.urlArchivo" target="_blank" href={{normativa.urlArchivo}}>{{normativa.titulo}}</a>
           <span *ngIf="!normativa.urlArchivo" class="badge text-bg-danger">No hay archivo</span>
         </p>
-        <p><strong>Fecha de publicación de normativa:</strong> {{normativa.fecha}}</p>
+        <p><strong>Fecha de publicación de normativa:</strong> {{normativa.fecha | date: "longDate"}}</p>
         <p><strong>Entidad:</strong> {{normativa.entidad}}</p>
         <p><strong>Estado:</strong> <span class="badge mx-2 border border-2" [ngClass]="'text-bg-' + estadoActual().clase">{{estadoActual().label}}</span></p>
       </div>
