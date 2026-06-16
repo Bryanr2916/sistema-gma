@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-center align-items-center">
+<div class="d-flex justify-content-center align-items-center gma-page-center">
     <!--loading-->
     <div *ngIf="cargando" class="d-flex justify-content-center">
         <div class="spinner-border mt-5 text-primary" role="status">
@@ -6,7 +6,7 @@
         </div>
     </div>
 
-    <div *ngIf="!cargando" class="card shadow my-5 border border-dark">
+    <div *ngIf="!cargando" class="card shadow my-5 border border-dark gma-card-panel gma-card-panel--wide">
         <div class="card-header d-flex justify-content-around">
             <h2><i class="g-icon fa-solid fa-user me-1"></i>Perfil</h2>
         </div>
@@ -24,14 +24,14 @@
         </div>
 
         <div class="card-footer">
-            <div class="row">
-                <div class="col-3">
-                    <button (click)="editarPerfil()" type="button" class="btn btn-outline-primary">
+            <div class="row g-2">
+                <div class="col-12 col-sm-3">
+                    <button (click)="editarPerfil()" type="button" class="btn btn-outline-primary w-100">
                         <i class="fa-solid fa-pen-to-square fa-lg m-2"></i>Editar Perfil
                     </button>
                 </div>
-                <div class="col-4">
-                    <button (click)="reestablecerContrasena()" type="button" class="btn btn-outline-success">
+                <div class="col-12 col-sm-4">
+                    <button (click)="reestablecerContrasena()" type="button" class="btn btn-outline-success w-100">
                         <i class="fa-solid fa-key fa-lg m-2"></i>Reestablecer contraseña
                     </button>
                 </div>
