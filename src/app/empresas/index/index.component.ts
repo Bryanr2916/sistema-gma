@@ -15,10 +15,11 @@ import { UsuarioService } from 'src/app/core/services/usuario.service';
 export class IndexComponent implements OnInit {
   cargando = true;
   busqueda = "";
-  ths = ["#","Empresa", "Administrador", "Correo Electrónico", "Acciones"];
+  ths = ["#","Empresa", "Administrador", "Correo Electrónico"];
   empresasTodas:any[] = [];
   empresasFiltradas:any[] = [];
   usuarios:any[] = [];
+  filaSeleccionada = -1;
 
   constructor(
     private titleService: Title, private empresaService: EmpresasService,
@@ -47,24 +48,60 @@ export class IndexComponent implements OnInit {
       empresa.nombre.toLowerCase().includes(busquedaMinuscuala));
   }
 
-  borrarEmpresaFB(empresa: any) {
-    this.empresaService.borrarEmpresa(empresa.id).then(_ => {
-      this.mensajesService.mostrarMensaje("success", "Empresa borrada con éxito", undefined);
-      });
-  }
+  seleccionarFila(event: Event, index: number) {
+    event.stopPropagation();
+    const isChecked = (event.target as HTMLInputElement).checked;
 
-  borrar(empresa: any) {
-    if (confirm(`¿Desea eliminar la empresa "${empresa.nombre}"?`)) {
-      this.borrarEmpresaFB(empresa);
+    if (isChecked) {
+      this.filaSeleccionada = index;
+    } else {
+      this.filaSeleccionada = -1
     }
   }
 
-  duplicar (empresa: any) {
-    if (confirm(`¿Desea duplicar la empresa "${empresa.nombre}"?`)) {
-      const empDuplicada = {...empresa, nombre: `copia de ${empresa.nombre}`, urlLogo: ""};
-      this.empresasService.crearEmpresa(empDuplicada).then(_ => {
-        this.mensajesService.mostrarMensaje("success", "Empresa creada con éxito", undefined);
-      });
+  borrarFila() {
+    if (this.filaSeleccionada !== -1) {
+      const empresa = this.empresasFiltradas[this.filaSeleccionada];
+      if (confirm(`¿Desea eliminar la empresa "${empresa.nombre}"?`)) {
+        this.empresaService.borrarEmpresa(empresa.id).then(_ => {
+          this.mensajesService.mostrarMensaje("success", "Empresa borrada con éxito", undefined);
+        }).finally(() => {
+          this.filaSeleccionada = -1;
+        });
+      }
+    }
+  }
+
+  duplicarFila() {
+    if (this.filaSeleccionada !== -1) {
+      const empresa = this.empresasFiltradas[this.filaSeleccionada];
+      if (confirm(`¿Desea duplicar la empresa "${empresa.nombre}"?`)) {
+        const empDuplicada = {...empresa, nombre: `copia de ${empresa.nombre}`, urlLogo: ""};
+        this.empresasService.crearEmpresa(empDuplicada).then(_ => {
+          this.mensajesService.mostrarMensaje("success", "Empresa duplicada con éxito", undefined);
+        }).finally(() => {
+          this.filaSeleccionada = -1;
+        });
+      }
+    }
+  }
+
+  editarFila() {
+    if (this.filaSeleccionada !== -1) {
+      const empresa = this.empresasFiltradas[this.filaSeleccionada];
+      this.router.navigate([`/empresas/editar/${empresa.id}`]);
+    }
+  }
+
+  verEmpresa(index: number) {
+    const empresa = this.empresasFiltradas[index];
+    this.router.navigate([`/empresas/ver/${empresa.id}`]);
+  }
+
+  gestionarUsuarios() {
+    if (this.filaSeleccionada !== -1) {
+      const empresa = this.empresasFiltradas[this.filaSeleccionada];
+      this.router.navigate([`/empresas/${empresa.id}/usuarios`]);
     }
   }
 
