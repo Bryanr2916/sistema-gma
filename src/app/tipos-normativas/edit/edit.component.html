@@ -1,9 +1,9 @@
-<div class="d-flex justify-content-center align-items-center">
-    <div class="card shadow my-5 text-center border border-dark">
+<div class="d-flex justify-content-center align-items-center gma-page-center">
+    <div class="card shadow my-5 text-center border border-dark gma-card-panel">
         <div class="card-header d-flex justify-content-around">
             <h2><i class="g-icon fa-regular fa-rectangle-list me-1"></i>Editar tipo de normativas</h2>
              <!--Nav-->
-            <ul class="nav nav-pills mx-5">
+            <ul class="nav nav-pills mx-sm-5">
                 <li class="nav-item mx-2">
                     <a class="nav-link active" routerLink="/tipos-normativas"><i class="fa-solid fa-chevron-left"></i> Regresar</a>
                 </li>
@@ -12,7 +12,7 @@
         <div class="card-body">
             <form [formGroup]="formulario" id="form" class="my-4">
                 <!--Nombre-->
-                <div id="fieldNombre" class="mb-3 me-5 row">
+                <div id="fieldNombre" class="mb-3 me-sm-5 row">
                     <label for="inputNombre" class="col-sm-4 col-form-label">
                         <span class="text-danger">*</span>
                         Nombre
@@ -28,8 +28,8 @@
         </div>
         <div class="card-footer">
             <!--Acciones-->
-            <div class="mb-3 mx-5 row align-items-center">
-                <button (click)="editarTipo()" class="btn btn-primary col-sm-3" type="submit">Editar tipo</button>
+            <div class="mb-3 mx-sm-5 row align-items-center">
+                <button (click)="editarTipo()" class="btn btn-primary col-12 col-sm-3" type="submit">Editar tipo</button>
             </div>
         </div>
       </div>
