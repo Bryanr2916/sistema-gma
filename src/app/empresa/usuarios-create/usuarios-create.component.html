@@ -1,10 +1,10 @@
 
-<div class="d-flex justify-content-center align-items-center">
-    <div class="card shadow my-5 text-center border border-dark">
+<div class="d-flex justify-content-center align-items-center gma-page-center">
+    <div class="card shadow my-5 text-center border border-dark gma-card-panel gma-card-panel--wide">
         <div class="card-header d-flex justify-content-around">
             <h2><i class="g-icon fa-solid fa-user me-1"></i>Crear Usuario</h2>
             <!--Nav-->
-            <ul class="nav nav-pills mx-5">
+            <ul class="nav nav-pills mx-sm-5">
                 <li class="nav-item mx-2">
                     <a class="nav-link active" routerLink="/empresa/gestionar-usuarios"><i class="fa-solid fa-chevron-left"></i> Regresar</a>
                 </li>
@@ -15,7 +15,7 @@
             <!--FORM Usuario-->
             <form [formGroup]="formulario" id="form" class="my-5">
               <!--Nombre-->
-              <div id="fieldNombre" class="mb-3 me-5 row">
+              <div id="fieldNombre" class="mb-3 me-sm-5 row">
                   <label for="inputNombre" class="col-sm-4 col-form-label">
                     <span class="text-danger">*</span>
                     Nombre
@@ -28,7 +28,7 @@
                   </div>
               </div>
               <!--Correo-->
-              <div id="fieldCorreo" class="mb-3 me-5 row">
+              <div id="fieldCorreo" class="mb-3 me-sm-5 row">
                 <label for="inputCorreo" class="col-sm-4 col-form-label">
                   <span class="text-danger">*</span>
                   Correo Electrónico
@@ -44,7 +44,7 @@
               </div>
 
               <!--Tipo-->
-              <div id="fieldTipo" class="mb-3 me-5 row">
+              <div id="fieldTipo" class="mb-3 me-sm-5 row">
                 <label for="inputTipo" class="col-sm-4 col-form-label">
                   <span class="text-danger">*</span>
                   Tipo
@@ -62,7 +62,7 @@
               </div>
 
               <!--Contraseña-->
-              <div id="fieldContrasena" class="mb-3 me-5 row">
+              <div id="fieldContrasena" class="mb-3 me-sm-5 row">
                 <label for="inputContrasena" class="col-sm-4 col-form-label">
                   <span class="text-danger">*</span>
                   Contraseña
@@ -77,7 +77,7 @@
               </div>
 
               <!--Rep Contraseña-->
-              <div id="fieldRepContrasena" class="mb-3 me-5 row">
+              <div id="fieldRepContrasena" class="mb-3 me-sm-5 row">
                 <label for="inputRepContrasena" class="col-sm-4 col-form-label">
                   <span class="text-danger">*</span>
                   Repetir Contraseña
@@ -96,8 +96,8 @@
 
         <div class="card-footer">
           <!--Acciones-->
-          <div class="mb-3 mx-5 row align-items-center">
-              <button (click)="crearUsuario()" class="btn btn-primary col-sm-3" type="submit">Crear Usuario</button>
+          <div class="mb-3 mx-sm-5 row align-items-center">
+              <button (click)="crearUsuario()" class="btn btn-primary col-12 col-sm-3" type="submit">Crear Usuario</button>
           </div>
         </div>
     </div>
