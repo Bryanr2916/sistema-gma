@@ -4,8 +4,12 @@ import { GestionarUsuariosComponent } from './gestionar-usuarios/gestionar-usuar
 import { UsuariosCreateComponent } from './usuarios-create/usuarios-create.component';
 import { UsuariosEditComponent } from './usuarios-edit/usuarios-edit.component';
 import { UsuariosViewComponent } from './usuarios-view/usuarios-view.component';
+import { DetalleComponent } from './detalle/detalle.component';
+import { EditarComponent } from './editar/editar.component';
 
 const routes: Routes = [
+  {path: "detalle", component: DetalleComponent},
+  {path: "editar", component: EditarComponent},
   {path: "gestionar-usuarios", component: GestionarUsuariosComponent},
   {path: "gestionar-usuarios/crear", component: UsuariosCreateComponent},
   {path: "gestionar-usuarios/editar/:id", component: UsuariosEditComponent},

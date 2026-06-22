@@ -7,6 +7,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UsuariosCreateComponent } from './usuarios-create/usuarios-create.component';
 import { UsuariosEditComponent } from './usuarios-edit/usuarios-edit.component';
 import { UsuariosViewComponent } from './usuarios-view/usuarios-view.component';
+import { DetalleComponent } from './detalle/detalle.component';
+import { EditarComponent } from './editar/editar.component';
+import { ShareModule } from '../share/share.module';
 
 
 @NgModule({
@@ -14,13 +17,16 @@ import { UsuariosViewComponent } from './usuarios-view/usuarios-view.component';
     GestionarUsuariosComponent,
     UsuariosCreateComponent,
     UsuariosEditComponent,
-    UsuariosViewComponent
+    UsuariosViewComponent,
+    DetalleComponent,
+    EditarComponent
   ],
   imports: [
     CommonModule,
     EmpresaRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ShareModule
   ]
 })
 export class EmpresaModule { }
