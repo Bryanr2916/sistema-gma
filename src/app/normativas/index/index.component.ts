@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 import type { QueryDocumentSnapshot } from '@angular/fire/firestore';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { NormativaService } from 'src/app/core/services/normativa.service';
@@ -24,8 +25,8 @@ export class IndexComponent implements OnInit {
   cargandoListado = false;
   busqueda = "";
   tipos: any[] = [];
-  acciones = ["Editar |", "Borrar"];
-  ths = ["Número", "Título", "Archivo", "Tipo de Normativa", "Acciones"];
+  ths = ["#", "Título", "Número", "Archivo", "Tipo de Normativa"];
+  filaSeleccionada = -1;
 
   paginaActual = 1;
   totalRegistros = 0;
@@ -52,7 +53,7 @@ export class IndexComponent implements OnInit {
 
   constructor(private titleService: Title, private mensajesService: MensajesService,
     private normativaService: NormativaService, private tiposService: TiposNormativasService,
-    private truncarTexto: TruncarTextoPipe
+    private truncarTexto: TruncarTextoPipe, private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -393,6 +394,37 @@ export class IndexComponent implements OnInit {
       return tipo.nombre;
     }
     return "Desconocido";
+  }
+
+  seleccionarFila(event: Event, index: number) {
+    event.stopPropagation();
+    const isChecked = (event.target as HTMLInputElement).checked;
+
+    if (isChecked) {
+      this.filaSeleccionada = index;
+    } else {
+      this.filaSeleccionada = -1;
+    }
+  }
+
+  verNormativa(index: number) {
+    const normativa = this.normativasFiltradas[index];
+    this.router.navigate([`/normativas/ver/${normativa.id}`]);
+  }
+
+  editarFila() {
+    if (this.filaSeleccionada !== -1) {
+      const normativa = this.normativasFiltradas[this.filaSeleccionada];
+      this.router.navigate([`/normativas/editar/${normativa.id}`]);
+    }
+  }
+
+  borrarFila() {
+    if (this.filaSeleccionada !== -1) {
+      const normativa = this.normativasFiltradas[this.filaSeleccionada];
+      this.borrar(normativa);
+      this.filaSeleccionada = -1;
+    }
   }
 
 }
