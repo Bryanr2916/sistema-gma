@@ -29,15 +29,15 @@
             <a class="nav-link" aria-current="page" routerLink="matrices"><i class="fa-solid fa-table-cells me-1"></i>Matrices</a>
           </li>
 
-          <!--Riesgos ambientales-->
-          <li *ngIf="usuario.tipo == tiposUsuario.admin || usuario.tipo == tiposUsuario.editor" class="nav-item">
-            <a class="nav-link" aria-current="page" routerLink="riesgos-ambientales"><i class="fa-solid fa-recycle me-1"></i>Riesgos Ambientales</a>
-          </li>
-
-          <!--Permisos-->
-          <li *ngIf="usuario.tipo == tiposUsuario.admin || usuario.tipo == tiposUsuario.editor" class="nav-item">
-            <a class="nav-link" aria-current="page" routerLink="permisos"><i
-                class="fa-solid fa-bell me-1"></i>Permisos</a>
+          <!--Gestión Ambiental-->
+          <li *ngIf="usuario.tipo == tiposUsuario.admin || usuario.tipo == tiposUsuario.editor" class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fa-solid fa-leaf me-1"></i>Gestión Ambiental
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" routerLink="riesgos-ambientales"><i class="g-icon fa-solid fa-recycle me-1"></i>Riesgos Ambientales</a></li>
+              <li><a class="dropdown-item" routerLink="permisos"><i class="g-icon fa-solid fa-bell me-1"></i>Permisos</a></li>
+            </ul>
           </li>
 
           <!--Normativas-->
