@@ -1,9 +1,9 @@
-<div class="d-flex justify-content-center align-items-center">
-    <div class="card shadow my-5 text-center border border-dark">
+<div class="d-flex justify-content-center align-items-center gma-page-center">
+    <div class="card shadow my-5 text-center border border-dark gma-card-panel gma-card-panel--wide">
         <div class="card-header d-flex justify-content-around">
             <h2><i class="g-icon fa-solid fa-bookmark me-1"></i>{{matriz.titulo}}</h2>
              <!--Nav-->
-            <ul class="nav nav-pills mx-5">
+            <ul class="nav nav-pills mx-sm-5">
                 <li class="nav-item mx-2">
                     <a class="nav-link active" routerLink="/matrices"><i class="fa-solid fa-chevron-left"></i> Regresar</a>
                 </li>
@@ -19,7 +19,7 @@
             <div *ngIf="!cargando ">
                 <form *ngIf="areasAplicables.length !== 0" id="form" class="my-4">
                     <!--Area Legal-->
-                    <div class="mb-3 me-5 row">
+                    <div class="mb-3 me-sm-5 row">
                        <label for="inputArea" class="col-sm-4 col-form-label">Seleccione el área legal</label>
                        <div class="col-sm-8">
                            <select (change)="seleccionarAreaLegal()" [(ngModel)]="areaSeleccionada.id" [ngModelOptions]="{standalone:true}" id="inputArea" class="form-select border border-dark">
