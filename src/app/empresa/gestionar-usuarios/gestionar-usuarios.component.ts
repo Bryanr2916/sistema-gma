@@ -15,9 +15,10 @@ export class GestionarUsuariosComponent implements OnInit {
 
   cargando = true;
   busqueda = "";
-  ths = ["#","Nombre", "Correo", "Tipo", "Acciones"];
+  ths = ["#","Nombre", "Correo", "Tipo"];
   usuariosTodos:any[] = [];
   usuariosFiltrados:any[] = [];
+  filaSeleccionada = -1;
   usuario: any = {};
   empresa = {
     id: "",
@@ -89,40 +90,73 @@ export class GestionarUsuariosComponent implements OnInit {
     }
   }
 
-  // iniciar sesión o registrar
-  realizarAccion(uid: string, datos: any) {
-    if (uid !== "") return this.usuarioService.iniciarSesion(datos);
-    return this.usuarioService.registrar(datos);
-  }
-
   esUsuarioActual(usuario: any) {
     return this.usuario.id === usuario.id;
   }
 
-  usarComo(usuario: any) {
-    if (confirm(`Al aceptar se cerrará la sesión actual e iniciará sesión como "${usuario.correo}"`)) {
-      this.realizarAccion(
-        usuario.uid,
-        {
-          correo: usuario.correo,
-          contrasena: this.encriptadorService.desencriptarContrasena(usuario.contrasena)
-        }
-      ).then(_ => {
-        this.mensajesService.mostrarMensaje("success", "Bienvenido(a) a GMA Sistema", undefined);
-        this.router.navigate([""]);
-      }).catch(_ => {
-        this.mensajesService.mostrarMensaje("error", "No se pudo iniciar sesión", undefined);
-      });
+  seleccionarFila(event: Event, index: number) {
+    event.stopPropagation();
+    const isChecked = (event.target as HTMLInputElement).checked;
+
+    if (isChecked) {
+      this.filaSeleccionada = index;
+    } else {
+      this.filaSeleccionada = -1;
     }
   }
- 
-  borrar(usuario: any) {
-    if (confirm(`¿Desea eliminar a "${usuario.nombre}"?`)) {
-      this.usuarioService.borrarUsuario(usuario.id).then(_ => {
-        this.usuariosTodos = this.usuariosTodos.filter(us => us.id !== usuario.id);
-        this.usuariosFiltrados = this.usuariosFiltrados.filter(us => us.id !== usuario.id);
-        this.mensajesService.mostrarMensaje("success", "Usuario borrado con éxito", undefined);
-      });
+
+  verUsuario(index: number) {
+    const usuario = this.usuariosFiltrados[index];
+    this.router.navigate([`/empresa/gestionar-usuarios/ver/${usuario.id}`]);
+  }
+
+  editarFila() {
+    if (this.filaSeleccionada !== -1) {
+      const usuario = this.usuariosFiltrados[this.filaSeleccionada];
+      this.router.navigate([`/empresa/gestionar-usuarios/editar/${usuario.id}`]);
     }
+  }
+
+  usarComoFila() {
+    if (this.filaSeleccionada !== -1) {
+      const usuario = this.usuariosFiltrados[this.filaSeleccionada];
+      if (this.esUsuarioActual(usuario)) return;
+      if (confirm(`Al aceptar se cerrará la sesión actual e iniciará sesión como "${usuario.correo}"`)) {
+        this.realizarAccion(
+          usuario.uid,
+          {
+            correo: usuario.correo,
+            contrasena: this.encriptadorService.desencriptarContrasena(usuario.contrasena)
+          }
+        ).then(_ => {
+          this.mensajesService.mostrarMensaje("success", "Bienvenido(a) a GMA Sistema", undefined);
+          this.router.navigate([""]);
+        }).catch(_ => {
+          this.mensajesService.mostrarMensaje("error", "No se pudo iniciar sesión", undefined);
+        });
+      }
+    }
+  }
+
+  borrarFila() {
+    if (this.filaSeleccionada !== -1) {
+      const usuario = this.usuariosFiltrados[this.filaSeleccionada];
+      if (this.esUsuarioActual(usuario)) return;
+      if (confirm(`¿Desea eliminar a "${usuario.nombre}"?`)) {
+        this.usuarioService.borrarUsuario(usuario.id).then(_ => {
+          this.usuariosTodos = this.usuariosTodos.filter(us => us.id !== usuario.id);
+          this.usuariosFiltrados = this.usuariosFiltrados.filter(us => us.id !== usuario.id);
+          this.mensajesService.mostrarMensaje("success", "Usuario borrado con éxito", undefined);
+        }).finally(() => {
+          this.filaSeleccionada = -1;
+        });
+      }
+    }
+  }
+
+  // iniciar sesión o registrar
+  realizarAccion(uid: string, datos: any) {
+    if (uid !== "") return this.usuarioService.iniciarSesion(datos);
+    return this.usuarioService.registrar(datos);
   }
 }
