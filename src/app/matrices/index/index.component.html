@@ -17,7 +17,7 @@
               <input (ngModelChange)="buscar($event)" [(ngModel)]="busqueda" [ngModelOptions]="{standalone:true}" type="text" class="form-control border- border-dark" placeholder="Buscar..." aria-label="Username" aria-describedby="basic-addon1">
             </div>
       </li>
-      <li *ngIf="usuario.tipo === tiposUsuario.adminSistema || usuario.tipo === tiposUsuario.admin || usuario.tipo === tiposUsuario.editor" class="nav-item mx-2">
+      <li *ngIf="puedeEditar" class="nav-item mx-2">
         <a class="nav-link active" routerLink="crear"><i class="fa-solid fa-plus"></i> Crear matriz</a>
       </li>
   </ul>
@@ -26,32 +26,32 @@
     <table class="table table-light table-striped table-hover shadow table-bordered">
         <thead>
           <tr class="table-success">
+            <th *ngIf="puedeEditar"></th>
             <th scope="col" *ngFor="let th of ths">{{th}}</th>
           </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let matriz of matricesFiltradas; index as i">
+            <tr class="selectable-row" *ngFor="let matriz of matricesFiltradas; index as i" (click)="verMatriz(i)">
+                <th *ngIf="puedeEditar">
+                    <input [checked]="filaSeleccionada === i" (click)="seleccionarFila($event, i)"
+                        class="form-check-input border border-dark" type="checkbox" value="" id="checkDefault">
+                </th>
                 <th scope="row">{{ i + 1}}</th>
                 <td>{{matriz.titulo}}</td>
                 <td>({{obtenerCantidadArticulosAplicables(matriz.id)}})</td>
                 <td *ngIf="usuario.tipo === tiposUsuario.adminSistema">{{nombreEmpresa(matriz.empresa)}}</td>
-                <td>
-                    <a routerLink="ver/{{matriz.id}}"><i class="g-icon fa-solid fa-eye fa-lg me-2"></i>
-                      <span class="hidden-tooltip">Ver</span>
-                    </a>
-                    <a *ngIf="usuario.tipo === tiposUsuario.adminSistema || usuario.tipo === tiposUsuario.admin || usuario.tipo === tiposUsuario.editor" routerLink="editar/{{matriz.id}}"><i class="fa-solid fa-pen-to-square fa-lg me-2"></i>
-                      <span class="hidden-tooltip">Editar</span>
-                    </a>
-                    <a *ngIf="usuario.tipo === tiposUsuario.adminSistema || usuario.tipo === tiposUsuario.admin || usuario.tipo === tiposUsuario.editor" (click)="borrar(matriz)"><i class="r-icon fa-solid fa-trash fa-lg me-2"></i>
-                      <span class="hidden-tooltip">Borrar</span>
-                    </a>
-                    <a *ngIf="usuario.tipo === tiposUsuario.adminSistema || usuario.tipo === tiposUsuario.admin || usuario.tipo === tiposUsuario.editor" routerLink="crear-articulos/{{matriz.id}}"><i class="g-icon fa-solid fa-newspaper fa-lg ms-2"></i>
-                      <span class="hidden-tooltip">Crear artículos aplicables </span>
-                    </a>
-                </td>
             </tr>
         </tbody>
     </table>
+
+    <!-- Acciones flotantes -->
+    <div *ngIf="puedeEditar" [ngClass]="filaSeleccionada !== -1 ? 'active' : ''" class="table-actions border border-dark">
+      <a (click)="borrarFila()"><i class="r-icon fa-solid fa-trash fa-lg me-2"></i> Borrar</a>
+        <div class="vr text-success"></div>
+      <a (click)="editarFila()"><i class="b-icon fa-solid fa-pen-to-square fa-lg me-2"></i> Editar</a>
+        <div class="vr text-success"></div>
+      <a (click)="crearArticulosFila()"><i class="g-icon fa-solid fa-newspaper fa-lg me-2"></i> Crear artículos</a>
+    </div>
   </div>
   <!--No hay resultados-->
   <div *ngIf="matricesFiltradas.length === 0 && matricesTodas.length > 0" class="my-4">

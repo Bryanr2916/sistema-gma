@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 import { TIPOS_USUARIO } from 'src/app/core/services/constantes';
+import { esEditorOMayor } from 'src/app/core/utils/permisos-usuarios';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { MatricesService } from 'src/app/core/services/matrices.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
@@ -19,15 +21,18 @@ export class IndexComponent implements OnInit {
   matricesTodas:any[] = [];
   matricesFiltradas:any[] = [];
   articulosAplicables: any[] = [];
-  ths = ["#","Título","Artículos","Empresa","Acciones"];
+  ths = ["#","Título","Artículos","Empresa"];
   usuario: any = { };
+  filaSeleccionada = -1;
+  puedeEditar = false;
 
   constructor(
     private titleService: Title,
     private empresasService: EmpresasService,
     private matricesService: MatricesService,
     private usuarioService: UsuarioService,
-    private mensajesService: MensajesService
+    private mensajesService: MensajesService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -41,6 +46,7 @@ export class IndexComponent implements OnInit {
   async cargarUsuario() {
     this.usuarioService.usuarioActual().subscribe(usuario => {
       this.usuario = usuario;
+      this.puedeEditar = esEditorOMayor(this.usuario.tipo);
 
       if (this.usuario.tipo !== this.tiposUsuario.adminSistema) {
         this.ths = this.ths.filter(th => th !== "Empresa");
@@ -78,13 +84,47 @@ export class IndexComponent implements OnInit {
       this.nombreEmpresa(matriz.empresa).includes(busquedaMinuscuala));
   }
 
-  borrar(matriz: any) {
-    if (confirm("¿Desea eliminar la matriz?")) {
-      this.matricesService.borrarMatriz(matriz.id).then(_ => {
-        this.mensajesService.mostrarMensaje("success", "Matriz borrada con éxito", undefined);
-      });
+  seleccionarFila(event: Event, index: number) {
+    event.stopPropagation();
+    const isChecked = (event.target as HTMLInputElement).checked;
+
+    if (isChecked) {
+      this.filaSeleccionada = index;
+    } else {
+      this.filaSeleccionada = -1;
     }
-    
+  }
+
+  verMatriz(index: number) {
+    const matriz = this.matricesFiltradas[index];
+    this.router.navigate([`matrices/ver/${matriz.id}`]);
+  }
+
+  editarFila() {
+    if (this.filaSeleccionada !== -1) {
+      const matriz = this.matricesFiltradas[this.filaSeleccionada];
+      this.router.navigate([`matrices/editar/${matriz.id}`]);
+    }
+  }
+
+  borrarFila() {
+    if (this.filaSeleccionada !== -1) {
+      const matriz = this.matricesFiltradas[this.filaSeleccionada];
+      if (confirm(`¿Desea eliminar la matriz "${matriz.titulo}"?`)) {
+        this.matricesService.borrarMatriz(matriz.id).then(_ => {
+          this.mensajesService.mostrarMensaje("success", "Matriz borrada con éxito", undefined);
+        }).finally(() => {
+          this.filaSeleccionada = -1;
+        });
+      }
+    }
+  }
+
+  crearArticulosFila() {
+    if (this.filaSeleccionada !== -1) {
+      const matriz = this.matricesFiltradas[this.filaSeleccionada];
+      this.router.navigate([`matrices/crear-articulos/${matriz.id}`]);
+    }
   }
 
 }
