@@ -26,24 +26,30 @@
         <table class="table table-light table-striped table-hover shadow table-bordered">
             <thead>
               <tr class="table-success">
+                <th></th>
                 <th scope="col" *ngFor="let th of ths">{{th}}</th>
               </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let tipo of tiposFiltrados; index as i">
+                <tr class="selectable-row" *ngFor="let tipo of tiposFiltrados; index as i">
+                    <th>
+                        <input [checked]="filaSeleccionada === i" (click)="seleccionarFila($event, i)"
+                            class="form-check-input border border-dark" type="checkbox" value="" id="checkDefault">
+                    </th>
                     <th scope="row">{{i + 1}}</th>
                     <td>{{tipo.nombre}}</td>
-                    <td>
-                        <a routerLink="editar/{{tipo.id}}"><i class="fa-solid fa-pen-to-square fa-lg me-2"></i>
-                            <span class="hidden-tooltip">Editar</span>
-                        </a>
-                        <a (click)="borrar(tipo)"><i class="r-icon fa-solid fa-trash fa-lg"></i>
-                            <span class="hidden-tooltip">Borrar</span>
-                        </a>
-                    </td>
                 </tr>
             </tbody>
         </table>
+
+        <!-- Acciones -->
+        <div [ngClass]="filaSeleccionada !== -1 ? 'active' : ''" class="table-actions border border-dark">
+            <a (click)="borrarFila()"><i class="r-icon fa-solid fa-trash fa-lg me-2"></i> Borrar
+            </a>
+            <div class="vr text-success"></div>
+            <a (click)="editarFila()"><i class="b-icon fa-solid fa-pen-to-square fa-lg me-2"></i> Editar
+            </a>
+        </div>
     </div>
     <!--No hay resultados-->
     <div *ngIf="tiposFiltrados.length === 0 && tiposTodos.length > 0" class="my-4">

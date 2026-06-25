@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { TiposNormativasService } from 'src/app/core/services/tipos-normativas.service';
 
@@ -14,9 +15,11 @@ export class IndexComponent implements OnInit {
   busqueda = "";
   tiposTodos:any[] = [];
   tiposFiltrados:any[] = [];
-  ths = ["#","Tipos de Normativas", "Acciones"];
+  ths = ["#","Tipos de Normativas"];
+  filaSeleccionada = -1;
 
-  constructor(private titleService: Title, private tiposService: TiposNormativasService, private mensajesService: MensajesService) { }
+  constructor(private titleService: Title, private tiposService: TiposNormativasService,
+    private mensajesService: MensajesService, private router: Router) { }
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Tipos de normativas");
@@ -33,11 +36,34 @@ export class IndexComponent implements OnInit {
       tipo.nombre.toLowerCase().includes(busquedaMinuscuala));
   }
 
-  borrar(tipo: any) {
-    if (confirm(`¿Desea eliminar el área "${tipo.nombre}"?`)) {
-      this.tiposService.borrarTipo(tipo.id).then(_ => {
-        this.mensajesService.mostrarMensaje("success", "Área borrada con éxito", undefined);
-      });
+  seleccionarFila(event: Event, index: number) {
+    event.stopPropagation();
+    const isChecked = (event.target as HTMLInputElement).checked;
+
+    if (isChecked) {
+      this.filaSeleccionada = index;
+    } else {
+      this.filaSeleccionada = -1;
+    }
+  }
+
+  borrarFila() {
+    if (this.filaSeleccionada !== -1) {
+      const tipo = this.tiposFiltrados[this.filaSeleccionada];
+      if (confirm(`¿Desea eliminar el tipo "${tipo.nombre}"?`)) {
+        this.tiposService.borrarTipo(tipo.id).then(_ => {
+          this.mensajesService.mostrarMensaje("success", "Tipo borrado con éxito", undefined);
+        }).finally(() => {
+          this.filaSeleccionada = -1;
+        });
+      }
+    }
+  }
+
+  editarFila() {
+    if (this.filaSeleccionada !== -1) {
+      const tipo = this.tiposFiltrados[this.filaSeleccionada];
+      this.router.navigate([`/tipos-normativas/editar/${tipo.id}`]);
     }
   }
 }

@@ -26,42 +26,31 @@
         <table class="table table-light table-striped table-hover shadow table-bordered">
             <thead>
               <tr class="table-success">
+                <th></th>
                 <th scope="col" *ngFor="let th of ths">{{th}}</th>
               </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let area of areasFiltradas; index as i">
+                <tr class="selectable-row" *ngFor="let area of areasFiltradas; index as i">
+                    <th>
+                        <input [checked]="filaSeleccionada === i" (click)="seleccionarFila($event, i)"
+                            class="form-check-input border border-dark" type="checkbox" value="" id="checkDefault">
+                    </th>
                     <th scope="row">{{ i + 1}}</th>
                     <td>{{area.nombre}}</td>
-                    <td>
-                        <a routerLink="editar/{{area.id}}"><i class="fa-solid fa-pen-to-square fa-lg me-2"></i>
-                            <span class="hidden-tooltip">Editar</span>
-                        </a>
-                        <a (click)="borrar(area)"><i class="r-icon fa-solid fa-trash fa-lg"></i>
-                            <span class="hidden-tooltip">Borrar</span>
-                        </a>
-                    </td>
                 </tr>
             </tbody>
         </table>
+
+        <!-- Acciones -->
+        <div [ngClass]="filaSeleccionada !== -1 ? 'active' : ''" class="table-actions border border-dark">
+            <a (click)="borrarFila()"><i class="r-icon fa-solid fa-trash fa-lg me-2"></i> Borrar
+            </a>
+            <div class="vr text-success"></div>
+            <a (click)="editarFila()"><i class="b-icon fa-solid fa-pen-to-square fa-lg me-2"></i> Editar
+            </a>
+        </div>
     </div>
-    <!-- TODO: pagination
-    <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
-          <li class="page-item">
-            <a class="page-link" href="#">&laquo;</a>
-          </li>
-          <li class="page-item"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
-          <li class="page-item"><a class="page-link" href="#">...</a></li>
-          <li class="page-item"><a class="page-link" href="#">6</a></li>
-          <li class="page-item">
-            <a class="page-link" href="#">&raquo;</a>
-          </li>
-        </ul>
-      </nav>
-    -->
     <!--No hay resultados-->
     <div *ngIf="areasFiltradas.length === 0 && areasTodas.length > 0" class="my-4">
         <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No se encontraron resultados</h4>
