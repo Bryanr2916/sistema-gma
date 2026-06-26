@@ -34,7 +34,7 @@ export class IndexComponent implements OnInit {
       }
 
       if (this.usuario.tipo == TIPOS_USUARIO.admin) {
-        menuActualizado.unshift({ logo: "building", nombre: "Empresa Detalle", enlace: "empresa/detalle" });
+        menuActualizado.unshift({ logo: "briefcase", nombre: "Empresa Detalle", enlace: "empresa/detalle" });
         menuActualizado.unshift({ logo: "users", nombre: "Gestionar Usuarios", enlace: "empresa/gestionar-usuarios" });
       }
 
