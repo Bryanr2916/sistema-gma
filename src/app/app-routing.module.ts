@@ -57,6 +57,12 @@ const routes: Routes = [
     canActivate: [TipoGuard],
     data: { tipos: [TIPOS_USUARIO.admin, TIPOS_USUARIO.editor] }
   },
+  {
+    path: 'admin/riesgos-ambientales',
+    loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
+    canActivate: [TipoGuard],
+    data: { tipos: [TIPOS_USUARIO.adminSistema] }
+  },
   {path:'**',component:PaginaNoEncontradaComponent, canActivate: [UsuarioGuard]}
 ];
 

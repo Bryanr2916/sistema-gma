@@ -54,6 +54,17 @@
           <li *ngIf="usuario.tipo == tiposUsuario.adminSistema" class="nav-item">
             <a class="nav-link" routerLink="area-legal"><i class="fa-solid fa-bookmark me-1"></i>Área Legal</a>
           </li>
+
+          <!--Gestión Ambiental - adminSistema-->
+          <li *ngIf="usuario.tipo == tiposUsuario.adminSistema" class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fa-solid fa-leaf me-1"></i>Gestión Ambiental
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" routerLink="admin/riesgos-ambientales"><i
+                    class="g-icon fa-solid fa-recycle me-1"></i>Riesgos Ambientales</a></li>
+            </ul>
+          </li>
           
         </ul>
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-5">

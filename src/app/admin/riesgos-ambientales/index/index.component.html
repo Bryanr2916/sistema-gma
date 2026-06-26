@@ -1,0 +1,56 @@
+<div class="mt-4 mb-2 mx-2 gma-page-center">
+    <h2><i class="g-icon fa-solid fa-recycle me-1"></i>Riesgos Ambientales - Todas las Empresas</h2>
+    <hr class="border border-success border-1 opacity-75">
+
+    <div *ngIf="cargando" class="d-flex justify-content-center">
+      <div class="spinner-border mt-5 text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <div *ngIf="!cargando" class="content-container">
+      <ul class="nav nav-pills mt-4">
+        <li class="nav-item">
+          <div class="input-group mb-3">
+            <span class="input-group-text border border-dark" id="basic-addon1"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input (ngModelChange)="buscar($event)" [(ngModel)]="busqueda" [ngModelOptions]="{standalone:true}" type="text" class="form-control border border-dark" placeholder="Buscar por empresa..." aria-label="Buscar" aria-describedby="basic-addon1">
+          </div>
+        </li>
+      </ul>
+
+      <div *ngIf="empresasFiltradas.length > 0" class="table-responsive mb-4 mt-2">
+        <table class="table table-light table-striped table-hover shadow table-bordered">
+          <thead>
+            <tr class="table-success">
+              <th></th>
+              <th scope="col" *ngFor="let th of ths">{{th}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="selectable-row" *ngFor="let empresa of empresasFiltradas; index as i" (click)="verRiesgo(i)">
+              <th>
+                <input [checked]="filaSeleccionada === i" (click)="seleccionarFila($event, i)"
+                    class="form-check-input border border-dark" type="checkbox" value="" id="checkDefault">
+              </th>
+              <th scope="row">{{ i + 1 }}</th>
+              <td>{{empresa.nombre}}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div [ngClass]="filaSeleccionada !== -1 ? 'active' : ''" class="table-actions border border-dark">
+          <a (click)="borrarFila()"><i class="r-icon fa-solid fa-trash fa-lg me-2"></i>Borrar</a>
+          <div class="vr text-success"></div>
+          <a (click)="descargarCSV()"><i class="g-icon fa-solid fa-download fa-lg me-2"></i>Descargar CSV</a>
+        </div>
+      </div>
+
+      <div *ngIf="empresasFiltradas.length === 0 && empresasTodas.length > 0" class="my-4">
+        <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No se encontraron resultados</h4>
+      </div>
+
+      <div *ngIf="empresasTodas.length === 0" class="my-4">
+        <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No hay empresas registradas</h4>
+      </div>
+    </div>
+</div>

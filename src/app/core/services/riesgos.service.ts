@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, serverTimestamp, query, where, getDocs } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -55,5 +56,15 @@ export class RiesgosService {
     editarRiesgo(riesgo: any) {
         const riesgoRef = doc(this.firestore, `${this.path}/${riesgo.id}`);
         return updateDoc(riesgoRef, { ...riesgo, fechaEdicion: serverTimestamp() });
+    }
+
+    obtenerTodosLosRiesgos(): Observable<any[]> {
+        const riesgoRef = collection(this.firestore, this.path);
+        return collectionData(riesgoRef, { idField: 'id' }) as Observable<any[]>;
+    }
+
+    borrarRiesgo(id: string) {
+        const riesgoRef = doc(this.firestore, `${this.path}/${id}`);
+        return deleteDoc(riesgoRef);
     }
 }
