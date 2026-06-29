@@ -31,6 +31,8 @@ export class IndexComponent implements OnInit {
         menuActualizado.push({ logo: "book", nombre: "Normativas", enlace: "normativas" });
         menuActualizado.push({ logo: "rectangle-list", nombre: "Tipos de Normativas", enlace: "tipos-normativas" });
         menuActualizado.push({ logo: "bookmark", nombre: "Área Legal", enlace: "area-legal" });
+        menuActualizado.push({ logo: "recycle", nombre: "Riesgos Ambientales", enlace: "admin/riesgos-ambientales" });
+        menuActualizado.push({ logo: "bell", nombre: "Permisos", enlace: "admin/permisos" });
       }
 
       if (this.usuario.tipo == TIPOS_USUARIO.admin) {
