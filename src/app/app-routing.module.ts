@@ -58,7 +58,7 @@ const routes: Routes = [
     data: { tipos: [TIPOS_USUARIO.admin, TIPOS_USUARIO.editor] }
   },
   {
-    path: 'admin/riesgos-ambientales',
+    path: 'admin',
     loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
     canActivate: [TipoGuard],
     data: { tipos: [TIPOS_USUARIO.adminSistema] }

@@ -39,6 +39,21 @@ export class PermisosService {
     });
   }
   
+  obtenerTodosLosPermisos(
+    callback: (permisos: any[]) => void
+  ) {
+    const permisosRef = collection(this.firestore, this.path);
+
+    return onSnapshot(permisosRef, snapshot => {
+      const permisos = snapshot.docs.map(doc => ({
+        ...doc.data(),
+        id: doc.id
+      }));
+
+      callback(permisos);
+    });
+  }
+
   obtenerPermiso(id: any) {
     const permisoRef = doc(this.firestore, `${this.path}/${id}`);
     return getDoc(permisoRef);

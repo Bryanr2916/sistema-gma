@@ -1,0 +1,91 @@
+<div class="mt-4 mb-2 mx-2">
+    <h2><i class="g-icon fa-solid fa-bell me-1"></i>Permisos - Todas las Empresas</h2>
+    <hr class="border border-success border-1 opacity-75">
+
+    <div *ngIf="cargando" class="d-flex justify-content-center">
+        <div class="spinner-border mt-5 text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <div *ngIf="!cargando" class="content-container">
+        <ul class="nav nav-pills mt-4">
+            <li class="nav-item">
+                <div class="input-group mb-3">
+                    <span class="input-group-text border border-dark" id="basic-addon1"><i
+                            class="fa-solid fa-magnifying-glass"></i></span>
+                    <input (ngModelChange)="buscar($event)" [(ngModel)]="busqueda" [ngModelOptions]="{standalone:true}"
+                        type="text" class="form-control border border-dark" placeholder="Buscar por nombre o empresa..."
+                        aria-label="Buscar" aria-describedby="basic-addon1">
+                </div>
+            </li>
+            <li class="nav-item mx-2">
+                <a class="nav-link active" aria-current="page" routerLink="crear"><i class="fa-solid fa-plus"></i> Crear un
+                    permiso</a>
+            </li>
+        </ul>
+
+        <div *ngIf="permisosFiltrados.length > 0" class="table-responsive mb-4 mt-2">
+            <table class="table table-light table-striped table-hover shadow table-bordered">
+                <thead>
+                    <tr class="table-success">
+                        <th></th>
+                        <th scope="col" *ngFor="let th of ths">{{th}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="selectable-row" *ngFor="let permiso of permisosFiltrados; index as i" (click)="verPermiso(i)">
+                        <th>
+                            <input [checked]="filaSeleccionada === i" (click)="seleccionarFila($event, i)"
+                                class="form-check-input border border-dark" type="checkbox" value="" id="checkDefault">
+                        </th>
+                        <th scope="row">{{i + 1}}</th>
+                        <td>{{permiso.nombre}}</td>
+                        <td>{{obtenerNombreEmpresa(permiso.empresaId)}}</td>
+                        <td>
+                            <p class="badge bg-success">{{obtenerTipo(permiso.tipo).label}}</p>
+                        </td>
+                        <td>
+                            {{ permiso.fechaVencimiento | date: "mediumDate" }}
+                        </td>
+                        <td>
+                            <a *ngIf="permiso.urlArchivo" target="_blank" href="{{permiso.urlArchivo}}" (click)="$event.stopPropagation()"><i
+                                    class="g-i fa-solid fa-paperclip fa-lg"></i>
+                                <span class="hidden-tooltip">Ver archivo</span>
+                            </a>
+                            <a *ngIf="!permiso.urlArchivo">
+                                <i class="r-icon fa-solid fa-ban fa-lg"></i>
+                                <span class="hidden-tooltip">No hay archivo</span>
+                            </a>
+                        </td>
+                        <td>
+                            <span class="badge" [ngClass]="'text-bg-' + obtenerEstado(permiso.estado).clase">
+                                {{obtenerEstado(permiso.estado).label}}
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div [ngClass]="filaSeleccionada !== -1 ? 'active' : ''" class="table-actions border border-dark">
+                <a (click)="borrarFila()"><i class="r-icon fa-solid fa-trash fa-lg me-2"></i> Borrar
+                </a>
+                <div class="vr text-success"></div>
+                <a (click)="editarFila()"><i class="b-icon fa-solid fa-pen-to-square fa-lg me-2"></i> Editar
+                </a>
+                <div class="vr text-success"></div>
+                <a (click)="duplicarFila()"><i class="g-icon fa-regular fa-copy fa-lg me-2"></i> Duplicar
+                </a>
+            </div>
+        </div>
+
+        <div *ngIf="permisosFiltrados.length === 0 && permisosTodos.length > 0" class="my-4">
+            <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No se encontraron resultados</h4>
+        </div>
+
+        <div *ngIf="permisosTodos.length === 0" class="my-4">
+            <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No hay permisos registrados</h4>
+        </div>
+
+    </div>
+</div>
