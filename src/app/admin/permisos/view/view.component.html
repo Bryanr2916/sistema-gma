@@ -1,9 +1,9 @@
-<div class="d-flex justify-content-center align-items-center">
-    <div class="card shadow my-5 border border-dark">
+<div class="gma-page-center d-flex justify-content-center align-items-center">
+    <div class="card gma-card-panel gma-card-panel--wide shadow my-5 border border-dark">
 
         <div class="card-header d-flex justify-content-around">
             <h2><i class="g-icon fa-solid fa-book me-1"></i>Permiso</h2>
-            <ul class="nav nav-pills mx-5">
+            <ul class="nav nav-pills mx-sm-5">
                 <li class="nav-item mx-2">
                     <a class="nav-link active" routerLink="/admin/permisos"><i class="fa-solid fa-chevron-left"></i> Regresar</a>
                 </li>
@@ -42,29 +42,29 @@
                         </a>
                     </p>
                 </div>
+            </div>
 
-                <!--Estado - Correos-->
-                <div class="row mb-4">
-                    <div class="col-6">
-                        <h3>Estado:</h3>
-                        <p class="lead">
-                            <span class="badge" [ngClass]="'text-bg-' + obtenerEstado(permiso.estado).clase">
-                                {{obtenerEstado(permiso.estado).label}}
-                            </span>
-                        </p>
-                    </div>
-                    <div class="col-6">
-                        <h3>Correos:</h3>
-                        <p *ngIf="permiso.correos.length === 0" class="lead">
-                            No hay correos a notificar
-                        </p>
-                        <div *ngIf="permiso.correos.length !== 0">
-                            <ul>
-                                <li *ngFor="let correo of permiso.correos">
-                                    {{correo.value}}
-                                </li>
-                            </ul>
-                        </div>
+            <!--Estado - Correos-->
+            <div class="row mb-4">
+                <div class="col-6">
+                    <h3>Estado:</h3>
+                    <p class="lead">
+                        <span class="badge" [ngClass]="'text-bg-' + obtenerEstado(permiso.estado).clase">
+                            {{obtenerEstado(permiso.estado).label}}
+                        </span>
+                    </p>
+                </div>
+                <div class="col-6">
+                    <h3>Correos:</h3>
+                    <p *ngIf="permiso.correos.length === 0" class="lead">
+                        No hay correos a notificar
+                    </p>
+                    <div *ngIf="permiso.correos.length !== 0">
+                        <ul>
+                            <li *ngFor="let correo of permiso.correos">
+                                {{correo.value}}
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
