@@ -38,7 +38,7 @@
                 </th>
                 <th scope="row">{{ i + 1}}</th>
                 <td>{{matriz.titulo}}</td>
-                <td>({{obtenerCantidadArticulosAplicables(matriz.id)}})</td>
+                <td><span class="badge text-bg-success">{{obtenerCantidadArticulosAplicables(matriz.id)}}</span></td>
                 <td *ngIf="usuario.tipo === tiposUsuario.adminSistema">{{nombreEmpresa(matriz.empresa)}}</td>
             </tr>
         </tbody>
