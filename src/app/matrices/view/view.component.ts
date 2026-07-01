@@ -82,10 +82,18 @@ export class ViewComponent implements OnInit {
 
       this.tiposNormativasService.obtenerTipos().subscribe(tiposFB => {
         this.tiposNormativas = tiposFB;
+        this.cargarPrimeraOpcionArea();
         this.cargando = false;
       });
     } catch(error) {
       console.log(error);
+    }
+  }
+
+  cargarPrimeraOpcionArea() {
+    if (this.areasAplicables && this.areasAplicables.length > 0) {
+      this.areaSeleccionada.id = this.areasAplicables[0].id;
+      this.seleccionarAreaLegal();  
     }
   }
 
