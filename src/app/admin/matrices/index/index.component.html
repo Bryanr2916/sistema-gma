@@ -17,7 +17,7 @@
               <input (ngModelChange)="buscar($event)" [(ngModel)]="busqueda" [ngModelOptions]="{standalone:true}" type="text" class="form-control border- border-dark" placeholder="Buscar..." aria-label="Username" aria-describedby="basic-addon1">
             </div>
       </li>
-      <li *ngIf="puedeEditar" class="nav-item mx-2">
+      <li class="nav-item mx-2">
         <a class="nav-link active" routerLink="crear"><i class="fa-solid fa-plus"></i> Crear matriz</a>
       </li>
   </ul>
@@ -26,13 +26,13 @@
     <table class="table table-light table-striped table-hover shadow table-bordered">
         <thead>
           <tr class="table-success">
-            <th *ngIf="puedeEditar"></th>
+            <th></th>
             <th scope="col" *ngFor="let th of ths">{{th}}</th>
           </tr>
         </thead>
         <tbody>
             <tr class="selectable-row" *ngFor="let matriz of matricesFiltradas; index as i" (click)="verMatriz(i)">
-                <th *ngIf="puedeEditar">
+                <th>
                     <input [checked]="filaSeleccionada === i" (click)="seleccionarFila($event, i)"
                         class="form-check-input border border-dark" type="checkbox" value="" id="checkDefault">
                 </th>
@@ -45,7 +45,7 @@
     </table>
 
     <!-- Acciones flotantes -->
-    <div *ngIf="puedeEditar" [ngClass]="filaSeleccionada !== -1 ? 'active' : ''" class="table-actions border border-dark">
+    <div [ngClass]="filaSeleccionada !== -1 ? 'active' : ''" class="table-actions border border-dark">
       <a (click)="borrarFila()"><i class="r-icon fa-solid fa-trash fa-lg me-2"></i> Borrar</a>
         <div class="vr text-success"></div>
       <a (click)="editarFila()"><i class="b-icon fa-solid fa-pen-to-square fa-lg me-2"></i> Editar</a>

@@ -28,10 +28,6 @@ const routes: Routes = [
     canActivate: [TipoGuard],
     data: { tipos: [TIPOS_USUARIO.admin]}
   },
-  { path:'matrices',
-    loadChildren: () => import ('./matrices/matrices.module').then( m => m.MatricesModule),
-    ...canActivate(() => redirectUnauthorizedTo(["usuario/inicio-sesion"]))
-  },
   { path:'normativas',
     loadChildren: () => import ('./normativas/normativas.module').then( m => m.NormativasModule),
     canActivate: [TipoGuard],

@@ -69,7 +69,7 @@ export class MatrizArticulosViewComponent implements OnInit {
   }
 
   editarArticulo() {
-    this.router.navigate([`/matrices/editar-articulo/${this.articulo.id}`]);
+    this.router.navigate([`/admin/matrices/editar-articulo/${this.articulo.id}`]);
   }
 
   estadoActual() {

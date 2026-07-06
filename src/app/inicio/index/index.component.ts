@@ -12,7 +12,6 @@ export class IndexComponent implements OnInit {
   cargando = true;
   usuario: any = {};
   private readonly menuBase = [
-    {logo:"table-cells", nombre: "Matrices", enlace: "matrices"},
     {logo:"user", nombre: "Perfil de Usuario", enlace: "usuario/perfil"}
   ];
   menu = [...this.menuBase];
@@ -27,6 +26,7 @@ export class IndexComponent implements OnInit {
 
       const menuActualizado = [...this.menuBase];
       if (this.usuario.tipo == TIPOS_USUARIO.adminSistema) {
+        menuActualizado.unshift({ logo: "table-cells", nombre: "Matrices", enlace: "admin/matrices" });
         menuActualizado.unshift({ logo: "briefcase", nombre: "Empresas", enlace: "empresas" });
         menuActualizado.push({ logo: "book", nombre: "Normativas", enlace: "normativas" });
         menuActualizado.push({ logo: "rectangle-list", nombre: "Tipos de Normativas", enlace: "tipos-normativas" });

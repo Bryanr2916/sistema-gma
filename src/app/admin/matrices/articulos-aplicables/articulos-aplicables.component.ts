@@ -48,7 +48,7 @@ export class ArticulosAplicablesComponent implements OnInit {
       normativaId: ["", [Validators.required, seleccionVacia()]],
       areaLegalId: ["", [Validators.required, seleccionVacia()]],
       estado: ["", [Validators.required, seleccionVacia()]],
-      numeroArticulos: ["", [Validators.required]],
+      numeroArticulos: ["", []],
       articulos: ["", []],
       tramites: ["", []],
       cumplimiento: ["", []],
@@ -109,7 +109,7 @@ export class ArticulosAplicablesComponent implements OnInit {
 
       this.matricesService.agregarArticulosAplicables(this.articulosAplicables).then(_ => {
         this.mensajesService.mostrarMensaje("success", "Artículos aplicables creados con éxito", undefined);
-        this.router.navigate(["/matrices"]);
+        this.router.navigate(["/admin/matrices"]);
       }).catch(error => {
         console.log(error);
       });

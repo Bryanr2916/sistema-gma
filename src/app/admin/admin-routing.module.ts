@@ -6,8 +6,16 @@ import { AdminPermisosIndexComponent } from './permisos/index/index.component';
 import { AdminPermisosCreateComponent } from './permisos/create/create.component';
 import { AdminPermisosViewComponent } from './permisos/view/view.component';
 import { AdminPermisosEditComponent } from './permisos/edit/edit.component';
+import { TipoGuard } from '../core/guards/tipo.guard';
+import { TIPOS_USUARIO } from '../core/services/constantes';
 
 const routes: Routes = [
+  {
+    path: 'matrices',
+    loadChildren: () => import('./matrices/matrices.module').then(m => m.MatricesModule),
+    canActivate: [TipoGuard],
+    data: { tipos: [TIPOS_USUARIO.adminSistema]}
+  },
   { path: "riesgos-ambientales", component: IndexComponent },
   { path: "riesgos-ambientales/view/:id", component: ViewComponent },
   { path: "permisos", component: AdminPermisosIndexComponent },

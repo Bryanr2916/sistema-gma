@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { TIPOS_USUARIO } from 'src/app/core/services/constantes';
-import { esEditorOMayor } from 'src/app/core/utils/permisos-usuarios';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { MatricesService } from 'src/app/core/services/matrices.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
@@ -24,7 +23,6 @@ export class IndexComponent implements OnInit {
   ths = ["#","Título","Artículos","Empresa"];
   usuario: any = { };
   filaSeleccionada = -1;
-  puedeEditar = false;
 
   constructor(
     private titleService: Title,
@@ -46,7 +44,6 @@ export class IndexComponent implements OnInit {
   async cargarUsuario() {
     this.usuarioService.usuarioActual().subscribe(usuario => {
       this.usuario = usuario;
-      this.puedeEditar = esEditorOMayor(this.usuario.tipo);
 
       if (this.usuario.tipo !== this.tiposUsuario.adminSistema) {
         this.ths = this.ths.filter(th => th !== "Empresa");
@@ -97,13 +94,13 @@ export class IndexComponent implements OnInit {
 
   verMatriz(index: number) {
     const matriz = this.matricesFiltradas[index];
-    this.router.navigate([`matrices/ver/${matriz.id}`]);
+    this.router.navigate([`admin/matrices/ver/${matriz.id}`]);
   }
 
   editarFila() {
     if (this.filaSeleccionada !== -1) {
       const matriz = this.matricesFiltradas[this.filaSeleccionada];
-      this.router.navigate([`matrices/editar/${matriz.id}`]);
+      this.router.navigate([`admin/matrices/editar/${matriz.id}`]);
     }
   }
 
@@ -123,7 +120,7 @@ export class IndexComponent implements OnInit {
   crearArticulosFila() {
     if (this.filaSeleccionada !== -1) {
       const matriz = this.matricesFiltradas[this.filaSeleccionada];
-      this.router.navigate([`matrices/crear-articulos/${matriz.id}`]);
+      this.router.navigate([`admin/matrices/crear-articulos/${matriz.id}`]);
     }
   }
 

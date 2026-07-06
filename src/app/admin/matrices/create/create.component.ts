@@ -77,7 +77,7 @@ export class CreateComponent implements OnInit {
 
       this.matricesService.crearMatriz(this.matriz).then(_ => {
         this.mensajesService.mostrarMensaje("success", "Matriz creada con éxito", undefined);
-        this.router.navigate(["/matrices"]);
+        this.router.navigate(["admin/matrices"]);
       }).catch(error => {
         console.log(error);
       });

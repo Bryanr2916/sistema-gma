@@ -92,7 +92,7 @@ export class EditComponent implements OnInit {
         this.matriz
       ).then(_ => {
         this.mensajesService.mostrarMensaje("success", "Matriz editada con éxito", undefined);
-        this.router.navigate(["/matrices"]);
+        this.router.navigate(["/admin/matrices"]);
       }).catch(error => {
         console.log(error);
       });
