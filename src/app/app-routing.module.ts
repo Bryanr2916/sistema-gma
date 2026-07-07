@@ -54,6 +54,12 @@ const routes: Routes = [
     data: { tipos: [TIPOS_USUARIO.admin, TIPOS_USUARIO.editor] }
   },
   {
+    path: 'matrices',
+    loadChildren: () => import('./matrices/matrices.module').then(m => m.MatricesModule),
+    canActivate: [TipoGuard],
+    data: { tipos: [TIPOS_USUARIO.admin, TIPOS_USUARIO.editor, TIPOS_USUARIO.lector] }
+  },
+  {
     path: 'admin',
     loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
     canActivate: [TipoGuard],

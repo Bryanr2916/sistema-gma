@@ -1,0 +1,45 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { IndexComponent } from './index/index.component';
+import { CreateComponent } from './create/create.component';
+import { ViewComponent } from './view/view.component';
+import { ArticulosAplicablesComponent } from './articulos-aplicables/articulos-aplicables.component';
+import { EditComponent } from './edit/edit.component';
+import { MatrizArticulosEditComponent } from './matriz-articulos-edit/matriz-articulos-edit.component';
+import { TipoGuard } from 'src/app/core/guards/tipo.guard';
+import { TIPOS_USUARIO } from 'src/app/core/services/constantes';
+
+const routes: Routes = [
+  {path:'',component:IndexComponent},
+  {
+    path: 'crear',
+    component: CreateComponent,
+    canActivate: [TipoGuard],
+    data: { tipos: [TIPOS_USUARIO.admin, TIPOS_USUARIO.editor] }
+  },
+  {
+    path:'editar/:id',
+    component:EditComponent,
+    canActivate: [TipoGuard],
+    data: { tipos: [TIPOS_USUARIO.admin, TIPOS_USUARIO.editor] }
+  },
+  {path:'ver/:id',component:ViewComponent},
+  {
+    path:'crear-articulos/:id',
+    component:ArticulosAplicablesComponent,
+    canActivate: [TipoGuard],
+    data: { tipos: [TIPOS_USUARIO.admin, TIPOS_USUARIO.editor] }
+  },
+  {
+    path:'editar-articulo/:id',
+    component:MatrizArticulosEditComponent,
+    canActivate: [TipoGuard],
+    data: { tipos: [TIPOS_USUARIO.admin, TIPOS_USUARIO.editor] }
+  }
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class MatricesRoutingModule { }

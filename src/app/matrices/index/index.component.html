@@ -1,0 +1,64 @@
+<div class="mt-4 mb-2 mx-2 gma-page-center">
+    <h2><i class="g-icon fa-solid fa-table-cells me-1"></i>Matrices</h2>
+    <hr class="border border-success border-1 opacity-75">
+
+    <div *ngIf="cargando" class="d-flex justify-content-center">
+      <div class="spinner-border mt-5 text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <div *ngIf="!cargando" class="content-container">
+      <!--Nav-->
+    <ul class="nav nav-pills mt-4">
+      <li class="nav-item">
+          <div class="input-group mb-3">
+              <span class="input-group-text border- border-dark" id="basic-addon1"><i class="fa-solid fa-magnifying-glass"></i></span>
+              <input (ngModelChange)="buscar($event)" [(ngModel)]="busqueda" [ngModelOptions]="{standalone:true}" type="text" class="form-control border- border-dark" placeholder="Buscar..." aria-label="Username" aria-describedby="basic-addon1">
+            </div>
+      </li>
+      <li class="nav-item mx-2" *ngIf="!esLector">
+        <a class="nav-link active" routerLink="crear"><i class="fa-solid fa-plus"></i> Crear matriz</a>
+      </li>
+  </ul>
+  <!--table-->
+  <div *ngIf="matricesFiltradas.length > 0" class="table-responsive mb-4 mt-2">
+    <table class="table table-light table-striped table-hover shadow table-bordered">
+        <thead>
+          <tr class="table-success">
+            <th *ngIf="!esLector"></th>
+            <th scope="col" *ngFor="let th of ths">{{th}}</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr class="selectable-row" *ngFor="let matriz of matricesFiltradas; index as i" (click)="verMatriz(i)">
+                <th *ngIf="!esLector">
+                    <input [checked]="filaSeleccionada === i" (click)="seleccionarFila($event, i)"
+                        class="form-check-input border border-dark" type="checkbox" value="" id="checkDefault">
+                </th>
+                <th scope="row">{{ i + 1}}</th>
+                <td>{{matriz.titulo}}</td>
+                <td><span class="badge text-bg-success">{{obtenerCantidadArticulosAplicables(matriz.id)}}</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Acciones flotantes -->
+    <div *ngIf="!esLector" [ngClass]="filaSeleccionada !== -1 ? 'active' : ''" class="table-actions border border-dark">
+      <a (click)="borrarFila()"><i class="r-icon fa-solid fa-trash fa-lg me-2"></i> Borrar</a>
+        <div class="vr text-success"></div>
+      <a (click)="editarFila()"><i class="b-icon fa-solid fa-pen-to-square fa-lg me-2"></i> Editar</a>
+        <div class="vr text-success"></div>
+      <a (click)="crearArticulosFila()"><i class="g-icon fa-solid fa-newspaper fa-lg me-2"></i> Crear artículos</a>
+    </div>
+  </div>
+  <!--No hay resultados-->
+  <div *ngIf="matricesFiltradas.length === 0 && matricesTodas.length > 0" class="my-4">
+    <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No se encontraron resultados</h4>
+  </div>
+  <!--No Hay matrices-->
+  <div *ngIf="matricesTodas.length === 0" class="my-4">
+    <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No hay Matrices registradas</h4>
+  </div>
+</div>
+</div>

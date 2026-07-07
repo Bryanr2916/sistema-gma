@@ -35,6 +35,10 @@ export class IndexComponent implements OnInit {
         menuActualizado.push({ logo: "bell", nombre: "Permisos", enlace: "admin/permisos" });
       }
 
+      if (this.usuario.tipo == TIPOS_USUARIO.admin || this.usuario.tipo === TIPOS_USUARIO.editor || this.usuario.tipo === TIPOS_USUARIO.lector) {
+        menuActualizado.unshift({ logo: "table-cells", nombre: "Matrices", enlace: "matrices" });
+      }
+
       if (this.usuario.tipo == TIPOS_USUARIO.admin) {
         menuActualizado.unshift({ logo: "briefcase", nombre: "Empresa Detalle", enlace: "empresa/detalle" });
         menuActualizado.unshift({ logo: "users", nombre: "Gestionar Usuarios", enlace: "empresa/gestionar-usuarios" });

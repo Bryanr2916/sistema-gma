@@ -1,0 +1,54 @@
+<div class="card text-start my-4">
+    <div class="card-body">
+      <p class="card-title my-3"><strong>{{normativa.titulo}}</strong></p>
+      <ul class="nav nav-tabs mt-2">
+        <!--*ngIf="articulo.tramites !== ''"-->
+        <div *ngFor="let _tab of tabs">
+            <li *ngIf='articulo[_tab.value] !== ""' class="nav-item">
+                <a class="nav-link" (click)="changeTab(_tab)" [ngClass]="{ 'active': tab.value === _tab.value}" aria-current="page">{{_tab.label}}</a>  
+            </li>
+        </div>
+      </ul>
+      <div *ngIf="tab.value === 'general'" class="contenedor-articulos my-3">
+        <p><strong>Número:</strong> {{normativa.numero}}</p>
+        <p><strong>Número de artículos:</strong> {{articulo.numeroArticulos}}</p>
+        <p><strong>Descargar Normativa: </strong>
+          <a *ngIf="normativa.urlArchivo" target="_blank" href={{normativa.urlArchivo}}>{{normativa.titulo}}</a>
+          <span *ngIf="!normativa.urlArchivo" class="badge text-bg-danger">No hay archivo</span>
+        </p>
+        <p><strong>Fecha de publicación de normativa:</strong> {{normativa.fecha | date: "longDate"}}</p>
+        <p><strong>Entidad:</strong> {{normativa.entidad}}</p>
+        <p><strong>Estado:</strong> <span class="badge mx-2 border border-2" [ngClass]="'text-bg-' + estadoActual().clase">{{estadoActual().label}}</span></p>
+      </div>
+      <div *ngIf="tab.value !== 'general' && tab.value !== 'requerimientos'" class="contenedor-articulos my-3">
+        <p><strong>{{tab.label}}:</strong></p>
+        <p>{{articulo[tab.value]}}</p>
+      </div>
+      <div *ngIf="tab.value === 'requerimientos'" class="contenedor-articulos my-3">
+        <p class="lead">{{ cantidadReq() }} / {{ normativa.requerimientos.length }}</p>
+        <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="50" aria-valuemin="0"
+          aria-valuemax="100">
+          <div class="progress-bar" [style.width]="cantidadReq() * 100 / normativa.requerimientos.length + '%'"></div>
+        </div>
+        <p><strong>{{tab.label}}:</strong></p>
+        <div class="form-check" *ngFor="let req of normativa.requerimientos; index as i">
+          <input (change)="reqCheck($event, req.id)" class="form-check-input" type="checkbox" value="" id="checkChecked" [checked]="reqCumple(req.id)" [disabled]="usuario.tipo === tiposUsuario.lector">
+          <label class="form-check-label" for="checkChecked">
+            {{req.value}}
+          </label>
+        </div>
+        <button *ngIf="usuario.tipo !== tiposUsuario.lector" (click)="actualizarReqs()" type="button" class="btn btn-primary my-3">Actualizar</button>
+      </div>
+    </div>
+    <div class="card-footer" *ngIf="usuario.tipo !== tiposUsuario.lector">
+      <!--Acciones-->
+      <div>
+        <a (click)="editarArticulo()"><i class="b-icon fa-solid fa-pen-to-square fa-lg m-2"></i>
+          <span class="hidden-tooltip">Editar</span>
+        </a>
+        <a (click)="borrarArticulo()"><i class="r-icon fa-solid fa-trash fa-lg m-2"></i>
+          <span class="hidden-tooltip">Borrar</span>
+        </a>
+      </div>
+    </div>
+  </div>

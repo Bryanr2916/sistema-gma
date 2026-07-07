@@ -1,0 +1,36 @@
+<div class="d-flex justify-content-center align-items-center gma-page-center">
+    <div class="card shadow my-5 text-center border border-dark gma-card-panel gma-card-panel--wide">
+        <div class="card-header d-flex justify-content-around">
+            <h2><i class="g-icon fa-solid fa-table-cells me-1"></i>Matrices</h2>
+             <!--Nav-->
+            <ul class="nav nav-pills mx-sm-5">
+                <li class="nav-item mx-2">
+                    <a class="nav-link active" routerLink="/matrices"><i class="fa-solid fa-chevron-left"></i> Regresar</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <form [formGroup]="formulario" id="form" class="my-4">
+                <!--Título-->
+                <div id="fieldTitulo" class="mb-3 me-sm-5 row">
+                    <label for="inputTitulo" class="col-sm-4 col-form-label">
+                        <span class="text-danger">*</span>
+                        Título
+                    </label>
+                    <div class="col-sm-8">
+                      <input formControlName="titulo" type="text" class="form-control border border-dark" id="inputTitulo">
+                      <div class="d-flex">
+                        <small class="text-danger" *ngIf="errorEnControlador('titulo', 'required')">Título requerido</small>
+                      </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer">
+            <!--Acciones-->
+            <div class="mb-3 mx-sm-5 row align-items-center">
+                <button (click)="editarMatriz()" class="btn btn-primary col-12 col-sm-3" type="submit">Editar matriz</button>
+            </div>
+        </div>
+      </div>
+</div>
