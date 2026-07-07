@@ -18,13 +18,18 @@
                         Empresa
                     </label>
                     <div class="col-sm-8">
-                        <select formControlName="empresa" id="inputTipo" class="form-select border border-dark">
-                            <option value="select-valor-vacio" selected>Seleccione la empresa</option>
-                            <option *ngFor="let empresa of empresas" value="{{empresa.id}}">{{empresa.nombre}}</option>    
-                        </select>
+                        <app-dropdown-search
+                            [opciones]="empresas"
+                            [controlName]="'empresa'"
+                            [formulario]="formulario"
+                            [labelField]="'nombre'"
+                            [valueField]="'id'"
+                            [searchFields]="['nombre']"
+                            [placeholder]="'Buscar empresa por nombre...'"
+                            [labelSeleccionVacia]="'Seleccione la empresa'"
+                        ></app-dropdown-search>
                         <div class="d-flex">
                             <small class="text-danger" *ngIf="errorEnControlador('empresa', 'required')">Empresa es requerida</small>
-                            <small class="text-danger" *ngIf="errorEnControlador('empresa', 'emptySelect')">Empresa es requerida</small>
                         </div>
                     </div>
                 </div>

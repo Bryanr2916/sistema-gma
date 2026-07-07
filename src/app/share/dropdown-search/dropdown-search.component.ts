@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
@@ -6,7 +6,7 @@ import { FormGroup } from '@angular/forms';
   templateUrl: './dropdown-search.component.html',
   styleUrls: ['./dropdown-search.component.scss']
 })
-export class DropdownSearchComponent implements OnInit {
+export class DropdownSearchComponent implements OnInit, OnChanges {
 
   @Input() opciones: any[] = [];
   @Input() controlName: string = '';
@@ -38,8 +38,30 @@ export class DropdownSearchComponent implements OnInit {
     control?.valueChanges.subscribe(value => {
       if (value === '' || value === null || value === undefined) {
         this.seleccion = null;
+      } else {
+        this.sincronizarSeleccion(value);
       }
     });
+    this.sincronizarSeleccion(control?.value);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['opciones'] && this.opciones) {
+      this.opcionesFiltradas = [...this.opciones];
+      const control = this.formulario?.controls[this.controlName];
+      if (control?.value) {
+        this.sincronizarSeleccion(control.value);
+      }
+    }
+  }
+
+  private sincronizarSeleccion(value: any): void {
+    if (value === '' || value === null || value === undefined) {
+      this.seleccion = null;
+      return;
+    }
+    const opcion = this.opciones.find(opt => opt[this.valueField] === value);
+    this.seleccion = opcion || null;
   }
 
   toggle(event: Event) {

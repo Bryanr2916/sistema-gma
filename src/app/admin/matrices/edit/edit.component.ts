@@ -2,11 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TIPOS_USUARIO } from 'src/app/core/services/constantes';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { MatricesService } from 'src/app/core/services/matrices.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
-import { UsuarioService } from 'src/app/core/services/usuario.service';
 import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
 
 @Component({
@@ -25,8 +23,6 @@ export class EditComponent implements OnInit {
 
   empresas: any[] = [];
 
-  usuario: any = {};
-
   constructor(
     private titleService: Title,
     private empresaService: EmpresasService,
@@ -34,8 +30,7 @@ export class EditComponent implements OnInit {
     private mensajesService: MensajesService,
     private router: Router,
     private route: ActivatedRoute,
-    public fb: FormBuilder,
-    private usuarioService: UsuarioService
+    public fb: FormBuilder
   ) {
     this.definirFormulario();
   }
@@ -49,26 +44,17 @@ export class EditComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Matrices");
-    this.route.params.subscribe( params => {
+    this.route.params.subscribe(params => {
       this.matriz.id = params["id"];
-    });
-
-    this.usuarioService.usuarioActual().subscribe(usuario => {
-      this.usuario = usuario;
       this.empresaService.obtenerEmpresas().subscribe(datos => {
         this.empresas = datos;
-        if (this.usuario.tipo === TIPOS_USUARIO.admin) {
-          this.formulario.get("empresa")?.disable();
-        }
-
         this.matricesService.obtenerMatriz(this.matriz.id).then(respuesta => {
           this.formulario.controls["titulo"].setValue(respuesta.get("titulo"));
           this.formulario.controls["empresa"].setValue(respuesta.get("empresa"));
           this.matriz.titulo = respuesta.get("titulo");
           this.matriz.empresa = respuesta.get("empresa");
+          this.cargando = false;
         });
-
-        this.cargando = false;
       });
     });
   }
