@@ -1,0 +1,39 @@
+<div [formGroup]="formulario">
+  <div class="dropdown-container">
+    <div
+      class="form-select border border-dark dropdown-trigger"
+      (click)="toggle($event)"
+    >
+      <span *ngIf="!seleccion" class="text-secondary">{{labelSeleccionVacia}}</span>
+      <span *ngIf="seleccion" class="seleccion-texto">
+        {{getLabel(seleccion) | truncarTexto: 68 : true}}
+      </span>
+    </div>
+    <div *ngIf="abrirDropdown" class="dropdown-panel border border-dark">
+      <div class="dropdown-search-wrapper">
+        <input
+          (ngModelChange)="buscar($event)"
+          [(ngModel)]="busqueda"
+          [ngModelOptions]="{standalone: true}"
+          type="text"
+          class="form-control"
+          [placeholder]="placeholder"
+        />
+      </div>
+      <div class="dropdown-options">
+        <div
+          *ngFor="let opcion of opcionesFiltradas"
+          class="dropdown-option"
+          [class.selected]="esSeleccionada(opcion)"
+          (click)="seleccionar(opcion)"
+        >
+          <span>{{getLabel(opcion) | truncarTexto: 68 : true}}</span>
+          <i *ngIf="esSeleccionada(opcion)" class="fa-solid fa-check"></i>
+        </div>
+        <div *ngIf="opcionesFiltradas.length === 0" class="dropdown-option text-muted">
+          No se encontraron resultados
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

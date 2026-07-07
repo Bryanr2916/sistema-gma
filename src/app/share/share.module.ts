@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { PaginaNoEncontradaComponent } from './pagina-no-encontrada/pagina-no-encontrada.component';
 import { TruncarTextoPipe } from './pipes/truncar-texto.pipe';
 import { MultiSelectComponent } from './multi-select/multi-select.component';
+import { DropdownSearchComponent } from './dropdown-search/dropdown-search.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
@@ -14,7 +15,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FooterComponent,
     PaginaNoEncontradaComponent,
     TruncarTextoPipe,
-    MultiSelectComponent
+    MultiSelectComponent,
+    DropdownSearchComponent
   ],
   imports: [
     CommonModule,
@@ -26,7 +28,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     HeaderComponent,
     FooterComponent,
     TruncarTextoPipe,
-    MultiSelectComponent
+    MultiSelectComponent,
+    DropdownSearchComponent
   ]
 })
 export class ShareModule { }

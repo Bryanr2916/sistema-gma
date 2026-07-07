@@ -26,17 +26,23 @@
                             </span>
                         </h3>
                 </div>
-                <!--Normativa-->
-                <div id="fieldNormativa" class="mb-3 me-sm-5 row">
-                    <label for="inputNormativa" class="col-sm-4 col-form-label">
+                <!--Normativa (Dropdown Search)-->
+                <div class="mb-3 me-sm-5 row">
+                    <label class="col-sm-4 col-form-label">
                         <span class="text-danger">*</span>
                         Normativa
                     </label>
-                    <div class="col-sm-8">
-                        <select formControlName="normativaId" id="inputNormativa" class="form-select border border-dark">
-                            <option value="select-valor-vacio" selected>Seleccione la normativa</option>
-                            <option *ngFor="let normativa of normativas" value="{{normativa.id}}">{{normativa.titulo | truncarTexto: 68 : true}}</option>
-                        </select>
+                    <div id="fieldNormativa" class="col-sm-8">
+                        <app-dropdown-search
+                            [opciones]="normativas"
+                            [controlName]="'normativaId'"
+                            [formulario]="formulario"
+                            [labelField]="'titulo'"
+                            [valueField]="'id'"
+                            [searchFields]="['titulo', 'numero']"
+                            [placeholder]="'Buscar por número o título...'"
+                            [labelSeleccionVacia]="'Seleccione la normativa'"
+                        ></app-dropdown-search>
                         <div class="d-flex">
                             <small class="text-danger" *ngIf="errorEnControlador('normativaId', 'required')">Normativa es requerida</small>
                             <small class="text-danger" *ngIf="errorEnControlador('normativaId', 'emptySelect')">Normativa es requerida</small>
