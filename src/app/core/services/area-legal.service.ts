@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
 })
 export class AreaLegalService {
 
-  path = environment.production ? "area-legal" : "area-legal-dev";
+  path = environment.useProductionData ? "area-legal" : "area-legal-dev";
   constructor(private firestore: Firestore) { }
 
   crearArea( areaLegal:any ) {

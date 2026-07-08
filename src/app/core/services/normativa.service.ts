@@ -27,7 +27,7 @@ import { environment } from 'src/environments/environment';
 })
 export class NormativaService {
 
-  path = environment.production ? "normativas" : "normativas-dev";
+  path = environment.useProductionData ? "normativas" : "normativas-dev";
 
   constructor(private storage: Storage, private firestore: Firestore) { }
 
@@ -182,7 +182,7 @@ export class NormativaService {
 
   // para manejar el progress en el componente usado
   subirArchivoAlt(archivo: any) {
-    const urlPath = environment.production ? `normativas/archivos/${archivo.name}` : `normativas/archivos-dev/${archivo.name}`;
+    const urlPath = environment.useProductionData ? `normativas/archivos/${archivo.name}` : `normativas/archivos-dev/${archivo.name}`;
     const archivoRef = ref(this.storage, urlPath);
     const tareaSubirArchivo = uploadBytesResumable(archivoRef, archivo);
     return tareaSubirArchivo;

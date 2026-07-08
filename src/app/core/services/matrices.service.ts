@@ -7,8 +7,8 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class MatricesService {
-  path = environment.production ? "matrices" : "matrices-dev";
-  articulosPath = environment.production ? "articulos" : "articulos-dev";
+  path = environment.useProductionData ? "matrices" : "matrices-dev";
+  articulosPath = environment.useProductionData ? "articulos" : "articulos-dev";
   constructor(private firestore: Firestore) { }
 
   // matriz

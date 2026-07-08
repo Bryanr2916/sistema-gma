@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
 
 export class RiesgosService {
 
-    path = environment.production ? "riesgos" : "riesgos-dev";
+    path = environment.useProductionData ? "riesgos" : "riesgos-dev";
 
     constructor(private firestore: Firestore) { }
 

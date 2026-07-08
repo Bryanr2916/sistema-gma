@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
 })
 export class EmpresasService {
 
-  path = environment.production ? "empresas" : "empresas-dev";
+  path = environment.useProductionData ? "empresas" : "empresas-dev";
 
   constructor(private storage: Storage, private firestore: Firestore) { }
 
@@ -29,7 +29,7 @@ export class EmpresasService {
   }
 
   subirArchivo(archivo: any) {
-    const urlPath = environment.production ? `empresas/logos/${archivo.name}` : `empresas/logos-dev/${archivo.name}`;
+    const urlPath = environment.useProductionData ? `empresas/logos/${archivo.name}` : `empresas/logos-dev/${archivo.name}`;
     let urlArchivo = "";
     const archivoRef = ref(this.storage, urlPath);
     const tareaSubirArchivo = uploadBytesResumable(archivoRef, archivo);

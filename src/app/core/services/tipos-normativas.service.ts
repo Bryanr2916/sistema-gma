@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
 })
 export class TiposNormativasService {
 
-  path = environment.production ? "tipos-normativas" : "tipos-normativas-dev";
+  path = environment.useProductionData ? "tipos-normativas" : "tipos-normativas-dev";
   constructor(private firestore: Firestore) { }
 
   crearTipo( tipoNormativas:any ) {

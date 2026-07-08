@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
 })
 export class PermisosService {
 
-  path = environment.production ? "permisos" : "permisos-dev";
+  path = environment.useProductionData ? "permisos" : "permisos-dev";
 
   constructor(private storage: Storage, private firestore: Firestore) { }
 
@@ -60,7 +60,7 @@ export class PermisosService {
   }
   
   subirArchivo(archivo: any) {
-    const urlPath = environment.production ? `empresas/permisos/${archivo.name}` : `empresas/permisos-dev/${archivo.name}`;
+    const urlPath = environment.useProductionData ? `empresas/permisos/${archivo.name}` : `empresas/permisos-dev/${archivo.name}`;
     let urlArchivo = "";
     const archivoRef = ref(this.storage, urlPath);
     const tareaSubirArchivo = uploadBytesResumable(archivoRef, archivo);
@@ -93,7 +93,7 @@ export class PermisosService {
 
   // para manejar el progress en el componente usado
   subirArchivoAlt(archivo: any) {
-    const urlPath = environment.production ? `empresas/permisos/${archivo.name}` : `empresas/permisos-dev/${archivo.name}`;
+    const urlPath = environment.useProductionData ? `empresas/permisos/${archivo.name}` : `empresas/permisos-dev/${archivo.name}`;
     const archivoRef = ref(this.storage, urlPath);
     const tareaSubirArchivo = uploadBytesResumable(archivoRef, archivo);
     return tareaSubirArchivo;

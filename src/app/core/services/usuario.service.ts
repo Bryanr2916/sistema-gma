@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class UsuarioService {
-  path = environment.production ? "usuarios" : "usuarios-dev";
+  path = environment.useProductionData ? "usuarios" : "usuarios-dev";
 
   // todo: usar usuarioCache para optimizar llamados a la db
   private usuarioCache$ = new BehaviorSubject<any | null>(null); // Cache user data
