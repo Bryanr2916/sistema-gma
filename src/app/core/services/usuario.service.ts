@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Auth,createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, user, sendPasswordResetEmail, User } from '@angular/fire/auth';
-import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, query, where, getDocs, serverTimestamp } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, query, where, orderBy, getDocs, serverTimestamp } from '@angular/fire/firestore';
 import { EncriptadorService } from './encriptador.service';
 import { BehaviorSubject, map, Observable, of, switchMap } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -97,7 +97,8 @@ export class UsuarioService {
 
   obtenerUsuarios() {
     const usuariosRef = collection(this.firestore, this.path);
-    return collectionData(usuariosRef, {idField: 'id'}) as Observable<any[]>;
+    const q = query(usuariosRef, orderBy('fechaCreacion', 'desc'));
+    return collectionData(q, {idField: 'id'}) as Observable<any[]>;
   }
 
   obtenerUsuario(id: any) {

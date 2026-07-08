@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, serverTimestamp } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, query, orderBy, serverTimestamp } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -18,7 +18,8 @@ export class TiposNormativasService {
 
   obtenerTipos() {
     const tipoRef = collection(this.firestore, this.path);
-    return collectionData(tipoRef, {idField: 'id'}) as Observable<any[]>;
+    const q = query(tipoRef, orderBy('fechaCreacion', 'desc'));
+    return collectionData(q, {idField: 'id'}) as Observable<any[]>;
   }
 
   obtenerTipo(id: any) {

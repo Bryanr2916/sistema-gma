@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, getDocs, query, where, serverTimestamp } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, getDocs, query, where, orderBy, serverTimestamp } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -20,7 +20,8 @@ export class MatricesService {
 
   obtenerMatrices() {
     const matrizRef = collection(this.firestore, this.path);
-    return collectionData(matrizRef, {idField: 'id'}) as Observable<any[]>;
+    const q = query(matrizRef, orderBy('fechaCreacion', 'desc'));
+    return collectionData(q, {idField: 'id'}) as Observable<any[]>;
   }
 
   obtenerMatriz(id: any) {

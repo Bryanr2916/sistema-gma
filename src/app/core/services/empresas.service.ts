@@ -32,7 +32,7 @@ export class EmpresasService {
   constructor(private storage: Storage, private firestore: Firestore) { }
 
   private constraintsListado() {
-    return [orderBy('nombre', 'asc')];
+    return [orderBy('fechaCreacion', 'desc')];
   }
 
   private mapDoc(d: QueryDocumentSnapshot): any {
@@ -156,7 +156,8 @@ export class EmpresasService {
 
   obtenerEmpresas() {
     const empresasRef = collection(this.firestore, this.path);
-    return collectionData(empresasRef, {idField: 'id'}) as Observable<any[]>;
+    const q = query(empresasRef, orderBy('fechaCreacion', 'desc'));
+    return collectionData(q, {idField: 'id'}) as Observable<any[]>;
   }
 
   obtenerEmpresa(id: any) {

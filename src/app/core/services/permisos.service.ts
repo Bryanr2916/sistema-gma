@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, deleteDoc, doc, Firestore, getDoc, getDocs, onSnapshot, query, serverTimestamp, updateDoc, where } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, deleteDoc, doc, Firestore, getDoc, getDocs, onSnapshot, query, orderBy, serverTimestamp, updateDoc, where } from '@angular/fire/firestore';
 import { Storage, deleteObject, getDownloadURL, ref, uploadBytesResumable } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -26,7 +26,8 @@ export class PermisosService {
 
     const q = query(
       permisosRef,
-      where("empresaId", "==", empresaId)
+      where("empresaId", "==", empresaId),
+      orderBy('fechaCreacion', 'desc')
     );
 
     return onSnapshot(q , snapshot => {
@@ -44,7 +45,9 @@ export class PermisosService {
   ) {
     const permisosRef = collection(this.firestore, this.path);
 
-    return onSnapshot(permisosRef, snapshot => {
+    const q = query(permisosRef, orderBy('fechaCreacion', 'desc'));
+
+    return onSnapshot(q, snapshot => {
       const permisos = snapshot.docs.map(doc => ({
         ...doc.data(),
         id: doc.id
