@@ -83,7 +83,7 @@ export class ArticulosAplicablesComponent implements OnInit {
 
       this.areaLegalService.obtenerAreas().subscribe(datosArea => {
         this.areasLegales = datosArea;
-        this.normativaService.obtenerNormativas(Infinity).subscribe(datosNormativa => {
+        this.normativaService.obtenerNormativas().subscribe(datosNormativa => {
           this.normativas = datosNormativa.filter(dn => this.empresa.paises.includes(dn.pais));
           this.cargando = false;
         });

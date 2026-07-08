@@ -44,7 +44,7 @@ export class NormativaService {
     return addDoc(normativaRef, {...normativa, fechaCreacion: serverTimestamp()});
   }
 
-  obtenerNormativas(cantidad: number = 20) {
+  obtenerNormativas(cantidad: number = Infinity) {
     const normativasRef = collection(this.firestore, this.path);
 
     const q = query(
