@@ -3,13 +3,13 @@
     <hr class="border border-success border-1 opacity-75">
 
     <!--loading-->
-    <div *ngIf="cargando" class="d-flex justify-content-center">
+    <div *ngIf="cargandoInicial" class="d-flex justify-content-center">
         <div class="spinner-border mt-5 text-primary" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
     </div>
 
-    <div *ngIf="!cargando" class="content-container">
+    <div *ngIf="!cargandoInicial" class="content-container">
         <!--Nav-->
     <ul class="nav nav-pills mt-4">
         <li class="nav-item">
@@ -22,8 +22,16 @@
           <a class="nav-link active" aria-current="page" routerLink="crear"><i class="fa-solid fa-plus"></i> Crear una empresa</a>
         </li>
     </ul>
+
+    <!-- Spinner cambio de página -->
+    <div *ngIf="cargandoListado" class="d-flex justify-content-center my-4">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
     <!--Tabla-->
-    <div *ngIf="empresasFiltradas.length > 0" class="table-responsive mb-4 mt-2">
+    <div *ngIf="!cargandoListado && empresasFiltradas.length > 0" class="table-responsive mb-4 mt-2">
         <table class="table table-light table-striped table-hover shadow table-bordered">
             <thead>
               <tr class="table-success">
@@ -45,6 +53,30 @@
             </tbody>
         </table>
 
+        <!-- Paginación -->
+        <nav *ngIf="totalPaginas > 1" aria-label="Paginación de empresas">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" [class.disabled]="paginaActual === 1">
+                    <button type="button" class="page-link" aria-label="Anterior" (click)="paginaAnterior()">
+                        &laquo;
+                    </button>
+                </li>
+                <ng-container *ngFor="let el of elementosPaginacion">
+                    <li *ngIf="el.tipo === 'ellipsis'" class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+                    <li *ngIf="el.tipo === 'pagina'" class="page-item" [class.active]="el.num === paginaActual">
+                        <button type="button" class="page-link" (click)="irAPagina(el.num)">{{ el.num }}</button>
+                    </li>
+                </ng-container>
+                <li class="page-item" [class.disabled]="paginaActual === totalPaginas">
+                    <button type="button" class="page-link" aria-label="Siguiente" (click)="paginaSiguiente()">
+                        &raquo;
+                    </button>
+                </li>
+            </ul>
+        </nav>
+
         <!-- Acciones -->
         <div [ngClass]="filaSeleccionada !== -1 ? 'active' : ''" class="table-actions border border-dark">
             <a (click)="borrarFila()"><i class="r-icon fa-solid fa-trash fa-lg me-2"></i> Borrar
@@ -60,14 +92,15 @@
             </a>
         </div>
     </div>
-    <!--No hay resultados-->
-    <div *ngIf="empresasFiltradas.length === 0 && empresasTodas.length > 0" class="my-4">
+
+    <!--No hay resultados de búsqueda-->
+    <div *ngIf="!cargandoListado && empresasFiltradas.length === 0 && enModoBusqueda" class="my-4">
         <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No se encontraron resultados</h4>
     </div>
 
-    <!--No hay registro-->
-    <div *ngIf="empresasTodas.length === 0" class="my-4">
+    <!--No hay registros-->
+    <div *ngIf="!cargandoListado && totalRegistros === 0 && !enModoBusqueda" class="my-4">
         <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No hay empresas registradas</h4>
-      </div>
-    </div>    
+    </div>
+    </div>
 </div>
