@@ -34,6 +34,7 @@ export class EditComponent implements OnInit {
   requerimientos: any[] = [];
   tipos:any[] = [];
   paises = this.paisesService.paises;
+  paisesDropdown = this.paises.map(p => ({ label: p, value: p }));
   cargandoArchivo = false;
   progresoArchivo = 0;
 
@@ -56,7 +57,7 @@ export class EditComponent implements OnInit {
         tipoId: ["", [Validators.required, seleccionVacia()]],
         numero: ["", [Validators.required]],
         fecha: ["", [Validators.required]],
-        pais: ["", [Validators.required, seleccionVacia()]],
+        pais: ["", [Validators.required]],
         modificacion: ["", []],
         entidad: ["", []],
         enlace: ["", []],

@@ -74,13 +74,18 @@
                   País
                 </label>
                 <div class="col-sm-8">
-                  <select formControlName="pais" id="inputPais" class="form-select border border-dark">
-                    <option value="select-valor-vacio" selected>Seleccione el país</option>
-                    <option value={{pais}} *ngFor="let pais of paises">{{pais}}</option>
-                  </select>
+                  <app-dropdown-search
+                    [opciones]="paisesDropdown"
+                    [controlName]="'pais'"
+                    [formulario]="formulario"
+                    [labelField]="'label'"
+                    [valueField]="'value'"
+                    [searchFields]="['label']"
+                    [placeholder]="'Buscar país...'"
+                    [labelSeleccionVacia]="'Seleccione el país'"
+                  ></app-dropdown-search>
                   <div class="d-flex">
                     <small class="text-danger" *ngIf="errorEnControlador('pais', 'required')">País es requerido</small>
-                    <small class="text-danger" *ngIf="errorEnControlador('pais', 'emptySelect')">País es requerido</small>
                   </div>
                 </div>
               </div>
