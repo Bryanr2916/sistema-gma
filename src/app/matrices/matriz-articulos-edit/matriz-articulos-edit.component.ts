@@ -21,7 +21,7 @@ export class MatrizArticulosEditComponent implements OnInit {
   formulario: FormGroup = this.fb.group({});
 
   matriz = {id: "", titulo: "", empresa: ""};
-  empresa = {nombre: "", pais: ""};
+  empresa = { nombre: "", paises: [] as any[] };
   areasLegales: any[] = [];
   normativas:any[] = [];
   articulo: any = {
@@ -132,7 +132,7 @@ export class MatrizArticulosEditComponent implements OnInit {
       this.areaLegalService.obtenerAreas().subscribe(datosArea => {
         this.areasLegales = datosArea;
         this.normativaService.obtenerNormativas().subscribe(datosNormativa => {
-          this.normativas = datosNormativa.filter(dn => dn.id === this.articulo.normativaId || dn.id === this.articulo.normativaId );
+          this.normativas = datosNormativa.filter(dn => this.empresa.paises.includes(dn.pais));
           this.cargando = false;
         });
       });

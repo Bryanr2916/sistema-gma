@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  useProductionData: false, // Cambiar a true para usar datos de producción en local
+  useProductionData: true, // Cambiar a true para usar datos de producción en local
   secrectKey: "gm@-2024",
   firebase: {
     apiKey: "AIzaSyDatiFzqXXmK2Y_P__yrrIl6skgKkAOLgg",
