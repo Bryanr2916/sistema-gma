@@ -59,13 +59,19 @@
 
             <!-- Acciones -->
             <div [ngClass]="filaSeleccionada !== -1 ? 'active' : ''" class="table-actions border border-dark">
-                <a (click)="borrarFila()"><i class="r-icon fa-solid fa-trash fa-lg me-2"></i> Borrar
+                <a (click)="borrarFila()" class="d-inline-flex align-items-center">
+                    <i class="r-icon fa-solid fa-trash fa-lg me-2"></i>
+                    <span class="table-action-text">Borrar</span>
                 </a>
                 <div class="vr text-success"></div>
-                <a (click)="editarFila()"><i class="b-icon fa-solid fa-pen-to-square fa-lg me-2"></i> Editar
+                <a (click)="editarFila()" class="d-inline-flex align-items-center">
+                    <i class="b-icon fa-solid fa-pen-to-square fa-lg me-2"></i>
+                    <span class="table-action-text">Editar</span>
                 </a>
                 <div class="vr text-success"></div>
-                <a (click)="usarComoFila()"><i class="g-icon fa-solid fa-arrow-right-to-bracket fa-lg me-2"></i> Usar como
+                <a (click)="usarComoFila()" class="d-inline-flex align-items-center">
+                    <i class="g-icon fa-solid fa-arrow-right-to-bracket fa-lg me-2"></i>
+                    <span class="table-action-text">Usar como</span>
                 </a>
             </div>
         </div>

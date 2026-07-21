@@ -39,9 +39,15 @@
         </table>
 
         <div [ngClass]="filaSeleccionada !== -1 ? 'active' : ''" class="table-actions border border-dark">
-          <a (click)="borrarFila()"><i class="r-icon fa-solid fa-trash fa-lg me-2"></i>Borrar</a>
+          <a (click)="borrarFila()" class="d-inline-flex align-items-center">
+            <i class="r-icon fa-solid fa-trash fa-lg me-2"></i>
+            <span class="table-action-text">Borrar</span>
+          </a>
           <div class="vr text-success"></div>
-          <a (click)="descargarCSV()"><i class="g-icon fa-solid fa-download fa-lg me-2"></i>Descargar CSV</a>
+          <a (click)="descargarCSV()" class="d-inline-flex align-items-center">
+            <i class="g-icon fa-solid fa-download fa-lg me-2"></i>
+            <span class="table-action-text">Descargar CSV</span>
+          </a>
         </div>
       </div>
 

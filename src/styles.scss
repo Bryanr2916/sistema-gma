@@ -43,6 +43,26 @@ table {
     box-sizing: border-box;
 }
 
+.table-actions {
+    a{
+        .table-action-text {
+                position: absolute;
+                display: none;
+                background-color: rgba(0, 0, 0, 0.733);
+                color: #fff;
+                padding: 5px;
+                border-radius: 5px;
+                z-index: 1;
+                margin: -38px 0 0 -35px;
+            }
+        
+            &:hover .table-action-text {
+                display: inline;
+                padding: 5px;
+            }
+    }
+}
+
 @media (min-width: 768px) {
     .card.gma-card-panel {
         width: auto;
@@ -65,6 +85,28 @@ table {
     }
     table {
         font-size: 13px;
+    }
+
+    .table-actions {
+        a {
+            text-decoration: none;
+                
+            .table-action-text {
+                position: inherit;
+                display: inherit;
+                background-color: inherit;
+                color: black;
+                padding: inherit;
+                border-radius: inherit;
+                z-index: 1;
+                margin: inherit;
+            }
+    
+            &:hover .table-action-text {
+                display: inherit;
+                padding: inherit;
+            }
+        }
     }
 }
 
