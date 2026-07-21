@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
-import { PaisesService } from 'src/app/core/services/paises.service';
-import { UsuarioService } from 'src/app/core/services/usuario.service';
 
 @Component({
   selector: 'app-view',
@@ -12,6 +10,7 @@ import { UsuarioService } from 'src/app/core/services/usuario.service';
 })
 export class ViewComponent implements OnInit {
 
+  cargando = true;
   empresa = {
     id: "",
     nombre: "",
@@ -26,7 +25,6 @@ export class ViewComponent implements OnInit {
 
   constructor(
     private titleService: Title, private empresasService: EmpresasService,
-    private paisesService: PaisesService, private usuarioService:UsuarioService,
     private route: ActivatedRoute
   ) { }
 
@@ -44,6 +42,15 @@ export class ViewComponent implements OnInit {
       this.empresa.urlLogo = respuesta.get("urlLogo");
       this.empresa.notas = respuesta.get("notas");
       this.empresa.admin = respuesta.get("admin");
+
+      if (this.empresa.urlLogo) {
+        const img = new Image();
+        img.onload = () => { this.cargando = false; };
+        img.onerror = () => { this.cargando = false; };
+        img.src = this.empresa.urlLogo;
+      } else {
+        this.cargando = false;
+      }
     });
   }
 
