@@ -9,6 +9,7 @@ import { AdminPermisosCreateComponent } from './permisos/create/create.component
 import { AdminPermisosViewComponent } from './permisos/view/view.component';
 import { AdminPermisosEditComponent } from './permisos/edit/edit.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ShareModule } from '../share/share.module';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     AdminRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ShareModule
   ]
 })
 export class AdminModule { }
