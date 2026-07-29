@@ -80,12 +80,10 @@
                     </label>
                     <div class="col-sm-8">
                         <input formControlName="fechaVencimiento" type="date" class="form-control border border-dark"
-                            id="inputFecha" [min]="fechaMinima">
+                            id="inputFecha">
                         <div class="d-flex">
                             <small class="text-danger" *ngIf="errorEnControlador('fechaVencimiento', 'required')">Fecha
                                 requerida</small>
-                            <small class="text-danger" *ngIf="errorEnControlador('fechaVencimiento', 'minDate')">Fecha
-                                requerida no puede ser inferior a fecha actual</small>
                         </div>
                     </div>
                 </div>

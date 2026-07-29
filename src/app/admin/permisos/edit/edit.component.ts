@@ -7,7 +7,7 @@ import { ESTADOS_PERMISO, TIPOS_PERMISO } from 'src/app/core/services/constantes
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { PermisosService } from 'src/app/core/services/permisos.service';
-import { fechaMinima } from 'src/app/core/validators/fecha-minima';
+
 import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
 
 @Component({
@@ -28,7 +28,6 @@ export class AdminPermisosEditComponent implements OnInit {
   }
   cargandoArchivo = false;
   progresoArchivo = 0;
-  fechaMinima: string = '';
   tipos: any[] = TIPOS_PERMISO;
   estados: any[] = ESTADOS_PERMISO;
   correos: any[] = [];
@@ -69,7 +68,7 @@ export class AdminPermisosEditComponent implements OnInit {
     this.formulario = this.fb.group({
       nombre: ["", [Validators.required]],
       tipo: ["", [Validators.required, seleccionVacia()]],
-      fechaVencimiento: ["", [Validators.required, fechaMinima()]],
+      fechaVencimiento: ["", [Validators.required]],
       urlArchivo: ["", []],
       estado: ["", []],
       empresaId: ["", [Validators.required, seleccionVacia()]],
