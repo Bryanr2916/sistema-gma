@@ -12,9 +12,7 @@ import { TIPOS_USUARIO } from '../core/services/constantes';
 const routes: Routes = [
   {
     path: 'matrices',
-    loadChildren: () => import('./matrices/matrices.module').then(m => m.MatricesModule),
-    canActivate: [TipoGuard],
-    data: { tipos: [TIPOS_USUARIO.adminSistema]}
+    loadChildren: () => import('./matrices/matrices.module').then(m => m.MatricesModule)
   },
   { path: "riesgos-ambientales", component: IndexComponent },
   { path: "riesgos-ambientales/view/:id", component: ViewComponent },
