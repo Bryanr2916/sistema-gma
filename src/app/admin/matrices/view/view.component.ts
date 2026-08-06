@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { AreaLegalService } from 'src/app/core/services/area-legal.service';
 import { TIPOS_USUARIO } from 'src/app/core/services/constantes';
 import { MatricesService } from 'src/app/core/services/matrices.service';
@@ -66,25 +67,25 @@ export class ViewComponent implements OnInit {
       const articulosFB = (await this.matricesService.obtenerArticulosAplicables(this.matriz.id));
       this.articulosAplicablesTodos = articulosFB.docs.map((value) => { return {id: value.id, ...value.data() };});
 
-      this.areaLegalService.obtenerAreas().subscribe(areasFB => {
-        this.areasLegales = areasFB;
-        this.areasAplicables = this.areasLegales.filter(area => {
-          const busqueda = this.articulosAplicablesTodos.findIndex(aa => {
-            return aa.areaLegalId === area.id;
-          });
-          return busqueda !== -1;
+      const [areasFB, normativasFB, tiposFB] = await Promise.all([
+        firstValueFrom(this.areaLegalService.obtenerAreas()),
+        firstValueFrom(this.normativaService.obtenerNormativas()),
+        firstValueFrom(this.tiposNormativasService.obtenerTipos())
+      ]);
+
+      this.normativas = normativasFB;
+      this.tiposNormativas = tiposFB;
+      this.areasLegales = areasFB;
+
+      this.areasAplicables = this.areasLegales.filter(area => {
+        const busqueda = this.articulosAplicablesTodos.findIndex(aa => {
+          return aa.areaLegalId === area.id;
         });
+        return busqueda !== -1;
       });
 
-      this.normativaService.obtenerNormativas().subscribe(normativasFB => {
-        this.normativas = normativasFB;
-      });
-
-      this.tiposNormativasService.obtenerTipos().subscribe(tiposFB => {
-        this.tiposNormativas = tiposFB;
-        this.cargarPrimeraOpcionArea();
-        this.cargando = false;
-      });
+      this.cargarPrimeraOpcionArea();
+      this.cargando = false;
     } catch(error) {
       console.log(error);
     }
@@ -93,7 +94,7 @@ export class ViewComponent implements OnInit {
   cargarPrimeraOpcionArea() {
     if (this.areasAplicables && this.areasAplicables.length > 0) {
       this.areaSeleccionada.id = this.areasAplicables[0].id;
-      this.seleccionarAreaLegal();  
+      this.seleccionarAreaLegal();
     }
   }
 
