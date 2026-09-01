@@ -137,6 +137,6 @@ export class AdminPermisosIndexComponent implements OnInit, OnDestroy {
 
   verPermiso(index: number) {
     const permiso = this.permisosFiltrados[index];
-    this.router.navigate([`/admin/permisos/view/${permiso.id}`]);
+    this.router.navigate([`/admin/permisos/ver/${permiso.id}`]);
   }
 }

@@ -26,6 +26,7 @@ export class AdminPermisosEditComponent implements OnInit {
     urlArchivo: "",
     estado: ""
   }
+  cargando = true;
   cargandoArchivo = false;
   progresoArchivo = 0;
   tipos: any[] = TIPOS_PERMISO;
@@ -60,6 +61,8 @@ export class AdminPermisosEditComponent implements OnInit {
         this.permiso.estado = respuesta.get("estado");
         this.permiso.empresaId = respuesta.get("empresaId");
         this.correos = respuesta.get("correos");
+
+        this.cargando = false;
       });
     });
   }

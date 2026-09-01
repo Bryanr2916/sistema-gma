@@ -1,84 +1,108 @@
-<div class="gma-page-center d-flex justify-content-center align-items-center">
-    <div class="card gma-card-panel gma-card-panel--wide shadow my-5 border border-dark">
 
-        <div class="card-header d-flex justify-content-around">
-            <h2><i class="g-icon fa-solid fa-book me-1"></i>Permiso</h2>
-            <ul class="nav nav-pills mx-sm-5">
-                <li class="nav-item mx-2">
-                    <a class="nav-link active" routerLink="/admin/permisos"><i class="fa-solid fa-chevron-left"></i> Regresar</a>
-                </li>
-            </ul>
+<div>
+    <!--loading-->
+    <div *ngIf="cargando" class="d-flex justify-content-center">
+        <div class="spinner-border mt-5 text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
         </div>
+    </div>
 
-        <div *ngIf="!cargando" class="card-body mb-4 mx-3">
-            <!--Nombre - Tipo-->
-            <div class="row mb-4">
-                <div class="col-6">
-                    <h3>Nombre:</h3>
-                    <p class="lead">{{permiso.nombre}}</p>
-                </div>
-                <div class="col-6">
-                    <h3>Tipo:</h3>
-                    <p class="badge bg-success">{{obtenerTipo(permiso.tipo).label}}</p>
-                </div>
+    <div *ngIf="!cargando">
+        <!--Navegacion con breadcrumbs-->
+        <div class="mx-2">
+            <div class="row">
+                <nav class="ms-3 mt-3" aria-label="breadcrumb">
+                    <ol class="breadcrumb gma-breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/admin/permisos">
+                                <i class="g-icon fa-solid fa-bell me-1"></i>
+                                Permisos
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            {{permiso.nombre}}
+                        </li>
+                    </ol>
+                </nav>
             </div>
-
-            <!--Fecha - Archivo-->
-            <div class="row mb-4">
-                <div class="col-6">
-                    <h3>Fecha de vencimiento:</h3>
-                    <p class="lead">
-                        {{ permiso.fechaVencimiento | date: "longDate"}}
-                    </p>
-                </div>
-                <div class="col-6">
-                    <h3>Archivo:</h3>
-                    <p class="lead" *ngIf="!permiso.urlArchivo">
-                        No tiene
-                    </p>
-                    <p class="lead" *ngIf="permiso.urlArchivo">
-                        <a href={{permiso.urlArchivo}} target="_blank">
-                            Ver archivo
-                        </a>
-                    </p>
-                </div>
-            </div>
-
-            <!--Estado - Correos-->
-            <div class="row mb-4">
-                <div class="col-6">
-                    <h3>Estado:</h3>
-                    <p class="lead">
-                        <span class="badge" [ngClass]="'text-bg-' + obtenerEstado(permiso.estado).clase">
-                            {{obtenerEstado(permiso.estado).label}}
-                        </span>
-                    </p>
-
-                    <!--Info de recordatorios-->
-                    <div class="text-center alert alert-info alert-dismissible" role="alert">
-                        <i class="fa-solid fa-circle-info fa-2xl"></i>
-                        <p class="lead">
-                            Se enviarán recordatorios automáticos por correo a los destinatarios asignados
-                            3, 2 y 1 mes antes, y el día del vencimiento
-                        </p>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <hr class="gma-hr border border-success border-1 opacity-75">
+        </div>
+        
+        <!--Contenido-->
+        <div class="gma-page-center d-flex justify-content-center align-items-center">
+            <div class="card gma-card-panel gma-card-panel--wide shadow mb-5 border border-dark">
+        
+                <div *ngIf="!cargando" class="card-body mb-4 mx-3">
+                    <!--Nombre - Tipo-->
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <h3>Nombre:</h3>
+                            <p class="lead">{{permiso.nombre}}</p>
+                        </div>
+                        <div class="col-6">
+                            <h3>Tipo:</h3>
+                            <p class="badge bg-success">{{obtenerTipo(permiso.tipo).label}}</p>
+                        </div>
+                    </div>
+        
+                    <!--Fecha - Archivo-->
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <h3>Fecha de vencimiento:</h3>
+                            <p class="lead">
+                                {{ permiso.fechaVencimiento | date: "longDate"}}
+                            </p>
+                        </div>
+                        <div class="col-6">
+                            <h3>Archivo:</h3>
+                            <p class="lead" *ngIf="!permiso.urlArchivo">
+                                No tiene
+                            </p>
+                            <p class="lead" *ngIf="permiso.urlArchivo">
+                                <a href={{permiso.urlArchivo}} target="_blank">
+                                    Ver archivo
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+        
+                    <!--Estado - Correos-->
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <h3>Estado:</h3>
+                            <p class="lead">
+                                <span class="badge" [ngClass]="'text-bg-' + obtenerEstado(permiso.estado).clase">
+                                    {{obtenerEstado(permiso.estado).label}}
+                                </span>
+                            </p>
+        
+                            <!--Info de recordatorios-->
+                            <div class="text-center alert alert-info alert-dismissible" role="alert">
+                                <i class="fa-solid fa-circle-info fa-2xl"></i>
+                                <p class="lead">
+                                    Se enviarán recordatorios automáticos por correo a los destinatarios asignados
+                                    3, 2 y 1 mes antes, y el día del vencimiento
+                                </p>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <h3>Correos:</h3>
+                            <p *ngIf="permiso.correos.length === 0" class="lead">
+                                No hay correos a notificar
+                            </p>
+                            <div *ngIf="permiso.correos.length !== 0">
+                                <ul>
+                                    <li *ngFor="let correo of permiso.correos">
+                                        {{correo.value}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-6">
-                    <h3>Correos:</h3>
-                    <p *ngIf="permiso.correos.length === 0" class="lead">
-                        No hay correos a notificar
-                    </p>
-                    <div *ngIf="permiso.correos.length !== 0">
-                        <ul>
-                            <li *ngFor="let correo of permiso.correos">
-                                {{correo.value}}
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+        
             </div>
         </div>
-
     </div>
 </div>

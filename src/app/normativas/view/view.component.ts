@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { NormativaService } from 'src/app/core/services/normativa.service';
-import { PaisesService } from 'src/app/core/services/paises.service';
 import { TiposNormativasService } from 'src/app/core/services/tipos-normativas.service';
 
 @Component({
@@ -12,6 +11,7 @@ import { TiposNormativasService } from 'src/app/core/services/tipos-normativas.s
 })
 export class ViewComponent implements OnInit {
 
+  cargando = true;
   normativa = {
     id: "",
     urlArchivo: "",
@@ -47,6 +47,7 @@ export class ViewComponent implements OnInit {
       this.normativa.tipoId = respuesta.get("tipoId");
       this.tiposService.obtenerTipo(this.normativa.tipoId).then(rTipo => {
         this.tipo.nombre = rTipo.get("nombre");  
+        this.cargando = false;
       });
       this.normativa.numero = respuesta.get("numero");
       this.normativa.fecha = respuesta.get("fecha");

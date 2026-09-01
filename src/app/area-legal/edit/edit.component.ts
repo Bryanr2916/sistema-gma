@@ -14,6 +14,7 @@ export class EditComponent implements OnInit {
 
   formulario: FormGroup = this.fb.group({});
   areaLegal = { nombre:"", id: "" };
+  cargando = true;
 
   constructor(
     private titleService: Title,
@@ -33,6 +34,8 @@ export class EditComponent implements OnInit {
     });
     this.areaService.obtenerArea(this.areaLegal.id).then( respuesta => {
       this.formulario.controls["nombre"].setValue(respuesta.get("nombre"));
+      this.areaLegal.nombre = respuesta.get("nombre");
+      this.cargando = false;
     });
   }
 

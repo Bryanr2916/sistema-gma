@@ -18,7 +18,7 @@ const routes: Routes = [
   { path: "riesgos-ambientales/view/:id", component: ViewComponent },
   { path: "permisos", component: AdminPermisosIndexComponent },
   { path: "permisos/crear", component: AdminPermisosCreateComponent },
-  { path: "permisos/view/:id", component: AdminPermisosViewComponent },
+  { path: "permisos/ver/:id", component: AdminPermisosViewComponent },
   { path: "permisos/editar/:id", component: AdminPermisosEditComponent },
   { path: "", redirectTo: "riesgos-ambientales", pathMatch: "full" }
 ];

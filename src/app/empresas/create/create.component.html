@@ -1,17 +1,26 @@
+<div class="mx-2">
+  <div class="row">
+    <nav class="ms-3 mt-3" aria-label="breadcrumb">
+      <ol class="breadcrumb gma-breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="/empresas">
+            <i class="g-icon fa-solid fa-briefcase  me-1"></i>
+            Empresas</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+          Crear
+        </li>
+      </ol>
+    </nav>
+  </div>
+  <hr class="gma-hr border border-success border-1 opacity-75">
+</div>
+
 <div class="d-flex justify-content-center align-items-center gma-page-center">
-  <div class="card shadow my-5 text-center border border-dark gma-card-panel gma-card-panel--wide">
-      <div class="card-header d-flex justify-content-around">
-          <h2><i class="g-icon fa-solid fa-briefcase me-1"></i>Crear Empresa</h2>
-           <!--Nav-->
-          <ul class="nav nav-pills mx-sm-5">
-              <li class="nav-item mx-2">
-                  <a class="nav-link active" routerLink="/empresas"><i class="fa-solid fa-chevron-left"></i> Regresar</a>
-              </li>
-          </ul>
-      </div>
+  <div class="card shadow mb-5 text-center border border-dark gma-card-panel gma-card-panel--wide">
       <div class="card-body">
         <!--FORM Empresa-->
-          <form [formGroup]="formulario" id="form" class="my-5">
+          <form [formGroup]="formulario" id="form" class="my-2">
               <!--Nombre-->
               <div class="mb-3 me-sm-5 row" id="fieldNombre">
                   <label for="inputNombre" class="col-sm-4 col-form-label">

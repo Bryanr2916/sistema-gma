@@ -1,7 +1,5 @@
-<div class="mt-4 mb-2 mx-2">
-    <h2><i class="g-icon fa-solid fa-briefcase me-1"></i>Empresas</h2>
-    <hr class="border border-success border-1 opacity-75">
 
+<div>
     <!--loading-->
     <div *ngIf="cargandoInicial" class="d-flex justify-content-center">
         <div class="spinner-border mt-5 text-primary" role="status">
@@ -9,106 +7,131 @@
         </div>
     </div>
 
-    <div *ngIf="!cargandoInicial" class="content-container">
-        <!--Nav-->
-    <ul class="nav nav-pills mt-4">
-        <li class="nav-item">
-            <div class="input-group mb-3">
-                <span class="input-group-text border- border-dark" id="basic-addon1"><i class="fa-solid fa-magnifying-glass"></i></span>
-                <input (ngModelChange)="buscar($event)" [(ngModel)]="busqueda" [ngModelOptions]="{standalone:true}" type="text" class="form-control border- border-dark" placeholder="Buscar..." aria-label="Username" aria-describedby="basic-addon1">
-              </div>
-        </li>
-        <li class="nav-item mx-2">
-          <a class="nav-link active" aria-current="page" routerLink="crear"><i class="fa-solid fa-plus"></i> Crear una empresa</a>
-        </li>
-    </ul>
-
-    <!-- Spinner cambio de página -->
-    <div *ngIf="cargandoListado" class="d-flex justify-content-center my-4">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
+    <div *ngIf="!cargandoInicial">
+        <!--Navegacion con breadcrumbs-->
+        <div class="mx-2">
+            <div class="row">
+                <nav class="ms-3 mt-3" aria-label="breadcrumb">
+                    <ol class="breadcrumb gma-breadcrumb">
+                        <li class="breadcrumb-item active">
+                            <i class="g-icon fa-solid fa-briefcase  me-1"></i>
+                            Empresas
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+            <hr class="gma-hr border border-success border-1 opacity-75">
         </div>
-    </div>
 
-    <!--Tabla-->
-    <div *ngIf="!cargandoListado && empresasFiltradas.length > 0" class="table-responsive mb-4 mt-2">
-        <table class="table table-light table-striped table-hover shadow table-bordered">
-            <thead>
-              <tr class="table-success">
-                <th></th>
-                <th scope="col" *ngFor="let th of ths">{{th}}</th>
-              </tr>
-            </thead>
-            <tbody>
-                <tr class="selectable-row" *ngFor="let empresa of empresasFiltradas; index as i" (click)="verEmpresa(i)">
-                    <th>
-                        <input [checked]="filaSeleccionada === i" (click)="seleccionarFila($event, i)"
-                            class="form-check-input border border-dark" type="checkbox" value="" id="checkDefault">
-                    </th>
-                    <th scope="row">{{i + 1}}</th>
-                    <td>{{empresa.nombre}}</td>
-                    <td>{{usuarioAdmin(empresa) || "no encontrado"}}</td>
-                    <td>{{empresa.correo}}</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- Paginación -->
-        <nav *ngIf="totalPaginas > 1" aria-label="Paginación de empresas">
-            <ul class="pagination justify-content-center">
-                <li class="page-item" [class.disabled]="paginaActual === 1">
-                    <button type="button" class="page-link" aria-label="Anterior" (click)="paginaAnterior()">
-                        &laquo;
-                    </button>
-                </li>
-                <ng-container *ngFor="let el of elementosPaginacion">
-                    <li *ngIf="el.tipo === 'ellipsis'" class="page-item disabled">
-                        <span class="page-link">...</span>
+        <!--Contenido-->
+        <div class="mb-2 mx-2">
+            <div class="content-container">
+                <!--Nav-->
+                <ul class="nav nav-pills mt-4">
+                    <li class="nav-item">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text border- border-dark" id="basic-addon1"><i
+                                    class="fa-solid fa-magnifying-glass"></i></span>
+                            <input (ngModelChange)="buscar($event)" [(ngModel)]="busqueda" [ngModelOptions]="{standalone:true}"
+                                type="text" class="form-control border- border-dark" placeholder="Buscar..."
+                                aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
                     </li>
-                    <li *ngIf="el.tipo === 'pagina'" class="page-item" [class.active]="el.num === paginaActual">
-                        <button type="button" class="page-link" (click)="irAPagina(el.num)">{{ el.num }}</button>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link active" aria-current="page" routerLink="crear"><i class="fa-solid fa-plus"></i> Crear
+                            una empresa</a>
                     </li>
-                </ng-container>
-                <li class="page-item" [class.disabled]="paginaActual === totalPaginas">
-                    <button type="button" class="page-link" aria-label="Siguiente" (click)="paginaSiguiente()">
-                        &raquo;
-                    </button>
-                </li>
-            </ul>
-        </nav>
-
-        <!-- Acciones -->
-        <div [ngClass]="filaSeleccionada !== -1 ? 'active' : ''" class="table-actions border border-dark">
-            <a (click)="borrarFila()" class="d-inline-flex align-items-center">
-                <i class="r-icon fa-solid fa-trash fa-lg me-2"></i>
-                <span class="table-action-text">Borrar</span>
-            </a>
-            <div class="vr text-success"></div>
-            <a (click)="editarFila()" class="d-inline-flex align-items-center">
-                <i class="b-icon fa-solid fa-pen-to-square fa-lg me-2"></i>
-                <span class="table-action-text">Editar</span>
-            </a>
-            <div class="vr text-success"></div>
-            <a (click)="duplicarFila()" class="d-inline-flex align-items-center">
-                <i class="g-icon fa-regular fa-copy fa-lg me-2"></i> 
-                <span class="table-action-text">Duplicar</span>
-            </a>
-            <div class="vr text-success"></div>
-            <a (click)="gestionarUsuarios()" class="d-inline-flex align-items-center">
-                <i class="g-icon fa-solid fa-users fa-lg me-2"></i> 
-                <span class="table-action-text">Gestionar usuarios</span>
-            </a>
+                </ul>
+        
+                <!-- Spinner cambio de página -->
+                <div *ngIf="cargandoListado" class="d-flex justify-content-center my-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+        
+                <!--Tabla-->
+                <div *ngIf="!cargandoListado && empresasFiltradas.length > 0" class="table-responsive mb-4 mt-2">
+                    <table class="table table-light table-striped table-hover shadow table-bordered">
+                        <thead>
+                            <tr class="table-success">
+                                <th></th>
+                                <th scope="col" *ngFor="let th of ths">{{th}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="selectable-row" *ngFor="let empresa of empresasFiltradas; index as i"
+                                (click)="verEmpresa(i)">
+                                <th>
+                                    <input [checked]="filaSeleccionada === i" (click)="seleccionarFila($event, i)"
+                                        class="form-check-input border border-dark" type="checkbox" value="" id="checkDefault">
+                                </th>
+                                <th scope="row">{{i + 1}}</th>
+                                <td>{{empresa.nombre}}</td>
+                                <td>{{usuarioAdmin(empresa) || "no encontrado"}}</td>
+                                <td>{{empresa.correo}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+        
+                    <!-- Paginación -->
+                    <nav *ngIf="totalPaginas > 1" aria-label="Paginación de empresas">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" [class.disabled]="paginaActual === 1">
+                                <button type="button" class="page-link" aria-label="Anterior" (click)="paginaAnterior()">
+                                    &laquo;
+                                </button>
+                            </li>
+                            <ng-container *ngFor="let el of elementosPaginacion">
+                                <li *ngIf="el.tipo === 'ellipsis'" class="page-item disabled">
+                                    <span class="page-link">...</span>
+                                </li>
+                                <li *ngIf="el.tipo === 'pagina'" class="page-item" [class.active]="el.num === paginaActual">
+                                    <button type="button" class="page-link" (click)="irAPagina(el.num)">{{ el.num }}</button>
+                                </li>
+                            </ng-container>
+                            <li class="page-item" [class.disabled]="paginaActual === totalPaginas">
+                                <button type="button" class="page-link" aria-label="Siguiente" (click)="paginaSiguiente()">
+                                    &raquo;
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+        
+                    <!-- Acciones -->
+                    <div [ngClass]="filaSeleccionada !== -1 ? 'active' : ''" class="table-actions border border-dark">
+                        <a (click)="borrarFila()" class="d-inline-flex align-items-center">
+                            <i class="r-icon fa-solid fa-trash fa-lg me-2"></i>
+                            <span class="table-action-text">Borrar</span>
+                        </a>
+                        <div class="vr text-success"></div>
+                        <a (click)="editarFila()" class="d-inline-flex align-items-center">
+                            <i class="b-icon fa-solid fa-pen-to-square fa-lg me-2"></i>
+                            <span class="table-action-text">Editar</span>
+                        </a>
+                        <div class="vr text-success"></div>
+                        <a (click)="duplicarFila()" class="d-inline-flex align-items-center">
+                            <i class="g-icon fa-regular fa-copy fa-lg me-2"></i>
+                            <span class="table-action-text">Duplicar</span>
+                        </a>
+                        <div class="vr text-success"></div>
+                        <a (click)="gestionarUsuarios()" class="d-inline-flex align-items-center">
+                            <i class="g-icon fa-solid fa-users fa-lg me-2"></i>
+                            <span class="table-action-text">Gestionar usuarios</span>
+                        </a>
+                    </div>
+                </div>
+        
+                <!--No hay resultados de búsqueda-->
+                <div *ngIf="!cargandoListado && empresasFiltradas.length === 0 && enModoBusqueda" class="my-4">
+                    <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No se encontraron resultados</h4>
+                </div>
+        
+                <!--No hay registros-->
+                <div *ngIf="!cargandoListado && totalRegistros === 0 && !enModoBusqueda" class="my-4">
+                    <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No hay empresas registradas</h4>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <!--No hay resultados de búsqueda-->
-    <div *ngIf="!cargandoListado && empresasFiltradas.length === 0 && enModoBusqueda" class="my-4">
-        <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No se encontraron resultados</h4>
-    </div>
-
-    <!--No hay registros-->
-    <div *ngIf="!cargandoListado && totalRegistros === 0 && !enModoBusqueda" class="my-4">
-        <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No hay empresas registradas</h4>
-    </div>
     </div>
 </div>

@@ -12,6 +12,7 @@ import { TiposNormativasService } from 'src/app/core/services/tipos-normativas.s
 })
 export class EditComponent implements OnInit {
 
+  cargando = true;
   formulario: FormGroup = this.fb.group({});
   tipoNormativas = { nombre:"", id: "" };
 
@@ -37,6 +38,8 @@ export class EditComponent implements OnInit {
         this.router.navigate(["/tipos-normativas"]);
       }
       this.formulario.controls["nombre"].setValue(respuesta.get("nombre"));
+      this.tipoNormativas.nombre = respuesta.get("nombre");
+      this.cargando = false;
     });
   }
 

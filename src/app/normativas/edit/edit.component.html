@@ -1,167 +1,195 @@
-<div class="d-flex justify-content-center align-items-center gma-page-center">
-    <div class="card shadow my-5 text-center border border-dark gma-card-panel gma-card-panel--wide">
-        <div class="card-header d-flex justify-content-around">
-            <h2><i class="g-icon fa-solid fa-book me-1"></i> Editar normativa</h2>
-             <!--Nav-->
-            <ul class="nav nav-pills mx-sm-5">
-                <li class="nav-item mx-2">
-                    <a class="nav-link active" routerLink="/normativas"><i class="fa-solid fa-chevron-left"></i> Regresar</a>
-                </li>
-            </ul>
-        </div>
+
+<div>
+  <!--loading-->
+  <div *ngIf="cargando" class="d-flex justify-content-center">
+    <div class="spinner-border mt-5 text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!cargando">
+    <!--Navegacion con breadcrumbs-->
+    <div class="mx-2">
+      <div class="row">
+        <nav class="ms-3 mt-3" aria-label="breadcrumb">
+          <ol class="breadcrumb gma-breadcrumb">
+            <li class="breadcrumb-item">
+              <a href="/normativas">
+                <i class="g-icon fa-solid fa-book me-1"></i>
+                Normativas
+              </a>
+            </li>
+            <li class="breadcrumb-item">
+              <a [href]="'/normativas/ver/' + normativa.id">
+                {{normativa.titulo | truncarTexto: 40 : true}}
+              </a>
+            </li>
+            <li class="breadcrumb-item active">
+              Editar
+            </li>
+          </ol>
+        </nav>
+      </div>
+      <hr class="gma-hr border border-success border-1 opacity-75">
+    </div>
+
+    <!--Contenido-->
+    <div class="d-flex justify-content-center align-items-center gma-page-center">
+      <div class="card shadow mb-5 text-center border border-dark gma-card-panel gma-card-panel--wide">
         <div class="card-body">
-            <form [formGroup]="formulario" id="form" class="my-4">
-                <!--Título-->
-                <div id="fieldTitulo" class="mb-3 me-sm-5 row">
-                    <label for="inputTitulo" class="col-sm-4 col-form-label">
-                      <span class="text-danger">*</span>
-                      Título
-                    </label>
-                    <div class="col-sm-8">
-                      <input formControlName="titulo" type="text" class="form-control border border-dark" id="inputTitulo">
-                      <div class="d-flex">
-                        <small class="text-danger" *ngIf="errorEnControlador('titulo', 'required')">Título requerido</small>
-                      </div>
-                    </div>
+          <form [formGroup]="formulario" id="form" class="my-2">
+            <!--Título-->
+            <div id="fieldTitulo" class="mb-3 me-sm-5 row">
+              <label for="inputTitulo" class="col-sm-4 col-form-label">
+                <span class="text-danger">*</span>
+                Título
+              </label>
+              <div class="col-sm-8">
+                <input formControlName="titulo" type="text" class="form-control border border-dark" id="inputTitulo">
+                <div class="d-flex">
+                  <small class="text-danger" *ngIf="errorEnControlador('titulo', 'required')">Título requerido</small>
                 </div>
-                <!--Tipo-->
-                <div id="fieldTipo" class="mb-3 me-sm-5 row">
-                    <label for="inputTipo" class="col-sm-4 col-form-label">
-                      <span class="text-danger">*</span>
-                      Tipo de normativa
-                    </label>
-                    <div class="col-sm-8">
-                        <select formControlName="tipoId" id="inputTipo" class="form-select border border-dark">
-                            <option value="select-valor-vacio" selected>Seleccione el tipo</option>
-                            <option *ngFor="let tipo of tipos" value="{{tipo.id}}">{{tipo.nombre}}</option>
-                        </select>
-                        <div class="d-flex">
-                          <small class="text-danger" *ngIf="errorEnControlador('tipoId', 'required')">Tipo es requerido</small>
-                          <small class="text-danger" *ngIf="errorEnControlador('tipoId', 'emptySelect')">Tipo es requerido</small>
-                        </div>
-                    </div>
+              </div>
+            </div>
+            <!--Tipo-->
+            <div id="fieldTipo" class="mb-3 me-sm-5 row">
+              <label for="inputTipo" class="col-sm-4 col-form-label">
+                <span class="text-danger">*</span>
+                Tipo de normativa
+              </label>
+              <div class="col-sm-8">
+                <select formControlName="tipoId" id="inputTipo" class="form-select border border-dark">
+                  <option value="select-valor-vacio" selected>Seleccione el tipo</option>
+                  <option *ngFor="let tipo of tipos" value="{{tipo.id}}">{{tipo.nombre}}</option>
+                </select>
+                <div class="d-flex">
+                  <small class="text-danger" *ngIf="errorEnControlador('tipoId', 'required')">Tipo es requerido</small>
+                  <small class="text-danger" *ngIf="errorEnControlador('tipoId', 'emptySelect')">Tipo es requerido</small>
                 </div>
-                <!--Número-->
-                <div id="fieldNumero" class="mb-3 me-sm-5 row">
-                    <label for="inputNumero" class="col-sm-4 col-form-label">
-                      <span class="text-danger">*</span>
-                      Número
-                    </label>
-                    <div class="col-sm-8">
-                      <input formControlName="numero" type="text" class="form-control border border-dark" id="inputNumero">
-                      <div class="d-flex">
-                        <small class="text-danger" *ngIf="errorEnControlador('numero', 'required')">Número requerido</small>
-                      </div>
-                    </div>
+              </div>
+            </div>
+            <!--Número-->
+            <div id="fieldNumero" class="mb-3 me-sm-5 row">
+              <label for="inputNumero" class="col-sm-4 col-form-label">
+                <span class="text-danger">*</span>
+                Número
+              </label>
+              <div class="col-sm-8">
+                <input formControlName="numero" type="text" class="form-control border border-dark" id="inputNumero">
+                <div class="d-flex">
+                  <small class="text-danger" *ngIf="errorEnControlador('numero', 'required')">Número requerido</small>
                 </div>
-                <!--Fecha-->
-                <div id="fieldFecha" class="mb-3 me-sm-5 row">
-                    <label for="inputFecha" class="col-sm-4 col-form-label">
-                      <span class="text-danger">*</span>
-                      Fecha
-                    </label>
-                    <div class="col-sm-8">
-                      <input formControlName="fecha" type="date" class="form-control border border-dark" id="inputFecha">
-                      <div class="d-flex">
-                        <small class="text-danger" *ngIf="errorEnControlador('fecha', 'required')">Fecha requerida</small>
-                      </div>
-                    </div>
+              </div>
+            </div>
+            <!--Fecha-->
+            <div id="fieldFecha" class="mb-3 me-sm-5 row">
+              <label for="inputFecha" class="col-sm-4 col-form-label">
+                <span class="text-danger">*</span>
+                Fecha
+              </label>
+              <div class="col-sm-8">
+                <input formControlName="fecha" type="date" class="form-control border border-dark" id="inputFecha">
+                <div class="d-flex">
+                  <small class="text-danger" *ngIf="errorEnControlador('fecha', 'required')">Fecha requerida</small>
                 </div>
-                <!--Pais-->
-              <div id="fieldPais" class="mb-3 me-sm-5 row">
-                <label for="inputPais" class="col-sm-4 col-form-label">
-                  <span class="text-danger">*</span>
-                  País
-                </label>
-                <div class="col-sm-8">
-                  <app-dropdown-search
-                    [opciones]="paisesDropdown"
-                    [controlName]="'pais'"
-                    [formulario]="formulario"
-                    [labelField]="'label'"
-                    [valueField]="'value'"
-                    [searchFields]="['label']"
-                    [placeholder]="'Buscar país...'"
-                    [labelSeleccionVacia]="'Seleccione el país'"
-                  ></app-dropdown-search>
-                  <div class="d-flex">
-                    <small class="text-danger" *ngIf="errorEnControlador('pais', 'required')">País es requerido</small>
+              </div>
+            </div>
+            <!--Pais-->
+            <div id="fieldPais" class="mb-3 me-sm-5 row">
+              <label for="inputPais" class="col-sm-4 col-form-label">
+                <span class="text-danger">*</span>
+                País
+              </label>
+              <div class="col-sm-8">
+                <app-dropdown-search [opciones]="paisesDropdown" [controlName]="'pais'" [formulario]="formulario"
+                  [labelField]="'label'" [valueField]="'value'" [searchFields]="['label']" [placeholder]="'Buscar país...'"
+                  [labelSeleccionVacia]="'Seleccione el país'"></app-dropdown-search>
+                <div class="d-flex">
+                  <small class="text-danger" *ngIf="errorEnControlador('pais', 'required')">País es requerido</small>
+                </div>
+              </div>
+            </div>
+            <!--Modificacion-->
+            <div class="mb-3 me-sm-5 row">
+              <label for="inputModificacion" class="col-sm-4 col-form-label">Modificación</label>
+              <div class="col-sm-8">
+                <input formControlName="modificacion" type="text" class="form-control border border-dark"
+                  id="inputModificacion">
+              </div>
+            </div>
+            <!--Entidad-->
+            <div class="mb-3 me-sm-5 row">
+              <label for="inputEntidad" class="col-sm-4 col-form-label">Entidad</label>
+              <div class="col-sm-8">
+                <input formControlName="entidad" type="text" class="form-control border border-dark" id="inputEntidad">
+              </div>
+            </div>
+            <!--Enlace-->
+            <div class="mb-3 me-sm-5 row">
+              <label for="inputEnlace" class="col-sm-4 col-form-label">Enlace</label>
+              <div class="col-sm-8">
+                <input formControlName="enlace" type="text" class="form-control border border-dark" id="inputEnlace">
+              </div>
+            </div>
+            <!--Comentarios-->
+            <div class="mb-3 me-sm-5 row">
+              <label for="inputComentarios" class="col-sm-12 col-form-label">Comentarios</label>
+              <div class="col-sm-12">
+                <textarea formControlName="comentarios" class="form-control border border-dark" name="comentarios"
+                  id="inputComentarios" cols="30" rows="10"></textarea>
+              </div>
+            </div>
+            <!--Archivo-->
+            <div *ngIf="normativa.urlArchivo !==''" class="mb-3 me-sm-5 row">
+              <p>Visualizar el archivo actual: <a target="_blank" href="{{normativa.urlArchivo}}">Archivo adjunto de la
+                  normativa<i class="ms-1 g-icon fa-solid fa-link fa-xl"></i></a></p>
+            </div>
+            <div class="mb-3 me-sm-5 row">
+              <label for="inputArchivo" class="col-sm-4 col-form-label">Archivo</label>
+              <div class="col-sm-8">
+                <input (change)="cargarArchivo($event)" type="file" class="form-control border border-dark"
+                  id="inputArchivo">
+                <div class="d-flex">
+                  <small *ngIf="normativa.urlArchivo !==''" class="mt-2 text-danger">* Si selecciona un nuevo archivo
+                    sobreescribirá el archivo actual</small>
+                </div>
+              </div>
+            </div>
+            <!--Agregar Requerimientos-->
+            <div class="mb-3 me-sm-5 row">
+              <label for="inputRequerimientos" class="col-sm-4 col-form-label ">Requerimientos</label>
+              <div class="col-sm-8">
+                <div class="input-group mb-3">
+                  <input (keydown)="agregarReqConEnter($event)" formControlName="nuevoReq" type="text"
+                    class="form-control border border-dark" placeholder="Agrega un requerimiento"
+                    aria-label="requerimientos" aria-describedby="button-addon2">
+                  <button (click)="agregarRequerimiento()" class="btn btn-outline-primary" type="button" id="button-addon2">
+                    <i class="fa-solid fa-plus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!--Mostrar Requerimientos-->
+            <div class="mb-3 me-sm-5 row">
+              <div *ngIf="requerimientos.length > 0">
+                <div class="input-group mb-3" *ngFor="let req of requerimientos; index as i; trackBy: trackByIndex">
+                  <input [(ngModel)]="requerimientos[i].value" [ngModelOptions]="{standalone: true}" type="text"
+                    class="form-control" aria-label="Text input with checkbox">
+                  <div class="input-group-text">
+                    <button (click)="eliminarRequerimiento(i)" class="btn btn-outline-danger" type="button"
+                      id="button-addon2">
+                      <i class="fa-solid fa-minus"></i>
+                    </button>
                   </div>
                 </div>
               </div>
-                <!--Modificacion-->
-                <div class="mb-3 me-sm-5 row">
-                    <label for="inputModificacion" class="col-sm-4 col-form-label">Modificación</label>
-                    <div class="col-sm-8">
-                      <input formControlName="modificacion" type="text" class="form-control border border-dark" id="inputModificacion">
-                    </div>
+              <div *ngIf="requerimientos.length === 0">
+                <div class="alert alert-secondary" role="alert">
+                  <p class="lead"><i class="b-icon fa-solid fa-book me-1"></i> No hay requerimientos para esta normativa</p>
                 </div>
-                <!--Entidad-->
-                <div class="mb-3 me-sm-5 row">
-                    <label for="inputEntidad" class="col-sm-4 col-form-label">Entidad</label>
-                    <div class="col-sm-8">
-                      <input formControlName="entidad" type="text" class="form-control border border-dark" id="inputEntidad">
-                    </div>
-                </div>
-                <!--Enlace-->
-                <div class="mb-3 me-sm-5 row">
-                    <label for="inputEnlace" class="col-sm-4 col-form-label">Enlace</label>
-                    <div class="col-sm-8">
-                      <input formControlName="enlace" type="text" class="form-control border border-dark" id="inputEnlace">
-                    </div>
-                </div>
-                <!--Comentarios-->
-                <div class="mb-3 me-sm-5 row">
-                    <label for="inputComentarios" class="col-sm-12 col-form-label">Comentarios</label>
-                    <div class="col-sm-12">
-                        <textarea formControlName="comentarios" class="form-control border border-dark" name="comentarios" id="inputComentarios" cols="30" rows="10"></textarea>
-                    </div>
-                </div>
-                <!--Archivo-->
-                <div *ngIf="normativa.urlArchivo !==''" class="mb-3 me-sm-5 row">
-                  <p>Visualizar el archivo actual: <a target="_blank" href="{{normativa.urlArchivo}}">Archivo adjunto de la normativa<i class="ms-1 g-icon fa-solid fa-link fa-xl"></i></a></p>
-                </div>
-                <div class="mb-3 me-sm-5 row">
-                    <label for="inputArchivo" class="col-sm-4 col-form-label">Archivo</label>
-                    <div class="col-sm-8">
-                      <input (change)="cargarArchivo($event)" type="file" class="form-control border border-dark" id="inputArchivo">
-                      <div class="d-flex">
-                        <small *ngIf="normativa.urlArchivo !==''" class="mt-2 text-danger">* Si selecciona un nuevo archivo sobreescribirá el archivo actual</small>
-                      </div>
-                    </div>
-                </div>
-                <!--Agregar Requerimientos-->
-                <div class="mb-3 me-sm-5 row">
-                  <label for="inputRequerimientos" class="col-sm-4 col-form-label ">Requerimientos</label>
-                  <div class="col-sm-8">
-                    <div class="input-group mb-3">
-                      <input (keydown)="agregarReqConEnter($event)" formControlName="nuevoReq" type="text" class="form-control border border-dark"
-                        placeholder="Agrega un requerimiento" aria-label="requerimientos" aria-describedby="button-addon2">
-                      <button (click)="agregarRequerimiento()" class="btn btn-outline-primary" type="button" id="button-addon2">
-                        <i class="fa-solid fa-plus"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <!--Mostrar Requerimientos-->
-                <div class="mb-3 me-sm-5 row">
-                  <div *ngIf="requerimientos.length > 0">
-                    <div class="input-group mb-3" *ngFor="let req of requerimientos; index as i; trackBy: trackByIndex">
-                      <input [(ngModel)]="requerimientos[i].value" [ngModelOptions]="{standalone: true}" type="text" class="form-control" aria-label="Text input with checkbox">
-                      <div class="input-group-text">
-                        <button (click)="eliminarRequerimiento(i)" class="btn btn-outline-danger" type="button" id="button-addon2">
-                          <i class="fa-solid fa-minus"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <div *ngIf="requerimientos.length === 0">
-                    <div class="alert alert-secondary" role="alert">
-                      <p class="lead"><i class="b-icon fa-solid fa-book me-1"></i> No hay requerimientos para esta normativa</p>
-                    </div>
-                  </div>
-                </div>
-            </form>
+              </div>
+            </div>
+          </form>
         </div>
         <div class="card-footer">
           <div *ngIf="cargandoArchivo" class="my-3 mx-sm-5 row align-items-center">
@@ -171,10 +199,14 @@
               <div class="progress-bar" [style.width.%]="progresoArchivo"></div>
             </div>
           </div>
-            <!--Acciones-->
-            <div class="mb-3 mx-sm-5 row align-items-center">
-                <button (click)="editarNormativa()" class="btn btn-primary col-12 col-sm-3" type="submit">Editar normativa</button>
-            </div>
+          <!--Acciones-->
+          <div class="mb-3 mx-sm-5 row align-items-center">
+            <button (click)="editarNormativa()" class="btn btn-primary col-12 col-sm-3" type="submit">Editar
+              normativa</button>
+          </div>
         </div>
       </div>
+    </div>
+  </div>
+
 </div>

@@ -1,16 +1,27 @@
-<div class="d-flex justify-content-center align-items-center gma-page-center">
-    <div class="card shadow my-5 text-center border border-dark gma-card-panel">
-        <div class="card-header d-flex justify-content-around">
-            <h2><i class="g-icon fa-regular fa-rectangle-list me-1"></i>Crear tipo de normativas</h2>
-             <!--Nav-->
-            <ul class="nav nav-pills mx-sm-5">
-                <li class="nav-item mx-2">
-                    <a class="nav-link active" routerLink="/tipos-normativas"><i class="fa-solid fa-chevron-left"></i> Regresar</a>
+
+<div class="mx-2">
+    <div class="row">
+        <nav class="ms-3 mt-3" aria-label="breadcrumb">
+            <ol class="breadcrumb gma-breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="/tipos-normativas">
+                        <i class="g-icon fa-regular fa-rectangle-list me-1"></i>
+                        Tipos de Normativas
+                    </a>
                 </li>
-            </ul>
-        </div>
+                <li class="breadcrumb-item active">
+                    Crear
+                </li>
+            </ol>
+        </nav>
+    </div>
+    <hr class="gma-hr border border-success border-1 opacity-75">
+</div>
+
+<div class="d-flex justify-content-center align-items-center gma-page-center">
+    <div class="card shadow mb-5 text-center border border-dark gma-card-panel">
         <div class="card-body">
-            <form [formGroup]="formulario" id="form" class="my-4">
+            <form [formGroup]="formulario" id="form" class="my-2">
                 <!--Nombre-->
                 <div id="fieldNombre" class="mb-3 me-sm-5 row">
                     <label for="inputNombre" class="col-sm-4 col-form-label">

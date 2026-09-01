@@ -15,6 +15,7 @@ import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
 })
 export class EditComponent implements OnInit {
 
+  cargando = true;
   formulario: FormGroup = this.fb.group({});
   displayLogo = "";
   archivoLogo:any = null;
@@ -97,7 +98,9 @@ export class EditComponent implements OnInit {
       this.empresa.notas = datosEmpresa['notas'];
 
       this.displayLogo = datosEmpresa['urlLogo'];
-      this.archivoLogo = datosEmpresa['urlLogo']
+      this.archivoLogo = datosEmpresa['urlLogo'];
+
+      this.cargando = false;
     }
   }
 

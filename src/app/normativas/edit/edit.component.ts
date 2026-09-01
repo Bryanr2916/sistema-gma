@@ -16,6 +16,7 @@ import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
 })
 export class EditComponent implements OnInit {
 
+  cargando = true;
   formulario: FormGroup = this.fb.group({});
   archivo:any = null;
   normativa: any = {
@@ -99,6 +100,7 @@ export class EditComponent implements OnInit {
       this.requerimientos = respuesta.get("requerimientos") || [];
       this.tiposService.obtenerTipos().subscribe(datos => {
         this.tipos = datos;
+        this.cargando = false;
       });
     });
   }

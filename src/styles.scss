@@ -36,6 +36,18 @@ table {
     padding-bottom: 3rem;
 }
 
+.gma-breadcrumb {
+    font-size: calc(1.275rem + .3vw) !important;
+    
+    a {
+        color: #198754;
+    }
+}
+
+.gma-hr {
+    margin-top: 0;
+}
+
 /* Panel de formulario: mobile-first, sin min-width en base */
 .card.gma-card-panel {
     width: 100%;
