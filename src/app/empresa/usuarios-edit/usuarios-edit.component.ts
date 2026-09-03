@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
-import { compararContrasenas } from 'src/app/core/validators/comparar-contrasenas';
 import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
 
 @Component({
@@ -13,7 +13,8 @@ import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
   styleUrls: ['./usuarios-edit.component.scss']
 })
 export class UsuariosEditComponent implements OnInit {
-  empresaId = "";
+  cargando = true;
+  empresa: any = { id: "", nombre: "" };
   formulario: FormGroup = this.fb.group({});
   tipos: any = [];
   usuarioActual: any = {};
@@ -27,6 +28,7 @@ export class UsuariosEditComponent implements OnInit {
   };
 
   constructor(private titleService: Title, public fb: FormBuilder, private usuarioService: UsuarioService,
+      private empresasService:EmpresasService,
       private mensajesService: MensajesService, private router: Router, private route: ActivatedRoute) {
     this.tipos = usuarioService.tiposSelect();
     this.definirFormulario();
@@ -39,6 +41,8 @@ export class UsuariosEditComponent implements OnInit {
       this.usuarioService.usuarioActual().subscribe(usuario => {
         this.usuarioActual = usuario;
         this.usuario.id = params["id"];
+        console.log("id: ", this.usuarioActual);
+        this.empresa.id = this.usuarioActual.empresaId;
         this.obtenerUsuario();
       });
     });
@@ -58,6 +62,17 @@ export class UsuariosEditComponent implements OnInit {
       this.formulario.controls["tipo"].disable();
     }
 
+    this.cargarDatosEmpresa();
+  }
+
+  cargarDatosEmpresa = async () => {
+    const reEmpresa = await this.empresasService.obtenerEmpresa(this.empresa.id);
+    const datosEmpresa = reEmpresa.data();
+
+    if (datosEmpresa) {
+      this.empresa.nombre = datosEmpresa['nombre'];
+      this.cargando = false;
+    }
   }
 
   definirFormulario() {

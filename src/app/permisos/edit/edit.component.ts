@@ -16,6 +16,7 @@ import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
 })
 export class EditComponent implements OnInit {
 
+  cargando = true;
   formulario: FormGroup = this.fb.group({});
   archivo: any = null;
   permiso: any = {
@@ -55,6 +56,7 @@ export class EditComponent implements OnInit {
         this.permiso.urlArchivo = respuesta.get("urlArchivo");
         this.permiso.estado = respuesta.get("estado");
         this.correos = respuesta.get("correos");
+        this.cargando = false;
       });
     });
   }

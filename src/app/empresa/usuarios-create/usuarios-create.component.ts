@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
 import { compararContrasenas } from 'src/app/core/validators/comparar-contrasenas';
@@ -13,7 +14,8 @@ import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
   styleUrls: ['./usuarios-create.component.scss']
 })
 export class UsuariosCreateComponent implements OnInit {
-  empresaId = "";
+  cargando = true;
+  empresa: any = {id: "", nombre: ""};
   formulario: FormGroup = this.fb.group({});
   tipos: any = [];
   usuario = {
@@ -26,6 +28,7 @@ export class UsuariosCreateComponent implements OnInit {
   };
 
   constructor(private titleService: Title, public fb: FormBuilder, private usuarioService: UsuarioService,
+    private empresasService:EmpresasService,
     private mensajesService: MensajesService, private router: Router, private route: ActivatedRoute
   ) {
     this.tipos = usuarioService.tiposSelect();
@@ -35,9 +38,20 @@ export class UsuariosCreateComponent implements OnInit {
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Empresas");
     this.usuarioService.usuarioActual().subscribe(usuario => {
-      this.empresaId = usuario?.['empresaId'];
+      this.empresa.id = usuario?.['empresaId'];
+      this.cargarDatosEmpresa();
     });
   }
+
+  cargarDatosEmpresa = async () => {
+    const reEmpresa = await this.empresasService.obtenerEmpresa(this.empresa.id);
+    const datosEmpresa = reEmpresa.data();
+
+    if (datosEmpresa) {
+      this.empresa.nombre = datosEmpresa['nombre'];
+      this.cargando = false;
+    }
+  };
 
   definirFormulario() {
       this.formulario = this.fb.group({
@@ -72,7 +86,7 @@ export class UsuariosCreateComponent implements OnInit {
           this.usuario.correo = this.formulario.controls["correo"].value;
           this.usuario.tipo = Number(this.formulario.controls["tipo"].value);
           this.usuario.contrasena = this.formulario.controls["contrasena"].value;
-          this.usuario.empresaId = this.empresaId;
+          this.usuario.empresaId = this.empresa.id;
 
           this.usuarioService.crearUsuario(this.usuario).then(_ => {
             this.mensajesService.mostrarMensaje("success", "Usuario creado con éxito", undefined);

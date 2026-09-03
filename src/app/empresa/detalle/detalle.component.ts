@@ -10,6 +10,7 @@ import { UsuarioService } from 'src/app/core/services/usuario.service';
 })
 export class DetalleComponent implements OnInit {
 
+  cargando = true;
   empresa = {
     id: "",
     nombre: "",
@@ -47,6 +48,7 @@ export class DetalleComponent implements OnInit {
     this.empresa.urlLogo = respuesta.get("urlLogo");
     this.empresa.notas = respuesta.get("notas");
     this.empresa.admin = respuesta.get("admin");
+    this.cargando = false;
   }
 
 }

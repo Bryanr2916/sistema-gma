@@ -1,17 +1,28 @@
-<div class="gma-page-center d-flex justify-content-center align-items-center">
-    <div class="card gma-card-panel gma-card-panel--wide shadow my-5 text-center border border-dark">
-        <div class="card-header d-flex justify-content-around">
-            <h2><i class="g-icon fa-solid fa-bell me-1"></i> Crear Permiso</h2>
-            <!--Nav-->
-            <ul class="nav nav-pills mx-sm-5">
-                <li class="nav-item mx-2">
-                    <a class="nav-link active" routerLink="/permisos"><i class="fa-solid fa-chevron-left"></i> Regresar</a>
-                </li>
-            </ul>
-        </div>
 
+<!--Navegacion con breadcrumbs-->
+<div class="mx-2">
+    <div class="row">
+        <nav class="ms-3 mt-3" aria-label="breadcrumb">
+            <ol class="breadcrumb gma-breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="/permisos">
+                        <i class="g-icon fa-solid fa-bell me-1"></i>
+                        Permisos
+                    </a>
+                </li>
+                <li class="breadcrumb-item active">
+                    Crear
+                </li>
+            </ol>
+        </nav>
+    </div>
+    <hr class="gma-hr border border-success border-1 opacity-75">
+</div>
+
+<div class="gma-page-center d-flex justify-content-center align-items-center">
+    <div class="card gma-card-panel gma-card-panel--wide shadow mb-5 text-center border border-dark">
         <div class="card-body">
-            <form [formGroup]="formulario" id="form" class="my-4">
+            <form [formGroup]="formulario" id="form" class="my-2">
                 <!--Nombre-->
                 <div id="fieldNombre" class="mb-3 me-5 row">
                     <label for="inputNombre" class="col-sm-4 col-form-label">

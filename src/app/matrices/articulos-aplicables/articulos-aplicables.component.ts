@@ -20,7 +20,7 @@ export class ArticulosAplicablesComponent implements OnInit {
   estados = ESTADOS_ARTICULO;
   formulario: FormGroup = this.fb.group({});
   cargando = true;
-  matriz = {titulo: "", empresa: ""};
+  matriz = {titulo: "", empresa: "", id: ""};
   empresa = {nombre: "", paises: [] as any []};
   areasLegales: any[] = [];
   normativas:any[] = [];
@@ -74,6 +74,7 @@ export class ArticulosAplicablesComponent implements OnInit {
     this.route.params.subscribe( async params => {
       this.articulosAplicables.matrizId = params["id"];
       const respuesta = await this.matricesService.obtenerMatriz(params["id"]);
+      this.matriz.id = params["id"];
       this.matriz.titulo = respuesta.get("titulo");
       this.matriz.empresa = respuesta.get("empresa");
       
