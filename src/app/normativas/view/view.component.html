@@ -105,6 +105,28 @@
                             </p>
                         </div>
                     </div>
+
+                    <!-- Requerimientos-->
+                     <div class="row mb-4">
+                        <div class="col-6">
+                            <h3>Requerimientos:</h3>
+
+                            <div class="my-2" *ngIf="normativa.requerimientos.length === 0">
+                                <p class="lead">
+                                    <i class="b-icon fa-solid fa-book me-1">
+                                    </i> No hay requerimientos para esta normativa
+                                </p>
+                            </div>
+
+                            <div class="my-2" *ngIf="normativa.requerimientos.length > 0">
+                                <ul class="list-group">
+                                    <li class="list-group-item list-group-item-info" *ngFor="let req of normativa.requerimientos">
+                                        {{req.value}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                     </div>
                 </div>
             </div>
         </div>

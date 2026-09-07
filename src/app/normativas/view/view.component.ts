@@ -12,7 +12,7 @@ import { TiposNormativasService } from 'src/app/core/services/tipos-normativas.s
 export class ViewComponent implements OnInit {
 
   cargando = true;
-  normativa = {
+  normativa: any = {
     id: "",
     urlArchivo: "",
     titulo: "",
@@ -24,6 +24,7 @@ export class ViewComponent implements OnInit {
     entidad:"",
     enlace:"",
     comentarios:"",
+    requerimientos: []
   };
 
   tipo= {
@@ -57,6 +58,7 @@ export class ViewComponent implements OnInit {
       this.normativa.enlace = respuesta.get("enlace");
       this.normativa.comentarios = respuesta.get("comentarios");
       this.normativa.urlArchivo = respuesta.get("urlArchivo");
+      this.normativa.requerimientos = respuesta.get("requerimientos");
     });
   }
 
