@@ -47,11 +47,15 @@ export class IndexComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Riesgos Ambientales");
-    this.inicializarListado();
+    this.inicializarListado(true);
   }
 
-  private async inicializarListado(): Promise<void> {
-    this.cargandoInicial = true;
+  private async inicializarListado(esCargaInicial = false): Promise<void> {
+    if (esCargaInicial) {
+      this.cargandoInicial = true;
+    } else {
+      this.cargandoListado = true;
+    }
     this.ultimoDocPorPagina.clear();
     this.itemsPorPagina.clear();
 
@@ -63,7 +67,12 @@ export class IndexComponent implements OnInit {
     this.totalRegistros = total;
     this.totalPaginas = Math.ceil(total / this.TAMANO_PAGINA);
     this.aplicarPagina(1, primeraPagina.items, primeraPagina.ultimoDoc);
-    this.cargandoInicial = false;
+    
+    if (esCargaInicial) {
+      this.cargandoInicial = false;
+    } else {
+      this.cargandoListado = false;
+    }
   }
 
   private aplicarPagina(n: number, items: any[], ultimoDoc: QueryDocumentSnapshot | null): void {
@@ -184,7 +193,7 @@ export class IndexComponent implements OnInit {
   private salirModoBusqueda(): void {
     this.empresasTodasCache = null;
     this.resultadosBusqueda = [];
-    this.inicializarListado();
+    this.inicializarListado(false);
   }
 
   async buscar(event: any): Promise<void> {
