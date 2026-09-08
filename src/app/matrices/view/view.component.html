@@ -71,6 +71,10 @@
                     <div *ngIf="areasAplicables.length === 0 && !cargando" class="my-4">
                         <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No hay artículos aplicables para esta matriz
                         </h4>
+                        <a [routerLink]="['/matrices/crear-articulos', matriz.id]" type="button" class="my-4 btn btn-success btn-lg">
+                            <i class="w-icon fa-solid fa-newspaper fa-lg me-2"></i>
+                            <span>Crear artículos</span>
+                        </a>
                     </div>
                 </div>
             </div>
