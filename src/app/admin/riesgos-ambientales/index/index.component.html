@@ -1,12 +1,12 @@
 <div>
   <!--loading-->
-  <div *ngIf="cargando" class="d-flex justify-content-center">
+  <div *ngIf="cargandoInicial" class="d-flex justify-content-center">
     <div class="spinner-border mt-5 text-primary" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
   </div>
 
-  <div *ngIf="!cargando">
+  <div *ngIf="!cargandoInicial">
     <!--Navegacion con breadcrumbs-->
     <div class="mx-2">
       <div class="row">
@@ -36,8 +36,15 @@
             </div>
           </li>
         </ul>
-    
-        <div *ngIf="empresasFiltradas.length > 0" class="table-responsive mb-4 mt-2">
+
+        <!-- Spinner cambio de página -->
+        <div *ngIf="cargandoListado" class="d-flex justify-content-center my-4">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+
+        <div *ngIf="!cargandoListado && empresasFiltradas.length > 0" class="table-responsive mb-4 mt-2">
           <table class="table table-light table-striped table-hover shadow table-bordered">
             <thead>
               <tr class="table-success">
@@ -51,12 +58,36 @@
                   <input [checked]="filaSeleccionada === i" (click)="seleccionarFila($event, i)"
                     class="form-check-input border border-dark" type="checkbox" value="" id="checkDefault">
                 </th>
-                <th scope="row">{{ i + 1 }}</th>
+                <th scope="row">{{ (paginaActual - 1) * 20 + i + 1 }}</th>
                 <td>{{empresa.nombre}}</td>
               </tr>
             </tbody>
           </table>
-    
+
+          <!-- Paginación -->
+          <nav *ngIf="totalPaginas > 1" aria-label="Paginación de riesgos ambientales">
+            <ul class="pagination justify-content-center">
+              <li class="page-item" [class.disabled]="paginaActual === 1">
+                <button type="button" class="page-link" aria-label="Anterior" (click)="paginaAnterior()">
+                  &laquo;
+                </button>
+              </li>
+              <ng-container *ngFor="let el of elementosPaginacion">
+                <li *ngIf="el.tipo === 'ellipsis'" class="page-item disabled">
+                  <span class="page-link">...</span>
+                </li>
+                <li *ngIf="el.tipo === 'pagina'" class="page-item" [class.active]="el.num === paginaActual">
+                  <button type="button" class="page-link" (click)="irAPagina(el.num)">{{ el.num }}</button>
+                </li>
+              </ng-container>
+              <li class="page-item" [class.disabled]="paginaActual === totalPaginas">
+                <button type="button" class="page-link" aria-label="Siguiente" (click)="paginaSiguiente()">
+                  &raquo;
+                </button>
+              </li>
+            </ul>
+          </nav>
+
           <div [ngClass]="filaSeleccionada !== -1 ? 'active' : ''" class="table-actions border border-dark">
             <a (click)="borrarFila()" class="d-inline-flex align-items-center">
               <i class="r-icon fa-solid fa-trash fa-lg me-2"></i>
@@ -69,12 +100,12 @@
             </a>
           </div>
         </div>
-    
-        <div *ngIf="empresasFiltradas.length === 0 && empresasTodas.length > 0" class="my-4">
+
+        <div *ngIf="!cargandoListado && empresasFiltradas.length === 0 && enModoBusqueda" class="my-4">
           <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No se encontraron resultados</h4>
         </div>
-    
-        <div *ngIf="empresasTodas.length === 0" class="my-4">
+
+        <div *ngIf="!cargandoListado && totalRegistros === 0 && !enModoBusqueda" class="my-4">
           <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No hay empresas registradas</h4>
         </div>
       </div>
