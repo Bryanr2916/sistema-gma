@@ -1,4 +1,6 @@
-<div class="d-flex justify-content-center align-items-center gma-page-center">
+
+<div>
+
     <!--loading-->
     <div *ngIf="cargando" class="d-flex justify-content-center">
         <div class="spinner-border mt-5 text-primary" role="status">
@@ -6,34 +8,49 @@
         </div>
     </div>
 
-    <div *ngIf="!cargando" class="card shadow my-5 border border-dark gma-card-panel gma-card-panel--wide">
-        <div class="card-header d-flex justify-content-around">
-            <h2><i class="g-icon fa-solid fa-user me-1"></i>Perfil</h2>
+    <div *ngIf="!cargando">
+        <!--Navegacion con breadcrumbs-->
+        <div class="mx-2">
+            <div class="row">
+                <nav class="ms-3 mt-3" aria-label="breadcrumb">
+                    <ol class="breadcrumb gma-breadcrumb">
+                        <li class="breadcrumb-item active">
+                            <i class="g-icon fa-solid fa-user me-1"></i>Perfil
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+            <hr class="gma-hr border border-success border-1 opacity-75">
         </div>
 
-        <div class="card-body mb-4 mx-3">
-            <p><strong>Nombre:</strong> {{usuario.nombre}}</p>
-            <p><strong>Correo:</strong> {{usuario.correo}}</p>
-            <p>
-                <strong class="me-2">Tipo:</strong>
-                <span class={{claseTipo(usuario.tipo)}}>
-                    {{mostrarTipo(usuario.tipo)}}
-                </span>
-            </p>
-            <p><strong>Empresa:</strong> {{nombreEmpresa}}</p>
-        </div>
-
-        <div class="card-footer">
-            <div class="row g-2">
-                <div class="col-12 col-sm-3">
-                    <button (click)="editarPerfil()" type="button" class="btn btn-outline-primary w-100">
-                        <i class="fa-solid fa-pen-to-square fa-lg m-2"></i>Editar Perfil
-                    </button>
+        <!--Contenido-->
+        <div class="d-flex justify-content-center align-items-center gma-page-center">
+            <div class="card shadow mb-5 border border-dark gma-card-panel gma-card-panel--wide">
+                <div class="card-body mb-4 mx-3">
+                    <p><strong>Nombre:</strong> {{usuario.nombre}}</p>
+                    <p><strong>Correo:</strong> {{usuario.correo}}</p>
+                    <p>
+                        <strong class="me-2">Tipo:</strong>
+                        <span class={{claseTipo(usuario.tipo)}}>
+                            {{mostrarTipo(usuario.tipo)}}
+                        </span>
+                    </p>
+                    <p><strong>Empresa:</strong> {{nombreEmpresa}}</p>
                 </div>
-                <div class="col-12 col-sm-4">
-                    <button (click)="reestablecerContrasena()" type="button" class="btn btn-outline-success w-100">
-                        <i class="fa-solid fa-key fa-lg m-2"></i>Reestablecer contraseña
-                    </button>
+        
+                <div class="card-footer">
+                    <div class="row g-2">
+                        <div class="col-12 col-sm-3">
+                            <button (click)="editarPerfil()" type="button" class="btn btn-outline-primary w-100">
+                                <i class="fa-solid fa-pen-to-square fa-lg m-2"></i>Editar Perfil
+                            </button>
+                        </div>
+                        <div class="col-12 col-sm-4">
+                            <button (click)="reestablecerContrasena()" type="button" class="btn btn-outline-success w-100">
+                                <i class="fa-solid fa-key fa-lg m-2"></i>Reestablecer contraseña
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
