@@ -100,7 +100,14 @@ export class EditComponent implements OnInit {
       this.displayLogo = datosEmpresa['urlLogo'];
       this.archivoLogo = datosEmpresa['urlLogo'];
 
-      this.cargando = false;
+      if (this.empresa.urlLogo) {
+        const img = new Image();
+        img.onload = () => { this.cargando = false; };
+        img.onerror = () => { this.cargando = false; };
+        img.src = this.empresa.urlLogo;
+      } else {
+        this.cargando = false;
+      }
     }
   }
 
