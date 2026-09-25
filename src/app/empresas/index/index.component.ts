@@ -24,7 +24,7 @@ export class IndexComponent implements OnInit {
   cargandoInicial = true;
   cargandoListado = false;
   busqueda = "";
-  ths = ["#","Empresa", "Administrador", "Correo Electrónico"];
+  ths = ["#", "Empresa", "Administrador", "Correo Electrónico"];
   empresasFiltradas: any[] = [];
   usuarios: any[] = [];
   filaSeleccionada = -1;
@@ -232,7 +232,7 @@ export class IndexComponent implements OnInit {
     }
   }
 
-  private async recargarTrasBorrado(): Promise<void> {
+  private async recargarTrasAccion(): Promise<void> {
     this.itemsPorPagina.clear();
     this.ultimoDocPorPagina.clear();
     this.empresasTodasCache = null;
@@ -268,7 +268,7 @@ export class IndexComponent implements OnInit {
         await this.empresaService.borrarEmpresa(empresa.id);
         this.mensajesService.mostrarMensaje("success", "Empresa borrada con éxito", undefined);
         this.filaSeleccionada = -1;
-        await this.recargarTrasBorrado();
+        await this.recargarTrasAccion();
       }
     }
   }
@@ -277,11 +277,13 @@ export class IndexComponent implements OnInit {
     if (this.filaSeleccionada !== -1) {
       const empresa = this.empresasFiltradas[this.filaSeleccionada];
       if (confirm(`¿Desea duplicar la empresa "${empresa.nombre}"?`)) {
-        const empDuplicada = {...empresa, nombre: `copia de ${empresa.nombre}`, urlLogo: ""};
+        const empDuplicada = { ...empresa, nombre: `copia de ${empresa.nombre}`, urlLogo: "" };
+        delete empDuplicada.id;
         this.empresasService.crearEmpresa(empDuplicada).then(_ => {
           this.mensajesService.mostrarMensaje("success", "Empresa duplicada con éxito", undefined);
         }).finally(() => {
           this.filaSeleccionada = -1;
+          this.recargarTrasAccion();
         });
       }
     }
@@ -307,7 +309,7 @@ export class IndexComponent implements OnInit {
   }
 
   usuarioAdmin(empresa: any) {
-    return this.usuarios.find( usuario => usuario.empresaId === empresa.id && usuario.tipo === TIPOS_USUARIO.admin)?.correo;
+    return this.usuarios.find(usuario => usuario.empresaId === empresa.id && usuario.tipo === TIPOS_USUARIO.admin)?.correo;
   }
 
   cargarUsuarios() {
