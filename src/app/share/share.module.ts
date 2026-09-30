@@ -7,6 +7,7 @@ import { PaginaNoEncontradaComponent } from './pagina-no-encontrada/pagina-no-en
 import { TruncarTextoPipe } from './pipes/truncar-texto.pipe';
 import { MultiSelectComponent } from './multi-select/multi-select.component';
 import { DropdownSearchComponent } from './dropdown-search/dropdown-search.component';
+import { LogoEmpresaComponent } from './logo-empresa/logo-empresa.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
@@ -16,7 +17,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     PaginaNoEncontradaComponent,
     TruncarTextoPipe,
     MultiSelectComponent,
-    DropdownSearchComponent
+    DropdownSearchComponent,
+    LogoEmpresaComponent
   ],
   imports: [
     CommonModule,
@@ -29,7 +31,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FooterComponent,
     TruncarTextoPipe,
     MultiSelectComponent,
-    DropdownSearchComponent
+    DropdownSearchComponent,
+    LogoEmpresaComponent
   ]
 })
 export class ShareModule { }

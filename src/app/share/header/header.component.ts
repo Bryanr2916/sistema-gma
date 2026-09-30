@@ -28,10 +28,19 @@ export class HeaderComponent implements OnInit {
         this.empresasService.obtenerEmpresa(this.usuario.empresaId).then(empresa => {
           if (empresa.exists()) {
             this.empresa = { id: empresa.id, ...empresa.data() };
+            
+            // Cachear logo en localStorage si no existe
+            const cached = localStorage.getItem('logo_empresa');
+            if (!cached && this.empresa['urlLogo']) {
+              localStorage.setItem('logo_empresa', this.empresa['urlLogo']);
+            }
+            
             this.cargando = false;
           }
         });
       } else {
+        // adminSistema: no tiene empresa asociada, limpiar logo cacheado
+        localStorage.removeItem('logo_empresa');
         this.empresa = {
           nombre: "GMA Sistema",
           urlLogo: "../assets/images/GMA-logo.png"
@@ -43,6 +52,7 @@ export class HeaderComponent implements OnInit {
 
   cerrarSesion() {
     if (confirm("¿Desea cerrar sesión?")) {
+      // La limpieza de localStorage ('logo_empresa') se realiza en UsuarioService.cerrarSesion()
       this.usuarioService.cerrarSesion().then(() => {
         this.usuario = {};
         this.mensajesService.mostrarMensaje("success", "Ha cerrado sesión de forma exitosa", undefined);

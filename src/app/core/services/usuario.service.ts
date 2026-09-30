@@ -44,6 +44,7 @@ export class UsuarioService {
   }
 
   cerrarSesion() {
+    localStorage.removeItem('logo_empresa');
     this.usuarioCache$.next(null);
     return signOut(this.auth);
   }

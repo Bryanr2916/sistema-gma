@@ -11,6 +11,9 @@ import { UsuarioService } from 'src/app/core/services/usuario.service';
 export class DetalleComponent implements OnInit {
 
   cargando = true;
+  datosListos = false;
+  logoListo = false;
+  imagenTarjetaLista = false;
   empresa = {
     id: "",
     nombre: "",
@@ -34,6 +37,10 @@ export class DetalleComponent implements OnInit {
       if (usuario?.['empresaId']) {
         this.empresa.id = usuario['empresaId'];
         this.cargarEmpresa();
+      } else {
+        this.datosListos = true;
+        this.imagenTarjetaLista = true;
+        this.verificarListo();
       }
     });
   }
@@ -48,7 +55,38 @@ export class DetalleComponent implements OnInit {
     this.empresa.urlLogo = respuesta.get("urlLogo");
     this.empresa.notas = respuesta.get("notas");
     this.empresa.admin = respuesta.get("admin");
-    this.cargando = false;
+    this.datosListos = true;
+    this.precargarImagenTarjeta();
+    this.verificarListo();
+  }
+
+  onLogoListo(): void {
+    this.logoListo = true;
+    this.verificarListo();
+  }
+
+  private precargarImagenTarjeta(): void {
+    if (!this.empresa.urlLogo) {
+      this.imagenTarjetaLista = true;
+      return;
+    }
+
+    const img = new Image();
+    img.onload = () => {
+      this.imagenTarjetaLista = true;
+      this.verificarListo();
+    };
+    img.onerror = () => {
+      this.imagenTarjetaLista = true;
+      this.verificarListo();
+    };
+    img.src = this.empresa.urlLogo;
+  }
+
+  private verificarListo(): void {
+    if (this.datosListos && this.logoListo && this.imagenTarjetaLista) {
+      this.cargando = false;
+    }
   }
 
 }
