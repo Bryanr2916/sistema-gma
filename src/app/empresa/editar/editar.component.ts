@@ -16,6 +16,9 @@ import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
 export class EditarComponent implements OnInit {
 
   cargando = true;
+  datosListos = false;
+  logoListo = false;
+  imagenLista = false;
   formulario: FormGroup = this.fb.group({});
   displayLogo = "";
   archivoLogo:any = null;
@@ -90,6 +93,37 @@ export class EditarComponent implements OnInit {
       this.displayLogo = datosEmpresa['urlLogo'];
       this.archivoLogo = datosEmpresa['urlLogo'];
 
+      this.datosListos = true;
+      this.precargarImagenLogo();
+      this.verificarListo();
+    }
+  }
+
+  onLogoListo(): void {
+    this.logoListo = true;
+    this.verificarListo();
+  }
+
+  private precargarImagenLogo(): void {
+    if (!this.displayLogo) {
+      this.imagenLista = true;
+      return;
+    }
+
+    const img = new Image();
+    img.onload = () => {
+      this.imagenLista = true;
+      this.verificarListo();
+    };
+    img.onerror = () => {
+      this.imagenLista = true;
+      this.verificarListo();
+    };
+    img.src = this.displayLogo;
+  }
+
+  private verificarListo(): void {
+    if (this.datosListos && this.logoListo && this.imagenLista) {
       this.cargando = false;
     }
   }

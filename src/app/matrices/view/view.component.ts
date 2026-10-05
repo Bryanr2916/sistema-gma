@@ -17,6 +17,8 @@ import { UsuarioService } from 'src/app/core/services/usuario.service';
 export class ViewComponent implements OnInit {
 
   cargando = true;
+  datosListos = false;
+  logoListo = false;
   matriz: any = {id: "", titulo: "" };
   areaSeleccionada = {id: ""};
   articulosAplicablesTodos: any[] = [];
@@ -83,10 +85,22 @@ export class ViewComponent implements OnInit {
       });
 
       this.cargarPrimeraOpcionArea();
-      this.cargando = false;
+      this.datosListos = true;
+      this.verificarListo();
       
     } catch(error) {
       console.log(error);
+    }
+  }
+
+  onLogoListo(): void {
+    this.logoListo = true;
+    this.verificarListo();
+  }
+
+  private verificarListo(): void {
+    if (this.datosListos && this.logoListo) {
+      this.cargando = false;
     }
   }
 

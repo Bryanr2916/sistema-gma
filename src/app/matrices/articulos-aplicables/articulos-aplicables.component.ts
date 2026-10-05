@@ -20,6 +20,8 @@ export class ArticulosAplicablesComponent implements OnInit {
   estados = ESTADOS_ARTICULO;
   formulario: FormGroup = this.fb.group({});
   cargando = true;
+  datosListos = false;
+  logoListo = false;
   matriz = {titulo: "", empresa: "", id: ""};
   empresa = {nombre: "", paises: [] as any []};
   areasLegales: any[] = [];
@@ -86,11 +88,23 @@ export class ArticulosAplicablesComponent implements OnInit {
         this.areasLegales = datosArea;
         this.normativaService.obtenerNormativas(Infinity).subscribe(datosNormativa => {
           this.normativas = datosNormativa.filter(dn => this.empresa.paises.includes(dn.pais));
-          this.cargando = false;
+          this.datosListos = true;
+          this.verificarListo();
         });
       });
     });
   };
+
+  onLogoListo(): void {
+    this.logoListo = true;
+    this.verificarListo();
+  }
+
+  private verificarListo(): void {
+    if (this.datosListos && this.logoListo) {
+      this.cargando = false;
+    }
+  }
 
   crearArticulo() {
 

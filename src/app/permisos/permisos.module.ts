@@ -7,6 +7,7 @@ import { CreateComponent } from './create/create.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EditComponent } from './edit/edit.component';
 import { ViewComponent } from './view/view.component';
+import { ShareModule } from '../share/share.module';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { ViewComponent } from './view/view.component';
     CommonModule,
     PermisosRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ShareModule
 ]
 })
 export class PermisosModule { }

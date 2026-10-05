@@ -7,10 +7,11 @@
         </div>
     </div>
 
-    <div *ngIf="!cargando">
+    <div [class.d-none]="cargando">
         <!--Navegacion con breadcrumbs-->
         <div class="mx-2">
-            <div class="row">
+            <div class="d-flex align-items-center">
+                <app-logo-empresa (logoListo)="onLogoListo()"></app-logo-empresa>
                 <nav class="ms-3 mt-3" aria-label="breadcrumb">
                     <ol class="breadcrumb gma-breadcrumb">
                         <li class="breadcrumb-item">

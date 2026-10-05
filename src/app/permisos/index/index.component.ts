@@ -16,6 +16,8 @@ export class IndexComponent implements OnInit {
   private unsubscribe?: () => void;
   empresaId = "";
   cargando = true;
+  datosListos = false;
+  logoListo = false;
   busqueda = "";
   ths = ["#", "Nombre", "Tipo", "Vence", "Días restantes", "Archivo", "Estado"];
   permisosTodos: any[] = [];
@@ -43,10 +45,22 @@ export class IndexComponent implements OnInit {
           permisos => {
             this.permisosTodos = permisos;
             this.permisosFiltrados = permisos;
-            this.cargando = false;
+            this.datosListos = true;
+            this.verificarListo();
           }
         );
     });
+  }
+
+  onLogoListo(): void {
+    this.logoListo = true;
+    this.verificarListo();
+  }
+
+  private verificarListo(): void {
+    if (this.datosListos && this.logoListo) {
+      this.cargando = false;
+    }
   }
 
   ngOnDestroy() {

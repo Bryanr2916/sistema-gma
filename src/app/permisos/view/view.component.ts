@@ -23,6 +23,8 @@ export class ViewComponent implements OnInit {
   tipos: any[] = TIPOS_PERMISO;
 
   cargando = true;
+  datosListos = false;
+  logoListo = false;
 
   constructor(
     private titleService: Title,
@@ -44,9 +46,21 @@ export class ViewComponent implements OnInit {
         this.permiso.estado = respuesta.get("estado");
         this.permiso.correos = respuesta.get("correos");
 
-        this.cargando = false;
+        this.datosListos = true;
+        this.verificarListo();
       });
     });
+  }
+
+  onLogoListo(): void {
+    this.logoListo = true;
+    this.verificarListo();
+  }
+
+  private verificarListo(): void {
+    if (this.datosListos && this.logoListo) {
+      this.cargando = false;
+    }
   }
 
   obtenerEstado(estado: string) {

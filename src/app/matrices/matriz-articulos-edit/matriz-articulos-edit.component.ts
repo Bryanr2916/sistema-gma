@@ -38,6 +38,8 @@ export class MatrizArticulosEditComponent implements OnInit {
   };
 
   cargando = true;
+  datosListos = false;
+  logoListo = false;
 
   constructor(
     private titleService: Title,
@@ -133,11 +135,23 @@ export class MatrizArticulosEditComponent implements OnInit {
         this.areasLegales = datosArea;
         this.normativaService.obtenerNormativas().subscribe(datosNormativa => {
           this.normativas = datosNormativa.filter(dn => this.empresa.paises.includes(dn.pais));
-          this.cargando = false;
+          this.datosListos = true;
+          this.verificarListo();
         });
       });
     });
   };
+
+  onLogoListo(): void {
+    this.logoListo = true;
+    this.verificarListo();
+  }
+
+  private verificarListo(): void {
+    if (this.datosListos && this.logoListo) {
+      this.cargando = false;
+    }
+  }
 
   private scrollCampoRequeridoInvalido() {
     const camposRequeridosEnOrden = [

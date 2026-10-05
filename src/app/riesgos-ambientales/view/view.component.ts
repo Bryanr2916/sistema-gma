@@ -42,6 +42,8 @@ export class ViewComponent implements OnInit {
   nombreArchivo = "";
 
   cargando = true;
+  datosListos = false;
+  logoListo = false;
   guardando = false;
 
   constructor(
@@ -85,13 +87,26 @@ export class ViewComponent implements OnInit {
 
       const resNuevoRiesgo = await this.riesgosService.crearRiesgo(nuevoRiesgo);
       this.riesgos = { id: resNuevoRiesgo.id, ...nuevoRiesgo }
-      this.cargando = false;
+      this.datosListos = true;
+      this.verificarListo();
       
     } else {
       this.riesgos = { ...reRiesgo.docs[0].data(), id: reRiesgo.docs[0].id };
-      this.cargando = false;
+      this.datosListos = true;
+      this.verificarListo();
     }
   };
+
+  onLogoListo(): void {
+    this.logoListo = true;
+    this.verificarListo();
+  }
+
+  private verificarListo(): void {
+    if (this.datosListos && this.logoListo) {
+      this.cargando = false;
+    }
+  }
 
   guardarAuto() {
     if (!this.empresa.id) return;

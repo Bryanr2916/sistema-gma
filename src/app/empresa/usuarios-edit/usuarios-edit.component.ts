@@ -14,6 +14,8 @@ import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
 })
 export class UsuariosEditComponent implements OnInit {
   cargando = true;
+  datosListos = false;
+  logoListo = false;
   empresa: any = { id: "", nombre: "" };
   formulario: FormGroup = this.fb.group({});
   tipos: any = [];
@@ -71,6 +73,18 @@ export class UsuariosEditComponent implements OnInit {
 
     if (datosEmpresa) {
       this.empresa.nombre = datosEmpresa['nombre'];
+      this.datosListos = true;
+      this.verificarListo();
+    }
+  }
+
+  onLogoListo(): void {
+    this.logoListo = true;
+    this.verificarListo();
+  }
+
+  private verificarListo(): void {
+    if (this.datosListos && this.logoListo) {
       this.cargando = false;
     }
   }

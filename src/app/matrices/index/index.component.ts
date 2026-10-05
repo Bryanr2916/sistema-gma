@@ -15,6 +15,8 @@ import { UsuarioService } from 'src/app/core/services/usuario.service';
 export class IndexComponent implements OnInit {
   tiposUsuario = TIPOS_USUARIO;
   cargando = true;
+  datosListos = false;
+  logoListo = false;
   busqueda = "";
   empresas:any[] = [];
   matricesTodas:any[] = [];
@@ -55,8 +57,20 @@ export class IndexComponent implements OnInit {
       this.matricesTodas = datos.filter(matriz => matriz.empresa === this.usuario.empresaId);
       this.matricesFiltradas = this.matricesTodas;
       this.articulosAplicables = (await this.matricesService.obtenerArticulosAplicables()).docs.map((value) => { return {id: value.id, ...value.data() };});
-      this.cargando = false;
+      this.datosListos = true;
+      this.verificarListo();
     });
+  }
+
+  onLogoListo(): void {
+    this.logoListo = true;
+    this.verificarListo();
+  }
+
+  private verificarListo(): void {
+    if (this.datosListos && this.logoListo) {
+      this.cargando = false;
+    }
   }
 
   nombreEmpresa (id: string) {

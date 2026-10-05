@@ -18,6 +18,9 @@ import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
 export class CreateComponent implements OnInit {
 
   empresaId = "";
+  cargando = true;
+  datosListos = false;
+  logoListo = false;
   formulario: FormGroup = this.fb.group({});
   archivo: any = null;
   permiso: any = {
@@ -69,7 +72,20 @@ export class CreateComponent implements OnInit {
     this.titleService.setTitle("GMA Sistema - Permisos");
     this.usuarioService.usuarioActual().subscribe(usuario => {
       this.empresaId = usuario?.['empresaId'];
+      this.datosListos = true;
+      this.verificarListo();
     });
+  }
+
+  onLogoListo(): void {
+    this.logoListo = true;
+    this.verificarListo();
+  }
+
+  private verificarListo(): void {
+    if (this.datosListos && this.logoListo) {
+      this.cargando = false;
+    }
   }
 
   cargarArchivo(event: any) {

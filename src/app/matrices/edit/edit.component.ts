@@ -13,6 +13,8 @@ import { UsuarioService } from 'src/app/core/services/usuario.service';
 })
 export class EditComponent implements OnInit {
   cargando = true;
+  datosListos = false;
+  logoListo = false;
   formulario: FormGroup = this.fb.group({});
   matriz = {
     empresa: "",
@@ -61,9 +63,21 @@ export class EditComponent implements OnInit {
         this.formulario.controls["titulo"].setValue(matrizData?.titulo);
         this.matriz.titulo = matrizData?.titulo;
         this.matriz.empresa = matrizData?.empresa;
-        this.cargando = false;
+        this.datosListos = true;
+        this.verificarListo();
       });
     });
+  }
+
+  onLogoListo(): void {
+    this.logoListo = true;
+    this.verificarListo();
+  }
+
+  private verificarListo(): void {
+    if (this.datosListos && this.logoListo) {
+      this.cargando = false;
+    }
   }
 
   errorEnControlador (controlador: string, error: string) {

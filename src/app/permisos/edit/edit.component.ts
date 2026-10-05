@@ -17,6 +17,8 @@ import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
 export class EditComponent implements OnInit {
 
   cargando = true;
+  datosListos = false;
+  logoListo = false;
   formulario: FormGroup = this.fb.group({});
   archivo: any = null;
   permiso: any = {
@@ -56,9 +58,21 @@ export class EditComponent implements OnInit {
         this.permiso.urlArchivo = respuesta.get("urlArchivo");
         this.permiso.estado = respuesta.get("estado");
         this.correos = respuesta.get("correos");
-        this.cargando = false;
+        this.datosListos = true;
+        this.verificarListo();
       });
     });
+  }
+
+  onLogoListo(): void {
+    this.logoListo = true;
+    this.verificarListo();
+  }
+
+  private verificarListo(): void {
+    if (this.datosListos && this.logoListo) {
+      this.cargando = false;
+    }
   }
 
   definirFormulario(){

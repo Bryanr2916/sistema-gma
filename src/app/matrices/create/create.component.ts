@@ -12,7 +12,9 @@ import { UsuarioService } from 'src/app/core/services/usuario.service';
   styleUrls: ['./create.component.scss']
 })
 export class CreateComponent implements OnInit {
-  cargando = false;
+  cargando = true;
+  datosListos = false;
+  logoListo = false;
   formulario: FormGroup = this.fb.group({});
   matriz = {
     empresa: "",
@@ -41,8 +43,20 @@ export class CreateComponent implements OnInit {
     this.titleService.setTitle("GMA Sistema - Matrices");
     this.usuarioService.usuarioActual().subscribe(usuario => {
       this.usuario = usuario;
-      this.cargando = false;
+      this.datosListos = true;
+      this.verificarListo();
     });
+  }
+
+  onLogoListo(): void {
+    this.logoListo = true;
+    this.verificarListo();
+  }
+
+  private verificarListo(): void {
+    if (this.datosListos && this.logoListo) {
+      this.cargando = false;
+    }
   }
 
   errorEnControlador (controlador: string, error: string) {

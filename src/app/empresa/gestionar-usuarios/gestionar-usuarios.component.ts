@@ -14,6 +14,8 @@ import { UsuarioService } from 'src/app/core/services/usuario.service';
 export class GestionarUsuariosComponent implements OnInit {
 
   cargando = true;
+  datosListos = false;
+  logoListo = false;
   busqueda = "";
   ths = ["#","Nombre", "Correo", "Tipo"];
   usuariosTodos:any[] = [];
@@ -56,9 +58,21 @@ export class GestionarUsuariosComponent implements OnInit {
         {...usDoc.data(), id: usDoc.id}
       ));
       this.usuariosFiltrados = this.usuariosTodos;
-      this.cargando = false;
+      this.datosListos = true;
+      this.verificarListo();
     }
   };
+
+  onLogoListo(): void {
+    this.logoListo = true;
+    this.verificarListo();
+  }
+
+  private verificarListo(): void {
+    if (this.datosListos && this.logoListo) {
+      this.cargando = false;
+    }
+  }
 
   buscar(event: any) {
     const busquedaMinuscuala = event.toLowerCase();

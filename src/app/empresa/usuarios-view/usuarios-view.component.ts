@@ -15,6 +15,8 @@ export class UsuariosViewComponent implements OnInit {
   empresa: any = {};
 
   cargando: boolean = true;
+  datosListos = false;
+  logoListo = false;
 
   usuario: any = {};
 
@@ -42,7 +44,19 @@ export class UsuariosViewComponent implements OnInit {
     if (empresaFB.exists()) {
       this.empresa = { ...this.empresa, ...empresaFB.data()};
     }
-    this.cargando = false;
+    this.datosListos = true;
+    this.verificarListo();
+  }
+
+  onLogoListo(): void {
+    this.logoListo = true;
+    this.verificarListo();
+  }
+
+  private verificarListo(): void {
+    if (this.datosListos && this.logoListo) {
+      this.cargando = false;
+    }
   }
 
   mostrarTipo(tipo: number) {
