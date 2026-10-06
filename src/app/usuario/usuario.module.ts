@@ -7,6 +7,7 @@ import { InicioSesionComponent } from './inicio-sesion/inicio-sesion.component';
 import { ReestablecerContrasenaComponent } from './reestablecer-contrasena/reestablecer-contrasena.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PerfilEditComponent } from './perfil-edit/perfil-edit.component';
+import { ShareModule } from '../share/share.module';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { PerfilEditComponent } from './perfil-edit/perfil-edit.component';
     CommonModule,
     UsuarioRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ShareModule
   ]
 })
 export class UsuarioModule { }

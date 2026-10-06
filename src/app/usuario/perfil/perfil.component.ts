@@ -14,6 +14,8 @@ import { UsuarioService } from 'src/app/core/services/usuario.service';
 export class PerfilComponent implements OnInit {
   tiposUsuario = TIPOS_USUARIO;
   cargando = true;
+  datosListos = false;
+  logoListo = false;
   usuario: any = {};
   nombreEmpresa = ""
   tipos: any = {};
@@ -29,15 +31,15 @@ export class PerfilComponent implements OnInit {
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Perfil");
     this.tipos = this.usuarioService.tiposSelect();
-    
+
     this.usuarioService.usuarioActual().subscribe(usuario => {
       this.usuario = usuario;
-      this.cargando = false;
       if (this.usuario.tipo !== TIPOS_USUARIO.adminSistema) {
         this.cargarEmpresa();
       } else {
         this.nombreEmpresa = "GMA Sistema";
-        this.cargando = false;
+        this.datosListos = true;
+        this.verificarListo();
       }
     });
   }
@@ -47,7 +49,19 @@ export class PerfilComponent implements OnInit {
     if (empresaFB.exists()) {
       this.nombreEmpresa = empresaFB.data()["nombre"];
     }
-    this.cargando = false;
+    this.datosListos = true;
+    this.verificarListo();
+  }
+
+  onLogoListo(): void {
+    this.logoListo = true;
+    this.verificarListo();
+  }
+
+  private verificarListo(): void {
+    if (this.datosListos && this.logoListo) {
+      this.cargando = false;
+    }
   }
 
   claseTipo(tipo: number) {

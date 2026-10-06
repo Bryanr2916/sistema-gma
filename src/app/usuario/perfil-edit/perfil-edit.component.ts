@@ -13,6 +13,9 @@ import { seleccionVacia } from 'src/app/core/validators/seleccion-vacia';
 })
 export class PerfilEditComponent implements OnInit {
 
+  cargando = true;
+  datosListos = false;
+  logoListo = false;
   formulario: FormGroup = this.fb.group({});
   tipos: any = [];
   usuario: any = {};
@@ -38,7 +41,21 @@ export class PerfilEditComponent implements OnInit {
 
       this.formulario.controls["correo"].disable();
       this.formulario.controls["tipo"].disable();
+
+      this.datosListos = true;
+      this.verificarListo();
     });
+  }
+
+  onLogoListo(): void {
+    this.logoListo = true;
+    this.verificarListo();
+  }
+
+  private verificarListo(): void {
+    if (this.datosListos && this.logoListo) {
+      this.cargando = false;
+    }
   }
 
   definirFormulario() {
