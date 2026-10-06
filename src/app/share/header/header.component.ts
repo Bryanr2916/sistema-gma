@@ -13,6 +13,7 @@ import { UsuarioService } from 'src/app/core/services/usuario.service';
 export class HeaderComponent implements OnInit {
   tiposUsuario = TIPOS_USUARIO;
   cargando = true;
+  mostrarLogo = false;
   usuario: any = {};
   empresa: any = {}
   constructor(
@@ -36,6 +37,7 @@ export class HeaderComponent implements OnInit {
             }
             
             this.cargando = false;
+            this.mostrarLogo = false;
           }
         });
       } else {
@@ -45,6 +47,7 @@ export class HeaderComponent implements OnInit {
           nombre: "GMA Sistema",
           urlLogo: "../assets/images/GMA-logo.png"
         };
+        this.mostrarLogo = true;
         this.cargando = false;
       }
     });
