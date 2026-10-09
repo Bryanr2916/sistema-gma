@@ -20,7 +20,7 @@ export class IndexComponent implements OnInit {
   matricesTodas:any[] = [];
   matricesFiltradas:any[] = [];
   articulosAplicables: any[] = [];
-  ths = ["#","Título","Artículos","Empresa"];
+  ths = ["#","Título","Normativas","Empresa"];
   usuario: any = { };
   filaSeleccionada = -1;
 
