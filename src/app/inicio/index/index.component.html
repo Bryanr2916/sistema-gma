@@ -1,21 +1,43 @@
-<div class="mt-4 mb-2 mx-2">
-    <h2><img src="../assets/images/GMA-logo.png" alt="Logo" width="30" height="24" class="mx-2">Bienvenido a GMA Sistema</h2>
+<div class="container my-4">
+
+  <!--loading-->
+  <div *ngIf="cargando" class="d-flex justify-content-center">
+    <div class="spinner-border mt-5 text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!cargando">
+    <P class="lead">Panel Principal</P>
+    <h1><img src="../assets/images/GMA-logo.png" alt="Logo" width="30" height="24" class="mx-2">Bienvenido,
+      {{usuario.nombre}}</h1>
     <hr class="border border-success border-1 opacity-75">
-    <p class="text-muted">Seleccione una de las opciones del menú para continuar.</p>
-
-    <!--loading-->
-    <div *ngIf="cargando" class="d-flex justify-content-center">
-      <div class="spinner-border mt-5 text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-    </div>
-
-    <div *ngIf="!cargando" class="row">
-      <div routerLink="{{opcion.enlace}}" class="card col-auto m-3 border border-dark" *ngFor="let opcion of menu; index as i">
-        <div class="card-body">
-          <h3><i class="fa-solid fa-{{opcion.logo}} g-icon me-1"></i>{{opcion.nombre}}</h3>
+    <p class="text-muted">
+      Gestione el cumplimiento legal y ambiental de su organización desde un solo lugar.
+    </p>
+    
+    <div>
+      <h4>Módulos:</h4>
+      <div *ngIf="!cargando" class="mx-0 row row-cols-1 row-cols-md-3 row-cols-lg-4">
+    
+        <div class="card col m-3 border border-success" *ngFor="let opcion of menu; index as i">
+          <div class="card-body">
+            <span class="badge text-bg-light">
+              <i class="fa-xl fa-solid fa-{{opcion.logo}} g-icon me-1"></i>
+            </span>
+            <h4>{{opcion.nombre}}</h4>
+            <p>{{opcion.descripcion}}</p>
+          </div>
+    
+          <div class="card-footer">
+            <button [routerLink]="opcion.enlace" type="button" class="btn btn-outline-success">
+              Abrir
+              <i class="ms-2 fa-solid fa-arrow-right-long"></i>
+            </button>
+          </div>
         </div>
+    
       </div>
-
     </div>
+  </div>
 </div>
