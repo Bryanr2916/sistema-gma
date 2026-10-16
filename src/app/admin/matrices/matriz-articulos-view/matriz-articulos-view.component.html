@@ -39,7 +39,10 @@
             {{req.value}}
           </label>
         </div>
-        <button *ngIf="usuario.tipo !== tiposUsuario.lector" (click)="actualizarReqs()" type="button" class="btn btn-primary my-3">Actualizar</button>
+        <p *ngIf="guardando" class="text-primary mb-0 mt-0 ms-3">
+          Guardando...
+          <span class="spinner-border spinner-border-sm ms-1 text-primary" role="status"></span>
+        </p>
       </div>
     </div>
     <div class="card-footer" *ngIf="usuario.tipo !== tiposUsuario.lector">

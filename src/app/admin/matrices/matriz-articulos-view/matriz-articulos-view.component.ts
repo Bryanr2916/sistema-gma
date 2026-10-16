@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { debounceTime, Subject } from 'rxjs';
 import { ESTADOS_ARTICULO, TIPOS_USUARIO } from 'src/app/core/services/constantes';
 import { MatricesService } from 'src/app/core/services/matrices.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
@@ -12,6 +13,7 @@ import { UsuarioService } from 'src/app/core/services/usuario.service';
   styleUrls: ['./matriz-articulos-view.component.scss']
 })
 export class MatrizArticulosViewComponent implements OnInit {
+  private cambios$ = new Subject<void>();
 
   @Input() articulo: any;
   @Input() normativa: any;
@@ -28,6 +30,7 @@ export class MatrizArticulosViewComponent implements OnInit {
   tab = {value: "general", label: "General"};
   usuario: any = {};
   cargando = true;
+  guardando = false;
   reqs: any[] = [];
 
   constructor(
@@ -53,6 +56,12 @@ export class MatrizArticulosViewComponent implements OnInit {
     this.reqs = this.articulo.requerimientos
     ? this.articulo.requerimientos.filter((req: any) => this.normativa.requerimientos.map((req: any) => req.id).includes(req))
     : [];
+
+    this.cambios$
+      .pipe(debounceTime(2300))
+      .subscribe(() => {
+        this.guardarAuto();
+      });
   }
 
   changeTab(activeTab: any) {
@@ -99,11 +108,14 @@ export class MatrizArticulosViewComponent implements OnInit {
     } else {
       this.reqs = this.reqs.filter(req => req !== id);
     }
+
+    this.cambios$.next();
+    this.guardando = true;
   }
 
-  actualizarReqs() {
+  guardarAuto() {
     this.matricesService.editarArticulo({...this.articulo, requerimientos: this.reqs}).then(_ => {
-      this.mensajesService.mostrarMensaje("success", "Requerimientos Actualizados", undefined);
+      this.guardando = false;
     });
   }
 }
