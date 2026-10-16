@@ -22,7 +22,9 @@
       </div>
       <div *ngIf="tab.value !== 'general' && tab.value !== 'requerimientos'" class="contenedor-articulos my-3">
         <p><strong>{{tab.label}}:</strong></p>
-        <p>{{articulo[tab.value]}}</p>
+        <span class="contenedor-texto">
+          {{articulo[tab.value]}}
+        </span>
       </div>
       <div *ngIf="tab.value === 'requerimientos'" class="contenedor-articulos my-3">
         <p class="lead">{{ cantidadReq() }} / {{ normativa.requerimientos.length }}</p>
