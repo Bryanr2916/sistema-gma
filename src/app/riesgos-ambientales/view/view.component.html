@@ -20,6 +20,11 @@
                         </li>
                     </ol>
                 </nav>
+
+                <p *ngIf="guardando" class="text-primary mb-0 mt-0 ms-3">
+                    Guardando...
+                    <span class="spinner-border spinner-border-sm ms-1 text-primary" role="status"></span>
+                </p>
             </div>
             <hr class="gma-hr border border-success border-1 opacity-75">
         </div>
