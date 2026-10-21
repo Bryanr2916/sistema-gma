@@ -21,6 +21,7 @@ import {
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { AuditoriaService } from './auditoria.service';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +30,17 @@ export class EmpresasService {
 
   path = environment.useProductionData ? "empresas" : "empresas-dev";
 
-  constructor(private storage: Storage, private firestore: Firestore) { }
+  constructor(private storage: Storage, private firestore: Firestore, private auditoria: AuditoriaService) { }
+
+  private async documentoPrevio(id: any): Promise<any | null> {
+    try {
+      const snapshot = await getDoc(doc(this.firestore, `${this.path}/${id}`));
+      return snapshot.exists() ? snapshot.data() : null;
+    } catch (e) {
+      console.warn('No se pudo leer el documento previo para auditoría', e);
+      return null;
+    }
+  }
 
   private constraintsListado() {
     return [orderBy('fechaCreacion', 'desc')];
@@ -149,9 +160,19 @@ export class EmpresasService {
     return { items, ultimoDoc };
   }
 
-  crearEmpresa(empresa: any) {
+  async crearEmpresa(empresa: any) {
     const empresaRef = collection(this.firestore, this.path);
-    return addDoc(empresaRef, {...empresa, fechaCreacion: serverTimestamp()});
+    const referencia = await addDoc(empresaRef, {...empresa, fechaCreacion: serverTimestamp()});
+
+    await this.auditoria.registrar({
+      coleccion: this.path,
+      accion: 'crear',
+      documentoId: referencia.id,
+      empresaId: empresa.empresaId ?? null,
+      cambios: this.auditoria.calcularCambios({}, empresa)
+    });
+
+    return referencia;
   }
 
   obtenerEmpresas() {
@@ -202,13 +223,31 @@ export class EmpresasService {
     return deleteObject(archivoRef);
   }
 
-  editarEmpresa(empresa: any) {
+  async editarEmpresa(empresa: any) {
+    const previa = await this.documentoPrevio(empresa.id);
     const empresaRef = doc(this.firestore, `${this.path}/${empresa.id}`);
-    return updateDoc(empresaRef, {...empresa, fechaEdicion: serverTimestamp()});
+    await updateDoc(empresaRef, {...empresa, fechaEdicion: serverTimestamp()});
+
+    await this.auditoria.registrar({
+      coleccion: this.path,
+      accion: 'modificar',
+      documentoId: empresa.id,
+      empresaId: empresa.empresaId ?? null,
+      cambios: this.auditoria.calcularCambios(previa, empresa)
+    });
   }
 
-  borrarEmpresa(id: any) {
+  async borrarEmpresa(id: any) {
+    const previa = await this.documentoPrevio(id);
     const empresaRef = doc(this.firestore, `${this.path}/${id}`);
-    return deleteDoc(empresaRef);
+    await deleteDoc(empresaRef);
+
+    await this.auditoria.registrar({
+      coleccion: this.path,
+      accion: 'eliminar',
+      documentoId: id,
+      empresaId: previa?.empresaId ?? null,
+      datosPrevios: previa ?? null
+    });
   }
 }
