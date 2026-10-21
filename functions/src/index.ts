@@ -10,6 +10,8 @@ const db = admin.firestore();
 const auth = admin.auth();
 const bucket = admin.storage().bucket();
 
+const DIAS_RETENCION_AUDITORIA = 180;
+
 export const matrizBorrarArticulos = onDocumentDeleted("matrices/{matrizId}", async (event) => {
     const { matrizId } = event.params;
     logger.info(`Matriz eliminada: ${matrizId}, borrando artículos relacionados...`);
@@ -444,4 +446,66 @@ export const verificarPermisosVencimientoDev = onSchedule({
 }, async () => {
   logger.info("[dev] Iniciando verificación de vencimiento de permisos...");
   await verificarYEnviarNotificaciones("permisos-dev", "dev");
+});
+
+async function limpiarAuditoriaVieja(collectionName: string, suffijo: string): Promise<void> {
+  const fechaLimite = admin.firestore.Timestamp.fromDate(
+    new Date(Date.now() - DIAS_RETENCION_AUDITORIA * 24 * 60 * 60 * 1000)
+  );
+
+  let totalBorrados = 0;
+
+  try {
+    while (true) {
+      const snap = await db
+        .collection(collectionName)
+        .where("fecha", "<", fechaLimite)
+        .orderBy("fecha")
+        .limit(400)
+        .get();
+
+      if (snap.empty) break;
+
+      const batch = db.batch();
+      snap.docs.forEach((doc) => batch.delete(doc.ref));
+      await batch.commit();
+
+      totalBorrados += snap.size;
+      logger.info(`[${suffijo}] Lote borrado: ${snap.size} documentos de ${collectionName}`);
+    }
+
+    const huerfanos = await db
+      .collection(collectionName)
+      .where("fecha", "==", null)
+      .limit(400)
+      .get();
+
+    if (!huerfanos.empty) {
+      const batch = db.batch();
+      huerfanos.docs.forEach((doc) => batch.delete(doc.ref));
+      await batch.commit();
+      totalBorrados += huerfanos.size;
+      logger.info(`[${suffijo}] Borrados ${huerfanos.size} documentos sin fecha en ${collectionName}`);
+    }
+
+    logger.info(`[${suffijo}] Limpieza de ${collectionName} completada. Total borrados: ${totalBorrados}`);
+  } catch (error: any) {
+    logger.error(`[${suffijo}] Error limpiando ${collectionName}:`, error);
+  }
+}
+
+export const limpiarAuditoria = onSchedule({
+  schedule: "0 3 * * 0",
+  timeZone: "America/Caracas",
+}, async () => {
+  logger.info("[prod] Iniciando limpieza de auditoría vieja...");
+  await limpiarAuditoriaVieja("auditoria", "prod");
+});
+
+export const limpiarAuditoriaDev = onSchedule({
+  schedule: "0 3 * * 0",
+  timeZone: "America/Caracas",
+}, async () => {
+  logger.info("[dev] Iniciando limpieza de auditoría vieja...");
+  await limpiarAuditoriaVieja("auditoria-dev", "dev");
 });
