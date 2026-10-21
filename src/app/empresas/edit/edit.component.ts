@@ -57,9 +57,8 @@ export class EditComponent implements OnInit {
     this.titleService.setTitle("GMA Sistema - Empresas");
     this.route.params.subscribe( params => {
       this.empresa.id = params["id"];
+      this.obtenerEmpresa();
     });
-
-    this.obtenerEmpresa();
   }
 
   definirFormulario() {

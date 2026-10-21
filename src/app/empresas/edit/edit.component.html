@@ -88,10 +88,6 @@
               </label>
               <div class="col-sm-8">
                 <app-multi-select [opciones]="paises" [controlName]="'paises'" [formulario]="formulario"></app-multi-select>
-                <!--<select formControlName="pais" id="inputPais" class="form-select border border-dark">
-                          <option value="select-valor-vacio" selected>Seleccione el país</option>
-                          <option value={{pais}} *ngFor="let pais of paises; index as i">{{pais}}</option>
-                        </select>-->
                 <div class="d-flex">
                   <small class="text-danger" *ngIf="errorEnControlador('paises', 'required')">Paises requeridos</small>
                   <small class="text-danger" *ngIf="errorEnControlador('paises', 'emptySelect')">Paises requeridos</small>

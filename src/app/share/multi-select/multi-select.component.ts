@@ -29,11 +29,17 @@ export class MultiSelectComponent implements OnInit {
 
   ngOnInit(): void {
     this.opcionesFiltradas = this.opciones;
-    this.formulario?.controls[this.controlName].setErrors({ emptySelect: true});
-    const control = this.formulario.controls[this.controlName];
+    const control = this.formulario?.controls[this.controlName];
+    const valorActual = control?.value;
+
+    this.seleccionActual = Array.isArray(valorActual) ? valorActual : [];
+
+    if (this.seleccionActual.length === 0) {
+      control?.setErrors({ emptySelect: true });
+    }
 
     control?.valueChanges.subscribe(value => {
-      this.seleccionActual = value;
+      this.seleccionActual = Array.isArray(value) ? value : [];
     });
   }
 
