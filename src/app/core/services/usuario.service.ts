@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Auth,createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, user, sendPasswordResetEmail, User } from '@angular/fire/auth';
 import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, query, where, orderBy, getDocs, serverTimestamp } from '@angular/fire/firestore';
 import { EncriptadorService } from './encriptador.service';
+import { AuditoriaService } from './auditoria.service';
 import { BehaviorSubject, map, Observable, of, switchMap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -14,7 +15,7 @@ export class UsuarioService {
   // todo: usar usuarioCache para optimizar llamados a la db
   private usuarioCache$ = new BehaviorSubject<any | null>(null); // Cache user data
 
-  constructor(private auth: Auth, private firestore: Firestore, private encriptador: EncriptadorService) { }
+  constructor(private auth: Auth, private firestore: Firestore, private encriptador: EncriptadorService, private auditoria: AuditoriaService) { }
 
   // el usuario no existe en auth pero sí ha sido agregado a la base de datos
     async registrar(usuario: any) {
@@ -81,9 +82,9 @@ export class UsuarioService {
     }));
   }
 
-  crearUsuario( usuario:any ) {
+  async crearUsuario( usuario:any ) {
     const usuarioRef = collection(this.firestore, this.path);
-    return addDoc(usuarioRef,
+    const referencia = await addDoc(usuarioRef,
       {
         correo: usuario.correo,
         nombre: usuario.nombre,
@@ -94,6 +95,16 @@ export class UsuarioService {
         fechaCreacion: serverTimestamp()
       }
     );
+
+    await this.auditoria.registrar({
+      coleccion: this.path,
+      accion: 'crear',
+      documentoId: referencia.id,
+      empresaId: usuario.empresaId ?? null,
+      cambios: this.auditoria.calcularCambios({}, usuario, ['contrasena'])
+    });
+
+    return referencia;
   }
 
   obtenerUsuarios() {
@@ -126,18 +137,36 @@ export class UsuarioService {
     }
   }
 
-  editarUsuario(usuario: any) {
+  async editarUsuario(usuario: any) {
+    const previa = await this.auditoria.documentoPrevio(this.path, usuario.id);
     const usuarioref = doc(this.firestore, `${this.path}/${usuario.id}`);
-    return updateDoc(usuarioref, {...usuario, fechaEdicion: serverTimestamp()});
+    await updateDoc(usuarioref, {...usuario, fechaEdicion: serverTimestamp()});
+
+    await this.auditoria.registrar({
+      coleccion: this.path,
+      accion: 'modificar',
+      documentoId: usuario.id,
+      empresaId: usuario.empresaId ?? previa?.empresaId ?? null,
+      cambios: this.auditoria.calcularCambios(previa, usuario, ['contrasena'])
+    });
   }
 
   reestablecerContrasena(correo: string) {
     return sendPasswordResetEmail(this.auth, correo);
   }
 
-  borrarUsuario(id: any) {
+  async borrarUsuario(id: any) {
+    const previa = await this.auditoria.documentoPrevio(this.path, id);
     const usuarioRef = doc(this.firestore, `${this.path}/${id}`);
-    return deleteDoc(usuarioRef);
+    await deleteDoc(usuarioRef);
+
+    await this.auditoria.registrar({
+      coleccion: this.path,
+      accion: 'eliminar',
+      documentoId: id,
+      empresaId: previa?.empresaId ?? null,
+      datosPrevios: previa ?? null
+    });
   }
 
   // tipos de usuario para un select

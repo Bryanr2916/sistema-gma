@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Auth, user } from '@angular/fire/auth';
-import { Firestore, addDoc, collection, serverTimestamp } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, doc, getDoc, getDocs, query, serverTimestamp, where } from '@angular/fire/firestore';
 import { firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { UsuarioService } from './usuario.service';
 
 export type TipoAccionAuditoria = 'crear' | 'modificar' | 'eliminar';
 
@@ -30,38 +29,61 @@ const CAMPOS_EXCLUIDOS = ['id', 'fechaCreacion', 'fechaEdicion'];
 export class AuditoriaService {
 
   path = environment.useProductionData ? "auditoria" : "auditoria-dev";
+  private pathUsuarios = environment.useProductionData ? "usuarios" : "usuarios-dev";
 
-  constructor(private firestore: Firestore, private auth: Auth, private usuarioService: UsuarioService) { }
+  constructor(private firestore: Firestore, private auth: Auth) { }
 
   /** Usuario que disparó la operación (auth + datos de Firestore), con fallback seguro. */
   private async usuarioActual(): Promise<any> {
-    try {
-      const usuario = await firstValueFrom(this.usuarioService.usuarioActual());
-      if (usuario) {
-        const { uid, correo, nombre, tipo, empresaId } = usuario;
-        return { uid: uid ?? null, correo: correo ?? null, nombre: nombre ?? null, tipo: tipo ?? null, empresaId: empresaId ?? null };
-      }
-    } catch (e) {
-      console.warn('AuditoriaService: no se pudo obtener el usuario de Firestore', e);
+    const authUser = await firstValueFrom(user(this.auth));
+
+    if (!authUser) {
+      return { uid: 'desconocido', correo: null, nombre: null, tipo: null, empresaId: null };
     }
 
-    const authUser = await firstValueFrom(user(this.auth));
-    return {
-      uid: authUser?.uid ?? 'desconocido',
-      correo: authUser?.email ?? null,
-      nombre: null,
-      tipo: null,
-      empresaId: null
-    };
+    try {
+      const usuariosRef = collection(this.firestore, this.pathUsuarios);
+      const snap = await getDocs(query(usuariosRef, where('uid', '==', authUser.uid)));
+      const dbUser = snap.docs[0]?.data();
+
+      return {
+        uid: authUser.uid,
+        correo: dbUser?.['correo'] ?? authUser.email ?? null,
+        nombre: dbUser?.['nombre'] ?? null,
+        tipo: dbUser?.['tipo'] ?? null,
+        empresaId: dbUser?.['empresaId'] ?? null
+      };
+    } catch (e) {
+      console.warn('AuditoriaService: no se pudo obtener el usuario de Firestore', e);
+      return {
+        uid: authUser.uid,
+        correo: authUser.email ?? null,
+        nombre: null,
+        tipo: null,
+        empresaId: null
+      };
+    }
   }
 
-  /** Compara campo a campo, ignorando ids y timestamps. */
-  calcularCambios(antes: any, despues: any): CambioAuditoria[] {
+  /** Estado previo de un documento (para diff y snapshots de eliminación). */
+  async documentoPrevio(path: string, id: any): Promise<any | null> {
+    try {
+      const snapshot = await getDoc(doc(this.firestore, `${path}/${id}`));
+      return snapshot.exists() ? snapshot.data() : null;
+    } catch (e) {
+      console.warn('AuditoriaService: no se pudo leer el documento previo', e);
+      return null;
+    }
+  }
+
+  /** Compara campo a campo, ignorando ids, timestamps y campos sensibles. */
+  calcularCambios(antes: any, despues: any, camposExcluidos: string[] = []): CambioAuditoria[] {
+    const excluidos = [...CAMPOS_EXCLUIDOS, ...camposExcluidos];
     const cambios: CambioAuditoria[] = [];
     const claves = new Set([...Object.keys(antes ?? {}), ...Object.keys(despues ?? {})]);
 
     claves.forEach((campo) => {
-      if (CAMPOS_EXCLUIDOS.includes(campo)) return;
+      if (excluidos.includes(campo)) return;
 
       const valorAntes = antes?.[campo];
       const valorDespues = despues?.[campo];

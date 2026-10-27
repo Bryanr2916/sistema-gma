@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, serverTimestamp, query, where, getDocs } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { AuditoriaService } from './auditoria.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class RiesgosService {
 
     path = environment.useProductionData ? "riesgos" : "riesgos-dev";
 
-    constructor(private firestore: Firestore) { }
+    constructor(private firestore: Firestore, private auditoria: AuditoriaService) { }
 
     filaRiesgo() {
         const riesgo = {
@@ -36,9 +37,19 @@ export class RiesgosService {
         return cl;
     }
 
-    crearRiesgo(riesgo: any) {
+    async crearRiesgo(riesgo: any) {
         const riesgoRef = collection(this.firestore, this.path);
-        return addDoc(riesgoRef, { ...riesgo, fechaCreacion: serverTimestamp() });
+        const referencia = await addDoc(riesgoRef, { ...riesgo, fechaCreacion: serverTimestamp() });
+
+        await this.auditoria.registrar({
+            coleccion: this.path,
+            accion: 'crear',
+            documentoId: referencia.id,
+            empresaId: riesgo.empresaId ?? null,
+            cambios: this.auditoria.calcularCambios({}, riesgo)
+        });
+
+        return referencia;
     }
 
     obtenerRiesgo(id: any) {
@@ -53,9 +64,18 @@ export class RiesgosService {
         return getDocs(riesgoEmpresa);
     }
 
-    editarRiesgo(riesgo: any) {
+    async editarRiesgo(riesgo: any) {
+        const previa = await this.auditoria.documentoPrevio(this.path, riesgo.id);
         const riesgoRef = doc(this.firestore, `${this.path}/${riesgo.id}`);
-        return updateDoc(riesgoRef, { ...riesgo, fechaEdicion: serverTimestamp() });
+        await updateDoc(riesgoRef, { ...riesgo, fechaEdicion: serverTimestamp() });
+
+        await this.auditoria.registrar({
+            coleccion: this.path,
+            accion: 'modificar',
+            documentoId: riesgo.id,
+            empresaId: riesgo.empresaId ?? previa?.empresaId ?? null,
+            cambios: this.auditoria.calcularCambios(previa, riesgo)
+        });
     }
 
     obtenerTodosLosRiesgos(): Observable<any[]> {
@@ -63,8 +83,17 @@ export class RiesgosService {
         return collectionData(riesgoRef, { idField: 'id' }) as Observable<any[]>;
     }
 
-    borrarRiesgo(id: string) {
+    async borrarRiesgo(id: string) {
+        const previa = await this.auditoria.documentoPrevio(this.path, id);
         const riesgoRef = doc(this.firestore, `${this.path}/${id}`);
-        return deleteDoc(riesgoRef);
+        await deleteDoc(riesgoRef);
+
+        await this.auditoria.registrar({
+            coleccion: this.path,
+            accion: 'eliminar',
+            documentoId: id,
+            empresaId: previa?.empresaId ?? null,
+            datosPrevios: previa ?? null
+        });
     }
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, query, orderBy, serverTimestamp } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { AuditoriaService } from './auditoria.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,11 +10,21 @@ import { environment } from 'src/environments/environment';
 export class TiposNormativasService {
 
   path = environment.useProductionData ? "tipos-normativas" : "tipos-normativas-dev";
-  constructor(private firestore: Firestore) { }
+  constructor(private firestore: Firestore, private auditoria: AuditoriaService) { }
 
-  crearTipo( tipoNormativas:any ) {
+  async crearTipo( tipoNormativas:any ) {
     const tipoRef = collection(this.firestore, this.path);
-    return addDoc(tipoRef, {...tipoNormativas, fechaCreacion: serverTimestamp()});
+    const referencia = await addDoc(tipoRef, {...tipoNormativas, fechaCreacion: serverTimestamp()});
+
+    await this.auditoria.registrar({
+      coleccion: this.path,
+      accion: 'crear',
+      documentoId: referencia.id,
+      empresaId: tipoNormativas.empresaId ?? null,
+      cambios: this.auditoria.calcularCambios({}, tipoNormativas)
+    });
+
+    return referencia;
   }
 
   obtenerTipos() {
@@ -27,13 +38,31 @@ export class TiposNormativasService {
     return getDoc(tipoRef);
   }
 
-  editarTipo(area: any) {
+  async editarTipo(area: any) {
+    const previa = await this.auditoria.documentoPrevio(this.path, area.id);
     const tipoRef = doc(this.firestore, `${this.path}/${area.id}`);
-    return updateDoc(tipoRef, {...area, fechaEdicion: serverTimestamp()});
+    await updateDoc(tipoRef, {...area, fechaEdicion: serverTimestamp()});
+
+    await this.auditoria.registrar({
+      coleccion: this.path,
+      accion: 'modificar',
+      documentoId: area.id,
+      empresaId: area.empresaId ?? previa?.empresaId ?? null,
+      cambios: this.auditoria.calcularCambios(previa, area)
+    });
   }
 
-  borrarTipo(id: any) {
+  async borrarTipo(id: any) {
+    const previa = await this.auditoria.documentoPrevio(this.path, id);
     const tipoRef = doc(this.firestore, `${this.path}/${id}`);
-    return deleteDoc(tipoRef);
+    await deleteDoc(tipoRef);
+
+    await this.auditoria.registrar({
+      coleccion: this.path,
+      accion: 'eliminar',
+      documentoId: id,
+      empresaId: previa?.empresaId ?? null,
+      datosPrevios: previa ?? null
+    });
   }
 }

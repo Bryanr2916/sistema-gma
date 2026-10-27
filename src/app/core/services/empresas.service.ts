@@ -32,16 +32,6 @@ export class EmpresasService {
 
   constructor(private storage: Storage, private firestore: Firestore, private auditoria: AuditoriaService) { }
 
-  private async documentoPrevio(id: any): Promise<any | null> {
-    try {
-      const snapshot = await getDoc(doc(this.firestore, `${this.path}/${id}`));
-      return snapshot.exists() ? snapshot.data() : null;
-    } catch (e) {
-      console.warn('No se pudo leer el documento previo para auditoría', e);
-      return null;
-    }
-  }
-
   private constraintsListado() {
     return [orderBy('fechaCreacion', 'desc')];
   }
@@ -224,7 +214,7 @@ export class EmpresasService {
   }
 
   async editarEmpresa(empresa: any) {
-    const previa = await this.documentoPrevio(empresa.id);
+    const previa = await this.auditoria.documentoPrevio(this.path, empresa.id);
     const empresaRef = doc(this.firestore, `${this.path}/${empresa.id}`);
     await updateDoc(empresaRef, {...empresa, fechaEdicion: serverTimestamp()});
 
@@ -238,7 +228,7 @@ export class EmpresasService {
   }
 
   async borrarEmpresa(id: any) {
-    const previa = await this.documentoPrevio(id);
+    const previa = await this.auditoria.documentoPrevio(this.path, id);
     const empresaRef = doc(this.firestore, `${this.path}/${id}`);
     await deleteDoc(empresaRef);
 

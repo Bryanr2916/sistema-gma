@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, serverTimestamp, query, orderBy } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { AuditoriaService } from './auditoria.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,11 +10,21 @@ import { environment } from 'src/environments/environment';
 export class AreaLegalService {
 
   path = environment.useProductionData ? "area-legal" : "area-legal-dev";
-  constructor(private firestore: Firestore) { }
+  constructor(private firestore: Firestore, private auditoria: AuditoriaService) { }
 
-  crearArea( areaLegal:any ) {
+  async crearArea( areaLegal:any ) {
     const areaRef = collection(this.firestore, this.path);
-    return addDoc(areaRef, {...areaLegal, fechaCreacion: serverTimestamp()});
+    const referencia = await addDoc(areaRef, {...areaLegal, fechaCreacion: serverTimestamp()});
+
+    await this.auditoria.registrar({
+      coleccion: this.path,
+      accion: 'crear',
+      documentoId: referencia.id,
+      empresaId: areaLegal.empresaId ?? null,
+      cambios: this.auditoria.calcularCambios({}, areaLegal)
+    });
+
+    return referencia;
   }
 
   obtenerAreas() {
@@ -29,13 +40,31 @@ export class AreaLegalService {
     return getDoc(areaRef);
   }
 
-  editarArea(area: any) {
+  async editarArea(area: any) {
+    const previa = await this.auditoria.documentoPrevio(this.path, area.id);
     const areaRef = doc(this.firestore, `${this.path}/${area.id}`);
-    return updateDoc(areaRef, {...area, fechaEdicion: serverTimestamp()});
+    await updateDoc(areaRef, {...area, fechaEdicion: serverTimestamp()});
+
+    await this.auditoria.registrar({
+      coleccion: this.path,
+      accion: 'modificar',
+      documentoId: area.id,
+      empresaId: area.empresaId ?? null,
+      cambios: this.auditoria.calcularCambios(previa, area)
+    });
   }
 
-  borrarArea(id: any) {
+  async borrarArea(id: any) {
+    const previa = await this.auditoria.documentoPrevio(this.path, id);
     const areaRef = doc(this.firestore, `${this.path}/${id}`);
-    return deleteDoc(areaRef);
+    await deleteDoc(areaRef);
+
+    await this.auditoria.registrar({
+      coleccion: this.path,
+      accion: 'eliminar',
+      documentoId: id,
+      empresaId: previa?.empresaId ?? null,
+      datosPrevios: previa ?? null
+    });
   }
 }

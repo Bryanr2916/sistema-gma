@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, getDocs, query, where, orderBy, serverTimestamp } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { AuditoriaService } from './auditoria.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,13 +10,23 @@ import { environment } from 'src/environments/environment';
 export class MatricesService {
   path = environment.useProductionData ? "matrices" : "matrices-dev";
   articulosPath = environment.useProductionData ? "articulos" : "articulos-dev";
-  constructor(private firestore: Firestore) { }
+  constructor(private firestore: Firestore, private auditoria: AuditoriaService) { }
 
   // matriz
 
-  crearMatriz( matriz:any ) {
+  async crearMatriz( matriz:any ) {
     const matrizRef = collection(this.firestore, this.path);
-    return addDoc(matrizRef, {...matriz, fechaCreacion: serverTimestamp()});
+    const referencia = await addDoc(matrizRef, {...matriz, fechaCreacion: serverTimestamp()});
+
+    await this.auditoria.registrar({
+      coleccion: this.path,
+      accion: 'crear',
+      documentoId: referencia.id,
+      empresaId: matriz.empresa ?? null,
+      cambios: this.auditoria.calcularCambios({}, matriz)
+    });
+
+    return referencia;
   }
 
   obtenerMatrices() {
@@ -29,14 +40,32 @@ export class MatricesService {
     return getDoc(matrizRef);
   }
 
-  editarMatriz(matriz: any) {
+  async editarMatriz(matriz: any) {
+    const previa = await this.auditoria.documentoPrevio(this.path, matriz.id);
     const matrizRef = doc(this.firestore, `${this.path}/${matriz.id}`);
-    return updateDoc(matrizRef, {...matriz, fechaEdicion: serverTimestamp()});
+    await updateDoc(matrizRef, {...matriz, fechaEdicion: serverTimestamp()});
+
+    await this.auditoria.registrar({
+      coleccion: this.path,
+      accion: 'modificar',
+      documentoId: matriz.id,
+      empresaId: matriz.empresa ?? previa?.empresa ?? null,
+      cambios: this.auditoria.calcularCambios(previa, matriz)
+    });
   }
 
-  borrarMatriz(id: any) {
+  async borrarMatriz(id: any) {
+    const previa = await this.auditoria.documentoPrevio(this.path, id);
     const matrizRef = doc(this.firestore, `${this.path}/${id}`);
-    return deleteDoc(matrizRef);
+    await deleteDoc(matrizRef);
+
+    await this.auditoria.registrar({
+      coleccion: this.path,
+      accion: 'eliminar',
+      documentoId: id,
+      empresaId: previa?.empresa ?? null,
+      datosPrevios: previa ?? null
+    });
   }
 
   // articulos
@@ -46,15 +75,33 @@ export class MatricesService {
     return getDoc(articuloRef);
   }
 
-  editarArticulo(articulo: any) {
+  async editarArticulo(articulo: any) {
+    const previa = await this.auditoria.documentoPrevio(this.articulosPath, articulo.id);
     const articuloRef = doc(this.firestore, `${this.articulosPath}/${articulo.id}`);
-    return updateDoc(articuloRef, {...articulo, fechaEdicion: serverTimestamp()});
+    await updateDoc(articuloRef, {...articulo, fechaEdicion: serverTimestamp()});
+
+    await this.auditoria.registrar({
+      coleccion: this.articulosPath,
+      accion: 'modificar',
+      documentoId: articulo.id,
+      empresaId: articulo.empresaId ?? previa?.empresaId ?? null,
+      cambios: this.auditoria.calcularCambios(previa, articulo)
+    });
   }
 
-  agregarArticulosAplicables(articulosAplicables: any) {
+  async agregarArticulosAplicables(articulosAplicables: any) {
     const articulosAplicablesRef = collection(this.firestore, this.articulosPath);
+    const referencia = await addDoc(articulosAplicablesRef, {...articulosAplicables, fechaCreacion: serverTimestamp()});
 
-    return addDoc(articulosAplicablesRef, {...articulosAplicables, fechaCreacion: serverTimestamp()});
+    await this.auditoria.registrar({
+      coleccion: this.articulosPath,
+      accion: 'crear',
+      documentoId: referencia.id,
+      empresaId: articulosAplicables.empresaId ?? null,
+      cambios: this.auditoria.calcularCambios({}, articulosAplicables)
+    });
+
+    return referencia;
   }
 
   obtenerArticulosAplicables(matrizId?: string) {
@@ -69,8 +116,17 @@ export class MatricesService {
     }
   }
 
-  borrarArticulo(id: any) {
+  async borrarArticulo(id: any) {
+    const previa = await this.auditoria.documentoPrevio(this.articulosPath, id);
     const articuloRef = doc(this.firestore, `${this.articulosPath}/${id}`);
-    return deleteDoc(articuloRef);
+    await deleteDoc(articuloRef);
+
+    await this.auditoria.registrar({
+      coleccion: this.articulosPath,
+      accion: 'eliminar',
+      documentoId: id,
+      empresaId: previa?.empresaId ?? null,
+      datosPrevios: previa ?? null
+    });
   }
 }

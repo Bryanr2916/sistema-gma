@@ -3,6 +3,7 @@ import { addDoc, collection, collectionData, deleteDoc, doc, Firestore, getDoc, 
 import { Storage, deleteObject, getDownloadURL, ref, uploadBytesResumable } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { AuditoriaService } from './auditoria.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +12,21 @@ export class PermisosService {
 
   path = environment.useProductionData ? "permisos" : "permisos-dev";
 
-  constructor(private storage: Storage, private firestore: Firestore) { }
+  constructor(private storage: Storage, private firestore: Firestore, private auditoria: AuditoriaService) { }
 
-  crearPermiso(permiso: any) {
+  async crearPermiso(permiso: any) {
     const permisoRef = collection(this.firestore, this.path);
-    return addDoc(permisoRef, {...permiso, fechaCreacion: serverTimestamp()});
+    const referencia = await addDoc(permisoRef, {...permiso, fechaCreacion: serverTimestamp()});
+
+    await this.auditoria.registrar({
+      coleccion: this.path,
+      accion: 'crear',
+      documentoId: referencia.id,
+      empresaId: permiso.empresaId ?? null,
+      cambios: this.auditoria.calcularCambios({}, permiso)
+    });
+
+    return referencia;
   }
 
   obtenerPermisos(
@@ -107,13 +118,31 @@ export class PermisosService {
     return deleteObject(archivoRef);
   }
   
-  editarPermiso(permiso: any) {
+  async editarPermiso(permiso: any) {
+    const previa = await this.auditoria.documentoPrevio(this.path, permiso.id);
     const permisoRef = doc(this.firestore, `${this.path}/${permiso.id}`);
-    return updateDoc(permisoRef, {...permiso, fechaEdicion: serverTimestamp()});
+    await updateDoc(permisoRef, {...permiso, fechaEdicion: serverTimestamp()});
+
+    await this.auditoria.registrar({
+      coleccion: this.path,
+      accion: 'modificar',
+      documentoId: permiso.id,
+      empresaId: permiso.empresaId ?? previa?.empresaId ?? null,
+      cambios: this.auditoria.calcularCambios(previa, permiso)
+    });
   }
-  
-  borrarPermiso(id: any) {
+
+  async borrarPermiso(id: any) {
+    const previa = await this.auditoria.documentoPrevio(this.path, id);
     const permisoRef = doc(this.firestore, `${this.path}/${id}`);
-    return deleteDoc(permisoRef);
+    await deleteDoc(permisoRef);
+
+    await this.auditoria.registrar({
+      coleccion: this.path,
+      accion: 'eliminar',
+      documentoId: id,
+      empresaId: previa?.empresaId ?? null,
+      datosPrevios: previa ?? null
+    });
   }
 }

@@ -21,6 +21,7 @@ import {
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { AuditoriaService } from './auditoria.service';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +30,7 @@ export class NormativaService {
 
   path = environment.useProductionData ? "normativas" : "normativas-dev";
 
-  constructor(private storage: Storage, private firestore: Firestore) { }
+  constructor(private storage: Storage, private firestore: Firestore, private auditoria: AuditoriaService) { }
 
   private constraintsListado() {
     return [orderBy('fechaCreacion', 'desc')];
@@ -39,9 +40,19 @@ export class NormativaService {
     return { id: d.id, ...d.data() };
   }
 
-  crearNormativa(normativa: any) {
+  async crearNormativa(normativa: any) {
     const normativaRef = collection(this.firestore, this.path);
-    return addDoc(normativaRef, {...normativa, fechaCreacion: serverTimestamp()});
+    const referencia = await addDoc(normativaRef, {...normativa, fechaCreacion: serverTimestamp()});
+
+    await this.auditoria.registrar({
+      coleccion: this.path,
+      accion: 'crear',
+      documentoId: referencia.id,
+      empresaId: normativa.empresaId ?? null,
+      cambios: this.auditoria.calcularCambios({}, normativa)
+    });
+
+    return referencia;
   }
 
   obtenerNormativas(cantidad: number = Infinity) {
@@ -170,14 +181,32 @@ export class NormativaService {
     return getDoc(normativaRef);
   }
 
-  editarNormativa(normativa: any) {
+  async editarNormativa(normativa: any) {
+    const previa = await this.auditoria.documentoPrevio(this.path, normativa.id);
     const normativaRef = doc(this.firestore, `${this.path}/${normativa.id}`);
-    return updateDoc(normativaRef, {...normativa, fechaEdicion: serverTimestamp()});
+    await updateDoc(normativaRef, {...normativa, fechaEdicion: serverTimestamp()});
+
+    await this.auditoria.registrar({
+      coleccion: this.path,
+      accion: 'modificar',
+      documentoId: normativa.id,
+      empresaId: normativa.empresaId ?? previa?.empresaId ?? null,
+      cambios: this.auditoria.calcularCambios(previa, normativa)
+    });
   }
 
-  borrarNormativa(id: any) {
+  async borrarNormativa(id: any) {
+    const previa = await this.auditoria.documentoPrevio(this.path, id);
     const normativaRef = doc(this.firestore, `${this.path}/${id}`);
-    return deleteDoc(normativaRef);
+    await deleteDoc(normativaRef);
+
+    await this.auditoria.registrar({
+      coleccion: this.path,
+      accion: 'eliminar',
+      documentoId: id,
+      empresaId: previa?.empresaId ?? null,
+      datosPrevios: previa ?? null
+    });
   }
 
   // para manejar el progress en el componente usado
