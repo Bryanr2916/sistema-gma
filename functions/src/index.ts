@@ -306,10 +306,30 @@ export const empresaActualizarLogoDev = onDocumentUpdated("empresas-dev/{empresa
   }
 });
 
-export const sendEmailViaBrevo = onCall({ secrets: ["BREVO_API_KEY"] }, async (request) => {
+const SENDER_NAME = "GMA Sistema";
+
+async function enviarEmailTransaccional(
+  apiInstance: BrevoClient,
+  senderEmail: string,
+  params: { subject: string; htmlContent: string; to: { email: string; name?: string }[] }
+) {
+  await apiInstance.transactionalEmails.sendTransacEmail({
+    subject: params.subject,
+    htmlContent: params.htmlContent,
+    sender: { name: SENDER_NAME, email: senderEmail },
+    to: params.to
+  });
+}
+
+export const sendEmailViaBrevo = onCall({ secrets: ["BREVO_API_KEY", "BREVO_SENDER_EMAIL"] }, async (request) => {
   const apiKey = process.env.BREVO_API_KEY;
   if (!apiKey) {
     throw new HttpsError("failed-precondition", "Brevo API key is missing.");
+  }
+
+  const senderEmail = process.env.BREVO_SENDER_EMAIL;
+  if (!senderEmail) {
+    throw new HttpsError("failed-precondition", "Brevo sender email is missing.");
   }
 
   const apiInstance = new BrevoClient({ apiKey });
@@ -321,10 +341,9 @@ export const sendEmailViaBrevo = onCall({ secrets: ["BREVO_API_KEY"] }, async (r
   }
 
   try {
-    await apiInstance.transactionalEmails.sendTransacEmail({
+    await enviarEmailTransaccional(apiInstance, senderEmail, {
       subject: subject,
       htmlContent: `<html><body><p>${textContent}</p></body></html>`,
-      sender: { name: "GMA Sistema", email: "bryanr2916@gmail.com" },
       to: [{ email: toEmail, name: toName || "User" }]
     });
     return { success: true, message: "Email sent successfully!" };
@@ -381,6 +400,12 @@ async function verificarYEnviarNotificaciones(collectionName: string, suffijo: s
     return;
   }
 
+  const senderEmail = process.env.BREVO_SENDER_EMAIL;
+  if (!senderEmail) {
+    logger.error(`[${suffijo}] Brevo sender email is missing.`);
+    return;
+  }
+
   const apiInstance = new BrevoClient({ apiKey });
   const permisosSnap = await db.collection(collectionName).get();
 
@@ -413,10 +438,9 @@ async function verificarYEnviarNotificaciones(collectionName: string, suffijo: s
       if (!email || typeof email !== 'string') continue;
 
       try {
-        await apiInstance.transactionalEmails.sendTransacEmail({
+        await enviarEmailTransaccional(apiInstance, senderEmail, {
           subject: asunto,
           htmlContent: `<html><body><p>${mensaje}</p></body></html>`,
-          sender: { name: "GMA Sistema", email: "bryanr2916@gmail.com" },
           to: [{ email, name: "Usuario GMA" }]
         });
         emailsEnviados++;
@@ -432,7 +456,7 @@ async function verificarYEnviarNotificaciones(collectionName: string, suffijo: s
 
 export const verificarPermisosVencimiento = onSchedule({
   schedule: "every 24 hours",
-  secrets: ["BREVO_API_KEY"],
+  secrets: ["BREVO_API_KEY", "BREVO_SENDER_EMAIL"],
   timeZone: "America/Caracas",
 }, async () => {
   logger.info("[prod] Iniciando verificación de vencimiento de permisos...");
@@ -441,7 +465,7 @@ export const verificarPermisosVencimiento = onSchedule({
 
 export const verificarPermisosVencimientoDev = onSchedule({
   schedule: "every 24 hours",
-  secrets: ["BREVO_API_KEY"],
+  secrets: ["BREVO_API_KEY", "BREVO_SENDER_EMAIL"],
   timeZone: "America/Caracas",
 }, async () => {
   logger.info("[dev] Iniciando verificación de vencimiento de permisos...");
