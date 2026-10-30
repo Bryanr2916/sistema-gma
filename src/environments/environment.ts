@@ -5,6 +5,9 @@
 export const environment = {
   production: false,
   useProductionData: false, // Cambiar a true para usar datos de producción en local
+  // Secreto que, guardado en localStorage bajo la clave 'GMA_ENTORNO', fuerza el uso
+  // de datos de pruebas (-dev) desde cualquier build. Ver src/app/core/entorno-datos.ts
+  claveEntornoPruebas: "gma-entorno-pruebas-2026",
   secrectKey: "gm@-2024",
   firebase: {
     apiKey: "AIzaSyDatiFzqXXmK2Y_P__yrrIl6skgKkAOLgg",

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Auth, user } from '@angular/fire/auth';
 import { Firestore, addDoc, collection, doc, getDoc, getDocs, query, serverTimestamp, where } from '@angular/fire/firestore';
 import { firstValueFrom } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { rutaDatos } from 'src/app/core/entorno-datos';
 
 export type TipoAccionAuditoria = 'crear' | 'modificar' | 'eliminar';
 
@@ -28,8 +28,8 @@ const CAMPOS_EXCLUIDOS = ['id', 'fechaCreacion', 'fechaEdicion'];
 })
 export class AuditoriaService {
 
-  path = environment.useProductionData ? "auditoria" : "auditoria-dev";
-  private pathUsuarios = environment.useProductionData ? "usuarios" : "usuarios-dev";
+  path = rutaDatos("auditoria");
+  private pathUsuarios = rutaDatos("usuarios");
 
   constructor(private firestore: Firestore, private auth: Auth) { }
 

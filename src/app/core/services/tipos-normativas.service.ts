@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, query, orderBy, serverTimestamp } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { rutaDatos } from 'src/app/core/entorno-datos';
 import { AuditoriaService } from './auditoria.service';
 
 @Injectable({
@@ -9,7 +9,7 @@ import { AuditoriaService } from './auditoria.service';
 })
 export class TiposNormativasService {
 
-  path = environment.useProductionData ? "tipos-normativas" : "tipos-normativas-dev";
+  path = rutaDatos("tipos-normativas");
   constructor(private firestore: Firestore, private auditoria: AuditoriaService) { }
 
   async crearTipo( tipoNormativas:any ) {

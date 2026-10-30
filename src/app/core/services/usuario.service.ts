@@ -4,13 +4,13 @@ import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, 
 import { EncriptadorService } from './encriptador.service';
 import { AuditoriaService } from './auditoria.service';
 import { BehaviorSubject, map, Observable, of, switchMap } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { rutaDatos } from 'src/app/core/entorno-datos';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
-  path = environment.useProductionData ? "usuarios" : "usuarios-dev";
+  path = rutaDatos("usuarios");
 
   // todo: usar usuarioCache para optimizar llamados a la db
   private usuarioCache$ = new BehaviorSubject<any | null>(null); // Cache user data

@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, getDocs, query, where, orderBy, serverTimestamp } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { rutaDatos } from 'src/app/core/entorno-datos';
 import { AuditoriaService } from './auditoria.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MatricesService {
-  path = environment.useProductionData ? "matrices" : "matrices-dev";
-  articulosPath = environment.useProductionData ? "articulos" : "articulos-dev";
+  path = rutaDatos("matrices");
+  articulosPath = rutaDatos("articulos");
   constructor(private firestore: Firestore, private auditoria: AuditoriaService) { }
 
   // matriz

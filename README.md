@@ -22,6 +22,31 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
+## Entorno de datos (producción vs. pruebas)
+
+Los datos viven en el mismo proyecto Firebase y se separan por el sufijo `-dev` en las colecciones
+de Firestore y las carpetas de Storage (`usuarios` / `usuarios-dev`, `empresas/logos` / `empresas/logos-dev`, ...).
+
+- **Local (`ng serve`)**: usa datos de pruebas por defecto (`environment.useProductionData: false`).
+  Para ver datos de producción en local, cambia a `true` en `src/environments/environment.ts`.
+- **Producción (`ng build`)**: usa datos de producción (`environment.prod.ts`).
+
+Para **ver los datos de pruebas desde producción** (build ya desplegado), abre la consola del navegador y ejecuta:
+
+```js
+localStorage.setItem('GMA_ENTORNO', 'gma-entorno-pruebas-2026'); // valor de environment.claveEntornoPruebas
+location.reload();
+```
+
+Aparecerá un aviso amarillo **"ENTORNO DE PRUEBAS"** en la barra superior. Para volver a producción:
+
+```js
+localStorage.removeItem('GMA_ENTORNO');
+location.reload();
+```
+
+La lógica vive en `src/app/core/entorno-datos.ts`; los servicios usan `rutaDatos(...)` para resolver sus rutas.
+
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.

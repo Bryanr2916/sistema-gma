@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { addDoc, collection, collectionData, deleteDoc, doc, Firestore, getDoc, getDocs, onSnapshot, query, orderBy, serverTimestamp, updateDoc, where } from '@angular/fire/firestore';
 import { Storage, deleteObject, getDownloadURL, ref, uploadBytesResumable } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { rutaDatos } from 'src/app/core/entorno-datos';
 import { AuditoriaService } from './auditoria.service';
 
 @Injectable({
@@ -10,7 +10,7 @@ import { AuditoriaService } from './auditoria.service';
 })
 export class PermisosService {
 
-  path = environment.useProductionData ? "permisos" : "permisos-dev";
+  path = rutaDatos("permisos");
 
   constructor(private storage: Storage, private firestore: Firestore, private auditoria: AuditoriaService) { }
 
@@ -74,7 +74,7 @@ export class PermisosService {
   }
   
   subirArchivo(archivo: any) {
-    const urlPath = environment.useProductionData ? `empresas/permisos/${archivo.name}` : `empresas/permisos-dev/${archivo.name}`;
+    const urlPath = rutaDatos(`empresas/permisos/${archivo.name}`, `empresas/permisos-dev/${archivo.name}`);
     let urlArchivo = "";
     const archivoRef = ref(this.storage, urlPath);
     const tareaSubirArchivo = uploadBytesResumable(archivoRef, archivo);
@@ -107,7 +107,7 @@ export class PermisosService {
 
   // para manejar el progress en el componente usado
   subirArchivoAlt(archivo: any) {
-    const urlPath = environment.useProductionData ? `empresas/permisos/${archivo.name}` : `empresas/permisos-dev/${archivo.name}`;
+    const urlPath = rutaDatos(`empresas/permisos/${archivo.name}`, `empresas/permisos-dev/${archivo.name}`);
     const archivoRef = ref(this.storage, urlPath);
     const tareaSubirArchivo = uploadBytesResumable(archivoRef, archivo);
     return tareaSubirArchivo;

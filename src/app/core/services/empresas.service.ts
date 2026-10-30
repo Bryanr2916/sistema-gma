@@ -20,7 +20,7 @@ import {
   type QueryDocumentSnapshot,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { rutaDatos } from 'src/app/core/entorno-datos';
 import { AuditoriaService } from './auditoria.service';
 
 @Injectable({
@@ -28,7 +28,7 @@ import { AuditoriaService } from './auditoria.service';
 })
 export class EmpresasService {
 
-  path = environment.useProductionData ? "empresas" : "empresas-dev";
+  path = rutaDatos("empresas");
 
   constructor(private storage: Storage, private firestore: Firestore, private auditoria: AuditoriaService) { }
 
@@ -177,7 +177,7 @@ export class EmpresasService {
   }
 
   subirArchivo(archivo: any) {
-    const urlPath = environment.useProductionData ? `empresas/logos/${archivo.name}` : `empresas/logos-dev/${archivo.name}`;
+    const urlPath = rutaDatos(`empresas/logos/${archivo.name}`, `empresas/logos-dev/${archivo.name}`);
     let urlArchivo = "";
     const archivoRef = ref(this.storage, urlPath);
     const tareaSubirArchivo = uploadBytesResumable(archivoRef, archivo);

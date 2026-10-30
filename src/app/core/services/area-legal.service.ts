@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Firestore, addDoc, collection, collectionData, doc, deleteDoc, getDoc, updateDoc, serverTimestamp, query, orderBy } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { rutaDatos } from 'src/app/core/entorno-datos';
 import { AuditoriaService } from './auditoria.service';
 
 @Injectable({
@@ -9,7 +9,7 @@ import { AuditoriaService } from './auditoria.service';
 })
 export class AreaLegalService {
 
-  path = environment.useProductionData ? "area-legal" : "area-legal-dev";
+  path = rutaDatos("area-legal");
   constructor(private firestore: Firestore, private auditoria: AuditoriaService) { }
 
   async crearArea( areaLegal:any ) {

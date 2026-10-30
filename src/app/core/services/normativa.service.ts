@@ -20,7 +20,7 @@ import {
   type QueryDocumentSnapshot,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { rutaDatos } from 'src/app/core/entorno-datos';
 import { AuditoriaService } from './auditoria.service';
 
 @Injectable({
@@ -28,7 +28,7 @@ import { AuditoriaService } from './auditoria.service';
 })
 export class NormativaService {
 
-  path = environment.useProductionData ? "normativas" : "normativas-dev";
+  path = rutaDatos("normativas");
 
   constructor(private storage: Storage, private firestore: Firestore, private auditoria: AuditoriaService) { }
 
@@ -211,7 +211,7 @@ export class NormativaService {
 
   // para manejar el progress en el componente usado
   subirArchivoAlt(archivo: any) {
-    const urlPath = environment.useProductionData ? `normativas/archivos/${archivo.name}` : `normativas/archivos-dev/${archivo.name}`;
+    const urlPath = rutaDatos(`normativas/archivos/${archivo.name}`, `normativas/archivos-dev/${archivo.name}`);
     const archivoRef = ref(this.storage, urlPath);
     const tareaSubirArchivo = uploadBytesResumable(archivoRef, archivo);
     return tareaSubirArchivo;
@@ -219,7 +219,7 @@ export class NormativaService {
 
   subirArchivo(archivo: any) {
     let urlArchivo = "";
-    const archivoRef = ref(this.storage, `normativas/archivos/${archivo.name}`);
+    const archivoRef = ref(this.storage, rutaDatos(`normativas/archivos/${archivo.name}`, `normativas/archivos-dev/${archivo.name}`));
     const tareaSubirArchivo = uploadBytesResumable(archivoRef, archivo);
 
     return new Promise<string> ((resolve, reject) => {
@@ -255,7 +255,7 @@ export class NormativaService {
   }
 
   obtenerArchivo(ruta: any) {
-    const archivoRef = ref(this.storage, `normativas/archivos/${ruta}`);
+    const archivoRef = ref(this.storage, rutaDatos(`normativas/archivos/${ruta}`, `normativas/archivos-dev/${ruta}`));
     return getDownloadURL(archivoRef);
   }
 }
