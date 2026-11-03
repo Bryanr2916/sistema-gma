@@ -38,7 +38,7 @@ localStorage.setItem('GMA_ENTORNO', 'gma-entorno-pruebas-2026'); // valor de env
 location.reload();
 ```
 
-Aparecerá un aviso amarillo **"ENTORNO DE PRUEBAS"** en la barra superior. Para volver a producción:
+Para **volver a los datos de producción**:
 
 ```js
 localStorage.removeItem('GMA_ENTORNO');
