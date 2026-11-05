@@ -1,6 +1,15 @@
-import { Component, ElementRef, HostListener, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
+/**
+ * Combobox con buscador interno.
+ *
+ * Soporta dos modos:
+ *  - Formularios (existente): se pasa `[formulario]` + `[controlName]` y el valor
+ *    se escribe/lee en el FormGroup.
+ *  - Filtro de listado: NO se pasa `[formulario]`; se controla con `[valor]` +
+ *    `(valorChange)` (usar `labelSeleccionVacia="Todos"` para el estado por defecto).
+ */
 @Component({
   selector: 'app-dropdown-search',
   templateUrl: './dropdown-search.component.html',
@@ -10,12 +19,17 @@ export class DropdownSearchComponent implements OnInit, OnChanges {
 
   @Input() opciones: any[] = [];
   @Input() controlName: string = '';
-  @Input() formulario!: FormGroup;
+  /** Modo formulario: opcional. Si no se pasa, el componente opera en modo filtro. */
+  @Input() formulario?: FormGroup;
   @Input() labelField: string = 'label';
   @Input() valueField: string = 'id';
   @Input() searchFields: string[] = [];
   @Input() placeholder: string = 'Buscar...';
   @Input() labelSeleccionVacia: string = 'Seleccione una opción';
+  /** Modo filtro: valor actual (null/undefined = "Todos"). */
+  @Input() valor: any = null;
+  /** Modo filtro: emite el valor seleccionado (o null al limpiar). */
+  @Output() valorChange = new EventEmitter<any>();
 
   seleccion: any = null;
   abrirDropdown = false;
@@ -35,14 +49,19 @@ export class DropdownSearchComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.opcionesFiltradas = [...this.opciones];
     const control = this.formulario?.controls[this.controlName];
-    control?.valueChanges.subscribe(value => {
-      if (value === '' || value === null || value === undefined) {
-        this.seleccion = null;
-      } else {
-        this.sincronizarSeleccion(value);
-      }
-    });
-    this.sincronizarSeleccion(control?.value);
+    if (control) {
+      control.valueChanges.subscribe(value => {
+        if (value === '' || value === null || value === undefined) {
+          this.seleccion = null;
+        } else {
+          this.sincronizarSeleccion(value);
+        }
+      });
+      this.sincronizarSeleccion(control.value);
+    } else {
+      // Modo filtro: el valor lo controla el padre a través de [valor].
+      this.sincronizarSeleccion(this.valor);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -51,7 +70,13 @@ export class DropdownSearchComponent implements OnInit, OnChanges {
       const control = this.formulario?.controls[this.controlName];
       if (control?.value) {
         this.sincronizarSeleccion(control.value);
+      } else if (!control) {
+        // Modo filtro: re-sincroniza con el valor controlado por el padre.
+        this.sincronizarSeleccion(this.valor);
       }
+    }
+    if (changes['valor'] && !this.formulario) {
+      this.sincronizarSeleccion(this.valor);
     }
   }
 
@@ -75,8 +100,15 @@ export class DropdownSearchComponent implements OnInit, OnChanges {
   }
 
   seleccionar(opcion: any) {
-    this.seleccion = opcion;
-    this.formulario?.controls[this.controlName].setValue(opcion[this.valueField]);
+    if (this.formulario) {
+      this.seleccion = opcion;
+      this.formulario.controls[this.controlName].setValue(opcion[this.valueField]);
+    } else {
+      // Modo filtro: volver a pulsar la opción seleccionada la deselecciona ("Todos").
+      const esActual = this.seleccion && this.seleccion[this.valueField] === opcion[this.valueField];
+      this.seleccion = esActual ? null : opcion;
+      this.valorChange.emit(this.seleccion ? opcion[this.valueField] : null);
+    }
     this.abrirDropdown = false;
     this.busqueda = '';
     this.opcionesFiltradas = [...this.opciones];
