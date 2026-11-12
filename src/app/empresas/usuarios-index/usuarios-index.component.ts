@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TIPOS_USUARIO } from 'src/app/core/services/constantes';
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { EncriptadorService } from 'src/app/core/services/encriptador.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
+import { filtrarListado } from 'src/app/core/utils/filtros';
 
 @Component({
   selector: 'app-usuarios-index',
@@ -18,6 +20,14 @@ export class UsuariosIndexComponent implements OnInit {
   ths = ["#","Nombre", "Correo", "Tipo"];
   usuariosTodos:any[] = [];
   usuariosFiltrados:any[] = [];
+  /** Opciones del filtro de tipo (coinciden con `mostrarTipo`). */
+  opcionesTipoUsuario = [
+    { key: TIPOS_USUARIO.admin, label: 'Administrador' },
+    { key: TIPOS_USUARIO.editor, label: 'Editor' },
+    { key: TIPOS_USUARIO.lector, label: 'Lector' }
+  ];
+  /** Filtro de tipo: null = "Todos". */
+  filtroTipo: number | null = null;
   filaSeleccionada = -1;
   empresa = {
     id: "",
@@ -52,23 +62,59 @@ export class UsuariosIndexComponent implements OnInit {
 
     if (reUsuarios) {
       this.usuariosTodos = reUsuarios.docs.map(usDoc => ({...usDoc.data(), id: usDoc.id}));
-      this.usuariosFiltrados = this.usuariosTodos;
+      this.aplicarListado();
       this.cargando = false;
     }
   };
 
   buscar(event: any) {
-    const busquedaMinuscuala = event.toLowerCase();
-    this.usuariosFiltrados = this.usuariosTodos.filter(usuario => 
-      usuario.nombre.toLowerCase().includes(busquedaMinuscuala));
+    this.busqueda = event;
+    this.aplicarListado();
+  }
+
+  /** Pipeline único: búsqueda de texto + filtros (AND) sobre el listado completo. */
+  private aplicarListado(): void {
+    this.usuariosFiltrados = filtrarListado(
+      this.usuariosTodos,
+      this.busqueda,
+      usuario => [usuario.nombre],
+      [
+        this.filtroTipo == null ? null : (usuario: any) =>
+          this.coincideTipoUsuario(usuario.tipo, this.filtroTipo!)
+      ]
+    );
+    // La barra de acciones no debe apuntar a una fila que ya no está.
+    this.filaSeleccionada = -1;
+  }
+
+  /** Reproduce la lógica de `mostrarTipo`: Lector = todo lo que no sea admin ni editor. */
+  private coincideTipoUsuario(tipo: number, filtro: number): boolean {
+    if (filtro === TIPOS_USUARIO.lector) {
+      return tipo !== TIPOS_USUARIO.admin && tipo !== TIPOS_USUARIO.editor;
+    }
+    return tipo === filtro;
+  }
+
+  cambiarFiltroTipo(valor: number | null): void {
+    this.filtroTipo = valor;
+    this.aplicarListado();
+  }
+
+  limpiarFiltros(): void {
+    this.busqueda = '';
+    this.filtroTipo = null;
+    this.aplicarListado();
+  }
+
+  get hayFiltrosActivos(): boolean {
+    return !!this.busqueda || this.filtroTipo != null;
   }
 
   mostrarTipo(tipo: number) {
     switch(tipo) {
-      case 1:
       case 2:  
         return "Administrador"
-      case 3:
+      case 3:  
         return "Editor"
       default:
         return "Lector"
@@ -77,10 +123,9 @@ export class UsuariosIndexComponent implements OnInit {
 
   claseTipo(tipo: number) {
     switch(tipo) {
-      case 1:
       case 2:  
         return "badge bg-success"
-      case 3:
+      case 3:  
         return "badge bg-primary"
       default:
         return "badge bg-secondary"

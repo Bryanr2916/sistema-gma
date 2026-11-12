@@ -3,6 +3,7 @@
     <div
       class="form-select border border-dark dropdown-trigger"
       (click)="toggle($event)"
+      [attr.title]="textoTooltip"
     >
       <span *ngIf="!seleccion" class="text-secondary">{{labelSeleccionVacia}}</span>
       <span *ngIf="seleccion" class="seleccion-texto">

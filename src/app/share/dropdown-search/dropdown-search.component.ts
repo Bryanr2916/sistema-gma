@@ -131,6 +131,11 @@ export class DropdownSearchComponent implements OnInit, OnChanges {
     return opcion[this.labelField] || '';
   }
 
+  /** Texto completo (sin truncar) del valor seleccionado para el tooltip nativo. `null` = sin atributo. */
+  get textoTooltip(): string | null {
+    return this.seleccion ? this.getLabel(this.seleccion) : null;
+  }
+
   esSeleccionada(opcion: any): boolean {
     return this.seleccion && this.seleccion[this.valueField] === opcion[this.valueField];
   }

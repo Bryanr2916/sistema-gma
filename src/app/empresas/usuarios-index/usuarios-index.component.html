@@ -51,6 +51,20 @@
                             un usuario</a>
                     </li>
                 </ul>
+
+                <!--Filtros-->
+                <div class="filtros-tabla mt-2">
+                    <app-dropdown-search class="filtro-item" [opciones]="opcionesTipoUsuario" labelField="label"
+                        valueField="key" [searchFields]="['label']" placeholder="Buscar tipo..."
+                        labelSeleccionVacia="Tipo" [valor]="filtroTipo"
+                        (valorChange)="cambiarFiltroTipo($event)"></app-dropdown-search>
+
+                    <button *ngIf="hayFiltrosActivos" type="button" class="btn btn-link text-success filtros-limpiar"
+                        (click)="limpiarFiltros()">
+                        <i class="fa-solid fa-xmark me-1"></i>Limpiar filtros
+                    </button>
+                </div>
+
                 <!--Tabla-->
                 <div *ngIf="usuariosFiltrados.length > 0" class="table-responsive mb-4 mt-2">
                     <table class="table table-light table-striped table-hover shadow table-bordered">

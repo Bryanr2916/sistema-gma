@@ -11,16 +11,26 @@
   min-height: 38px;
   user-select: none;
 
+  // El texto del trigger nunca envuelve (evita cuadros más altos/desiguales)
+  > span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   &:empty::before {
     content: '';
   }
 }
 
 .seleccion-texto {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  // Una sola línea con puntos suspensivos (como un <select> nativo):
+  // evita que el texto largo envuelva y ensanche/desalte el trigger.
+  display: block;
   width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .seleccion-remove {
@@ -69,6 +79,14 @@
   justify-content: space-between;
   user-select: none;
 
+  // Texto de la opción a una sola línea con puntos suspensivos
+  span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   &:hover {
     background-color: #1987547e;
     color: white;
@@ -82,5 +100,6 @@
   i {
     margin-left: 8px;
     font-size: 0.8rem;
+    flex-shrink: 0;
   }
 }
