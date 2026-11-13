@@ -5,6 +5,7 @@ import { ESTADOS_PERMISO, TIPOS_PERMISO } from 'src/app/core/services/constantes
 import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { PermisosService } from 'src/app/core/services/permisos.service';
+import { filtrarListado } from 'src/app/core/utils/filtros';
 
 @Component({
   selector: 'app-admin-permisos-index',
@@ -20,8 +21,22 @@ export class AdminPermisosIndexComponent implements OnInit, OnDestroy {
   permisosTodos: any[] = [];
   permisosFiltrados: any[] = [];
   empresasMap: Map<string, string> = new Map();
+  /** Opciones del filtro de empresa, derivadas de `empresasMap`. */
+  opcionesEmpresa: any[] = [];
   tipos: any[] = TIPOS_PERMISO;
   estados = ESTADOS_PERMISO;
+  /** Opciones del filtro de vencimiento (las fechas se calculan con `diasRestantes`). */
+  opcionesVencimiento = [
+    { key: '30', label: 'Próximos 30 días' },
+    { key: '60', label: 'Próximos 60 días' },
+    { key: '90', label: 'Próximos 90 días' },
+    { key: 'vencido', label: 'Ya vencidos' }
+  ];
+  /** Filtros del listado: null = "Todos". */
+  filtroTipo: string | null = null;
+  filtroEstado: string | null = null;
+  filtroVencimiento: string | null = null;
+  filtroEmpresa: string | null = null;
   filaSeleccionada = -1;
 
   constructor(
@@ -38,12 +53,14 @@ export class AdminPermisosIndexComponent implements OnInit, OnDestroy {
     this.empresasService.obtenerEmpresas().subscribe(empresas => {
       this.empresasMap.clear();
       empresas.forEach(e => this.empresasMap.set(e.id, e.nombre));
+      this.opcionesEmpresa = empresas.map(e => ({ key: e.id, label: e.nombre }));
 
       this.unsubscribe =
         this.permisosService.obtenerTodosLosPermisos(
           permisos => {
             this.permisosTodos = permisos;
-            this.permisosFiltrados = permisos;
+            // El snapshot puede dispararse tras borrar/crear: reaplica búsqueda y filtros.
+            this.aplicarListado();
             this.cargando = false;
           }
         );
@@ -55,11 +72,71 @@ export class AdminPermisosIndexComponent implements OnInit, OnDestroy {
   }
 
   buscar(event: any) {
-    const busquedaMinuscula = event.toLowerCase();
-    this.permisosFiltrados = this.permisosTodos.filter(permiso =>
-      permiso.nombre.toLowerCase().includes(busquedaMinuscula) ||
-      this.obtenerNombreEmpresa(permiso.empresaId).toLowerCase().includes(busquedaMinuscula)
+    this.busqueda = event;
+    this.aplicarListado();
+  }
+
+  /** Pipeline único: búsqueda de texto + filtros (AND) sobre el listado completo. */
+  private aplicarListado(): void {
+    this.permisosFiltrados = filtrarListado(
+      this.permisosTodos,
+      this.busqueda,
+      permiso => [permiso.nombre, this.obtenerNombreEmpresa(permiso.empresaId)],
+      [
+        this.filtroTipo == null ? null : (permiso: any) => permiso.tipo === this.filtroTipo,
+        this.filtroEstado == null ? null : (permiso: any) =>
+          this.obtenerEstado(permiso.estado).key === this.filtroEstado,
+        this.filtroVencimiento == null ? null : (permiso: any) =>
+          this.pasaFiltroVencimiento(permiso, this.filtroVencimiento!),
+        this.filtroEmpresa == null ? null : (permiso: any) =>
+          permiso.empresaId === this.filtroEmpresa
+      ]
     );
+    // La barra de acciones no debe apuntar a una fila que ya no está.
+    this.filaSeleccionada = -1;
+  }
+
+  private pasaFiltroVencimiento(permiso: any, filtro: string): boolean {
+    const dias = this.diasRestantes(permiso.fechaVencimiento);
+    if (filtro === 'vencido') {
+      return dias < 0;
+    }
+    return dias >= 0 && dias <= Number(filtro);
+  }
+
+  cambiarFiltroTipo(valor: string | null): void {
+    this.filtroTipo = valor;
+    this.aplicarListado();
+  }
+
+  cambiarFiltroEstado(valor: string | null): void {
+    this.filtroEstado = valor;
+    this.aplicarListado();
+  }
+
+  cambiarFiltroVencimiento(valor: string | null): void {
+    this.filtroVencimiento = valor;
+    this.aplicarListado();
+  }
+
+  cambiarFiltroEmpresa(valor: string | null): void {
+    this.filtroEmpresa = valor;
+    this.aplicarListado();
+  }
+
+  limpiarFiltros(): void {
+    this.busqueda = '';
+    this.filtroTipo = null;
+    this.filtroEstado = null;
+    this.filtroVencimiento = null;
+    this.filtroEmpresa = null;
+    this.aplicarListado();
+  }
+
+  get hayFiltrosActivos(): boolean {
+    return !!this.busqueda || this.filtroTipo != null ||
+      this.filtroEstado != null || this.filtroVencimiento != null ||
+      this.filtroEmpresa != null;
   }
 
   obtenerNombreEmpresa(empresaId: string): string {

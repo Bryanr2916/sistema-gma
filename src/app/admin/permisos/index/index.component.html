@@ -43,6 +43,32 @@
                             permiso</a>
                     </li>
                 </ul>
+
+                <!--Filtros-->
+                <div class="filtros-tabla mt-2">
+                    <app-dropdown-search class="filtro-item" [opciones]="tipos" labelField="label" valueField="key"
+                        [searchFields]="['label']" placeholder="Buscar tipo..." labelSeleccionVacia="Tipo"
+                        [valor]="filtroTipo" (valorChange)="cambiarFiltroTipo($event)"></app-dropdown-search>
+
+                    <app-dropdown-search class="filtro-item" [opciones]="estados" labelField="label" valueField="key"
+                        [searchFields]="['label']" placeholder="Buscar estado..." labelSeleccionVacia="Estado"
+                        [valor]="filtroEstado" (valorChange)="cambiarFiltroEstado($event)"></app-dropdown-search>
+
+                    <app-dropdown-search class="filtro-item" [opciones]="opcionesVencimiento" labelField="label"
+                        valueField="key" [searchFields]="['label']" placeholder="Vencimiento..."
+                        labelSeleccionVacia="Vencimiento" [valor]="filtroVencimiento"
+                        (valorChange)="cambiarFiltroVencimiento($event)"></app-dropdown-search>
+
+                    <app-dropdown-search class="filtro-item" [opciones]="opcionesEmpresa" labelField="label"
+                        valueField="key" [searchFields]="['label']" placeholder="Buscar empresa..."
+                        labelSeleccionVacia="Empresa" [valor]="filtroEmpresa"
+                        (valorChange)="cambiarFiltroEmpresa($event)"></app-dropdown-search>
+
+                    <button *ngIf="hayFiltrosActivos" type="button" class="btn btn-link text-success filtros-limpiar"
+                        (click)="limpiarFiltros()">
+                        <i class="fa-solid fa-xmark me-1"></i>Limpiar filtros
+                    </button>
+                </div>
         
                 <div *ngIf="permisosFiltrados.length > 0" class="table-responsive mb-4 mt-2">
                     <table class="table table-light table-striped table-hover shadow table-bordered">

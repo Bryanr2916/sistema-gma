@@ -6,6 +6,7 @@ import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { MatricesService } from 'src/app/core/services/matrices.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
+import { filtrarListado } from 'src/app/core/utils/filtros';
 
 @Component({
   selector: 'app-index',
@@ -24,6 +25,13 @@ export class IndexComponent implements OnInit {
   articulosAplicables: any[] = [];
   ths = ["#","Título","Normativas"];
   usuario: any = { };
+  /** Opciones del filtro de artículos aplicables (estáticas). */
+  opcionesArticulos = [
+    { key: 'con', label: 'Con artículos aplicables' },
+    { key: 'sin', label: 'Sin artículos aplicables' }
+  ];
+  /** Filtro de artículos aplicables: null = "Todos". */
+  filtroArticulos: string | null = null;
   filaSeleccionada = -1;
   esLector = false;
 
@@ -55,8 +63,9 @@ export class IndexComponent implements OnInit {
   async cargarMatrices() {
     this.matricesService.obtenerMatrices().subscribe(async datos => {
       this.matricesTodas = datos.filter(matriz => matriz.empresa === this.usuario.empresaId);
-      this.matricesFiltradas = this.matricesTodas;
       this.articulosAplicables = (await this.matricesService.obtenerArticulosAplicables()).docs.map((value) => { return {id: value.id, ...value.data() };});
+      // El pipeline depende de `articulosAplicables`: se aplica cuando ambas cargas están listas.
+      this.aplicarListado();
       this.datosListos = true;
       this.verificarListo();
     });
@@ -84,9 +93,38 @@ export class IndexComponent implements OnInit {
   }
 
   buscar(event: any) {
-    const busquedaMinuscuala = event.toLowerCase();
-    this.matricesFiltradas = this.matricesTodas.filter(matriz => 
-      matriz.titulo.toLowerCase().includes(busquedaMinuscuala));
+    this.busqueda = event;
+    this.aplicarListado();
+  }
+
+  /** Pipeline único: búsqueda de texto + filtros (AND) sobre el listado completo. */
+  private aplicarListado(): void {
+    this.matricesFiltradas = filtrarListado(
+      this.matricesTodas,
+      this.busqueda,
+      matriz => [matriz.titulo],
+      [
+        this.filtroArticulos == null ? null : (matriz: any) =>
+          (this.obtenerCantidadArticulosAplicables(matriz.id) > 0) === (this.filtroArticulos === 'con')
+      ]
+    );
+    // La barra de acciones no debe apuntar a una fila que ya no está.
+    this.filaSeleccionada = -1;
+  }
+
+  cambiarFiltroArticulos(valor: string | null): void {
+    this.filtroArticulos = valor;
+    this.aplicarListado();
+  }
+
+  limpiarFiltros(): void {
+    this.busqueda = '';
+    this.filtroArticulos = null;
+    this.aplicarListado();
+  }
+
+  get hayFiltrosActivos(): boolean {
+    return !!this.busqueda || this.filtroArticulos != null;
   }
 
   seleccionarFila(event: Event, index: number) {
