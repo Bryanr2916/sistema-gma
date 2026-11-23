@@ -5,6 +5,7 @@ import type { QueryDocumentSnapshot } from '@angular/fire/firestore';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { NormativaService } from 'src/app/core/services/normativa.service';
 import { TiposNormativasService } from 'src/app/core/services/tipos-normativas.service';
+import { filtrarListado } from 'src/app/core/utils/filtros';
 import { TruncarTextoPipe } from 'src/app/share/pipes/truncar-texto.pipe';
 
 type ElementoPaginacion =
@@ -28,6 +29,17 @@ export class IndexComponent implements OnInit {
   ths = ["#", "Título", "Número", "Archivo", "Tipo de Normativa"];
   filaSeleccionada = -1;
 
+  /** Opciones del filtro de tipo de normativa, derivadas de `tipos`. */
+  opcionesTipo: any[] = [];
+  /** Opciones del filtro de archivo (estáticas). */
+  opcionesArchivo = [
+    { key: 'con', label: 'Con archivo' },
+    { key: 'sin', label: 'Sin archivo' }
+  ];
+  /** Filtros del listado: null = "Todos". */
+  filtroTipo: string | null = null;
+  filtroArchivo: string | null = null;
+
   paginaActual = 1;
   totalRegistros = 0;
   totalPaginas = 0;
@@ -47,8 +59,17 @@ export class IndexComponent implements OnInit {
 
   private debounceBusqueda?: ReturnType<typeof setTimeout>;
 
-  get enModoBusqueda(): boolean {
-    return this.busqueda.trim().length > 0;
+  /** Hay algún filtro de dropdown activo. */
+  get hayFiltrosActivos(): boolean {
+    return this.filtroTipo != null || this.filtroArchivo != null;
+  }
+
+  /**
+   * Modo listado en cliente: búsqueda o filtro activo → se usa el listado
+   * completo cacheado y se pagina con `slice()` (mismo mecanismo que la búsqueda).
+   */
+  get enModoCliente(): boolean {
+    return this.busqueda.trim().length > 0 || this.hayFiltrosActivos;
   }
 
   constructor(private titleService: Title, private mensajesService: MensajesService,
@@ -61,6 +82,7 @@ export class IndexComponent implements OnInit {
     this.tiposService.obtenerTipos().subscribe({
       next: (datos) => {
         this.tipos = datos;
+        this.opcionesTipo = datos.map(t => ({ key: t.id, label: t.nombre }));
         void this.inicializarListado(true);
       },
       error: (err) => {
@@ -153,8 +175,8 @@ export class IndexComponent implements OnInit {
       return;
     }
 
-    if (this.enModoBusqueda) {
-      this.aplicarPaginaBusqueda(n);
+    if (this.enModoCliente) {
+      this.aplicarPaginaCliente(n);
       return;
     }
 
@@ -266,10 +288,10 @@ export class IndexComponent implements OnInit {
 
   buscar(_valor: string): void {
     clearTimeout(this.debounceBusqueda);
-    this.debounceBusqueda = setTimeout(() => void this.ejecutarBusqueda(), 300);
+    this.debounceBusqueda = setTimeout(() => void this.aplicarListadoCliente(), 300);
   }
 
-  private aplicarPaginaBusqueda(n: number): void {
+  private aplicarPaginaCliente(n: number): void {
     this.paginaActual = n;
     const inicio = (n - 1) * this.TAMANO_PAGINA;
     this.normativasFiltradas = this.resultadosBusqueda.slice(
@@ -278,18 +300,19 @@ export class IndexComponent implements OnInit {
     );
   }
 
-  private filtrarNormativas(normativas: any[], termino: string): any[] {
-    return normativas.filter(
-      (n) =>
-        String(n.numero ?? '').toLowerCase().includes(termino) ||
-        String(n.titulo ?? '').toLowerCase().includes(termino)
-    );
+  private async salirModoCliente(): Promise<void> {
+    this.normativasTodasCache = null;
+    this.resultadosBusqueda = [];
+    await this.inicializarListado(false);
   }
 
-  private async ejecutarBusqueda(): Promise<void> {
-    const term = this.busqueda.trim().toLowerCase();
-    if (!term) {
-      await this.salirModoBusqueda();
+  /**
+   * Pipeline único en cliente: búsqueda de texto + filtros (AND) sobre el
+   * listado completo cacheado, paginado con `slice()`.
+   */
+  private async aplicarListadoCliente(): Promise<void> {
+    if (!this.enModoCliente) {
+      await this.salirModoCliente();
       return;
     }
 
@@ -302,9 +325,16 @@ export class IndexComponent implements OnInit {
         this.normativasTodasCache =
           await this.normativaService.obtenerTodasNormativasListado();
       }
-      this.resultadosBusqueda = this.filtrarNormativas(
+      this.resultadosBusqueda = filtrarListado(
         this.normativasTodasCache!,
-        term
+        this.busqueda,
+        n => [n.titulo, n.numero],
+        [
+          this.filtroTipo == null ? null : (n: any) =>
+            n.tipoId === this.filtroTipo,
+          this.filtroArchivo == null ? null : (n: any) =>
+            !!n.urlArchivo === (this.filtroArchivo === 'con')
+        ]
       );
       this.totalRegistros = this.resultadosBusqueda.length;
       this.totalPaginas =
@@ -312,11 +342,13 @@ export class IndexComponent implements OnInit {
           ? 0
           : Math.ceil(this.totalRegistros / this.TAMANO_PAGINA);
       if (this.totalPaginas > 0) {
-        this.aplicarPaginaBusqueda(1);
+        this.aplicarPaginaCliente(1);
       } else {
         this.paginaActual = 1;
         this.normativasFiltradas = [];
       }
+      // La barra de acciones no debe apuntar a una fila que ya no está.
+      this.filaSeleccionada = -1;
     } catch (e) {
       console.error(e);
       this.resultadosBusqueda = [];
@@ -330,10 +362,22 @@ export class IndexComponent implements OnInit {
     }
   }
 
-  private async salirModoBusqueda(): Promise<void> {
-    this.normativasTodasCache = null;
-    this.resultadosBusqueda = [];
-    await this.inicializarListado(false);
+  cambiarFiltroTipo(valor: string | null): void {
+    this.filtroTipo = valor;
+    void this.aplicarListadoCliente();
+  }
+
+  cambiarFiltroArchivo(valor: string | null): void {
+    this.filtroArchivo = valor;
+    void this.aplicarListadoCliente();
+  }
+
+  limpiarFiltros(): void {
+    clearTimeout(this.debounceBusqueda);
+    this.busqueda = '';
+    this.filtroTipo = null;
+    this.filtroArchivo = null;
+    void this.salirModoCliente();
   }
 
   borrarNormativaFB(normativa: any): void {
@@ -345,12 +389,12 @@ export class IndexComponent implements OnInit {
 
   private async recargarTrasBorrado(): Promise<void> {
     this.normativasTodasCache = null;
-    if (this.enModoBusqueda) {
+    if (this.enModoCliente) {
       const paginaPrevia = this.paginaActual;
-      await this.ejecutarBusqueda();
+      await this.aplicarListadoCliente();
       if (this.totalPaginas > 0) {
         const pagina = Math.min(paginaPrevia, this.totalPaginas);
-        this.aplicarPaginaBusqueda(pagina);
+        this.aplicarPaginaCliente(pagina);
       }
       return;
     }

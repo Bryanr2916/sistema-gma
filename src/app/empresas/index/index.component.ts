@@ -7,6 +7,7 @@ import { EmpresasService } from 'src/app/core/services/empresas.service';
 import { EncriptadorService } from 'src/app/core/services/encriptador.service';
 import { MensajesService } from 'src/app/core/services/mensajes.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
+import { filtrarListado } from 'src/app/core/utils/filtros';
 
 type ElementoPaginacion =
   | { tipo: 'pagina'; num: number }
@@ -29,6 +30,16 @@ export class IndexComponent implements OnInit {
   usuarios: any[] = [];
   filaSeleccionada = -1;
 
+  /** Opciones del filtro de administrador (estáticas). */
+  opcionesAdmin = [
+    { key: 'con', label: 'Con administrador' },
+    { key: 'sin', label: 'Sin administrador' }
+  ];
+  /** Filtro de administrador: null = "Todos". */
+  filtroAdmin: string | null = null;
+  /** La lista de usuarios ya entregó al menos un valor (condición para mostrar el filtro). */
+  usuariosCargados = false;
+
   paginaActual = 1;
   totalRegistros = 0;
   totalPaginas = 0;
@@ -47,6 +58,7 @@ export class IndexComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle("GMA Sistema - Empresas");
+    this.cargarUsuarios();
     this.inicializarListado(true);
   }
 
@@ -73,8 +85,6 @@ export class IndexComponent implements OnInit {
     } else {
       this.cargandoListado = false;
     }
-
-    this.cargarUsuarios();
   }
 
   private aplicarPagina(n: number, items: any[], ultimoDoc: QueryDocumentSnapshot | null): void {
@@ -108,8 +118,8 @@ export class IndexComponent implements OnInit {
   async irAPagina(n: number): Promise<void> {
     if (n < 1 || n > this.totalPaginas || n === this.paginaActual) return;
 
-    if (this.enModoBusqueda) {
-      this.aplicarPaginaBusqueda(n);
+    if (this.enModoCliente) {
+      this.aplicarPaginaCliente(n);
       return;
     }
 
@@ -181,44 +191,91 @@ export class IndexComponent implements OnInit {
     return elementos;
   }
 
-  get enModoBusqueda(): boolean {
-    return this.busqueda.trim().length > 0;
+  /** Hay algún filtro de dropdown activo. */
+  get hayFiltrosActivos(): boolean {
+    return this.filtroAdmin != null;
   }
 
-  private aplicarPaginaBusqueda(n: number): void {
+  /**
+   * Modo listado en cliente: búsqueda o filtro activo → se usa el listado
+   * completo cacheado y se pagina con `slice()` (mismo mecanismo que la búsqueda).
+   */
+  get enModoCliente(): boolean {
+    return this.busqueda.trim().length > 0 || this.hayFiltrosActivos;
+  }
+
+  private aplicarPaginaCliente(n: number): void {
     const TAMANO = this.TAMANO_PAGINA;
     const inicio = (n - 1) * TAMANO;
     this.empresasFiltradas = this.resultadosBusqueda.slice(inicio, inicio + TAMANO);
     this.paginaActual = n;
   }
 
-  private salirModoBusqueda(): void {
+  private async salirModoCliente(): Promise<void> {
     this.empresasTodasCache = null;
     this.resultadosBusqueda = [];
-    this.inicializarListado(false);
+    await this.inicializarListado(false);
+  }
+
+  /**
+   * Pipeline único en cliente: búsqueda de texto + filtros (AND) sobre el
+   * listado completo cacheado, paginado con `slice()`.
+   */
+  private async aplicarListadoCliente(paginaSolicitada = 1): Promise<void> {
+    const necesitaFetch = this.empresasTodasCache === null;
+    if (necesitaFetch) {
+      this.cargandoListado = true;
+    }
+    try {
+      if (!this.empresasTodasCache) {
+        this.empresasTodasCache = await this.empresaService.obtenerTodasEmpresasListado();
+      }
+      this.resultadosBusqueda = filtrarListado(
+        this.empresasTodasCache,
+        this.busqueda,
+        e => [e.nombre],
+        [
+          this.filtroAdmin == null ? null : (e: any) =>
+            (this.usuarioAdmin(e) != null) === (this.filtroAdmin === 'con')
+        ]
+      );
+      this.totalPaginas = Math.max(1, Math.ceil(this.resultadosBusqueda.length / this.TAMANO_PAGINA));
+      const pagina = Math.min(Math.max(paginaSolicitada, 1), this.totalPaginas);
+      this.aplicarPaginaCliente(pagina);
+      // La barra de acciones no debe apuntar a una fila que ya no está.
+      this.filaSeleccionada = -1;
+    } finally {
+      if (necesitaFetch) {
+        this.cargandoListado = false;
+      }
+    }
   }
 
   async buscar(event: any): Promise<void> {
     clearTimeout(this.debounceTimer);
 
-    const termino = (event ?? '').toString().trim().toLowerCase();
-
-    if (termino.length === 0) {
-      this.salirModoBusqueda();
+    if (!this.enModoCliente) {
+      await this.salirModoCliente();
       return;
     }
 
-    this.debounceTimer = setTimeout(async () => {
-      if (!this.empresasTodasCache) {
-        this.empresasTodasCache = await this.empresaService.obtenerTodasEmpresasListado();
-      }
-      this.resultadosBusqueda = this.empresasTodasCache.filter(e =>
-        e.nombre?.toLowerCase().includes(termino)
-      );
-      this.totalPaginas = Math.max(1, Math.ceil(this.resultadosBusqueda.length / this.TAMANO_PAGINA));
-      this.paginaActual = 1;
-      this.aplicarPaginaBusqueda(1);
-    }, 300);
+    this.debounceTimer = setTimeout(() => void this.aplicarListadoCliente(), 300);
+  }
+
+  async cambiarFiltroAdmin(valor: string | null): Promise<void> {
+    this.filtroAdmin = valor;
+    if (!this.enModoCliente) {
+      await this.salirModoCliente();
+      return;
+    }
+    await this.aplicarListadoCliente();
+  }
+
+  limpiarFiltros(): void {
+    clearTimeout(this.debounceTimer);
+    this.busqueda = '';
+    this.filtroAdmin = null;
+    void this.salirModoCliente();
   }
 
   seleccionarFila(event: Event, index: number) {
@@ -245,14 +302,8 @@ export class IndexComponent implements OnInit {
       this.paginaActual = this.totalPaginas;
     }
 
-    if (this.enModoBusqueda) {
-      this.empresasTodasCache = await this.empresaService.obtenerTodasEmpresasListado();
-      const termino = this.busqueda.trim().toLowerCase();
-      this.resultadosBusqueda = this.empresasTodasCache.filter(e =>
-        e.nombre?.toLowerCase().includes(termino)
-      );
-      this.totalPaginas = Math.max(1, Math.ceil(this.resultadosBusqueda.length / this.TAMANO_PAGINA));
-      this.aplicarPaginaBusqueda(this.paginaActual);
+    if (this.enModoCliente) {
+      await this.aplicarListadoCliente(this.paginaActual);
     } else {
       this.cargandoListado = true;
       const resultado = await this.empresaService.obtenerEmpresasPagina(this.TAMANO_PAGINA, null);
@@ -315,6 +366,7 @@ export class IndexComponent implements OnInit {
   cargarUsuarios() {
     this.usuarioService.obtenerUsuarios().subscribe(datos => {
       this.usuarios = datos;
+      this.usuariosCargados = true;
     });
   }
 

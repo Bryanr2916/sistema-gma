@@ -51,3 +51,23 @@ a {
 .selectable-row {
     cursor: pointer;
 }
+
+// Segunda fila de la toolbar: filtros (dropdowns con buscador + limpiar)
+.filtros-tabla {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.filtro-item {
+    display: block;
+    width: 200px;
+    flex: 0 0 200px; // base fija: no encoge ni crece
+    min-width: 0; // anula el min-width:auto de los flex items (evita que el contenido ensanche el cuadro)
+}
+
+.filtros-limpiar {
+    text-decoration: none;
+    font-weight: 500;
+}

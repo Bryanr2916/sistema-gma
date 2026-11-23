@@ -42,6 +42,19 @@
                             una empresa</a>
                     </li>
                 </ul>
+
+                <!--Filtros-->
+                <div *ngIf="usuariosCargados" class="filtros-tabla mt-2">
+                    <app-dropdown-search class="filtro-item" [opciones]="opcionesAdmin" labelField="label"
+                        valueField="key" [searchFields]="['label']" placeholder="Buscar administrador..."
+                        labelSeleccionVacia="Administrador" [valor]="filtroAdmin"
+                        (valorChange)="cambiarFiltroAdmin($event)"></app-dropdown-search>
+
+                    <button *ngIf="enModoCliente" type="button"
+                        class="btn btn-link text-success filtros-limpiar" (click)="limpiarFiltros()">
+                        <i class="fa-solid fa-xmark me-1"></i>Limpiar filtros
+                    </button>
+                </div>
         
                 <!-- Spinner cambio de página -->
                 <div *ngIf="cargandoListado" class="d-flex justify-content-center my-4">
@@ -123,12 +136,12 @@
                 </div>
         
                 <!--No hay resultados de búsqueda-->
-                <div *ngIf="!cargandoListado && empresasFiltradas.length === 0 && enModoBusqueda" class="my-4">
+                <div *ngIf="!cargandoListado && empresasFiltradas.length === 0 && enModoCliente" class="my-4">
                     <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No se encontraron resultados</h4>
                 </div>
-        
+
                 <!--No hay registros-->
-                <div *ngIf="!cargandoListado && totalRegistros === 0 && !enModoBusqueda" class="my-4">
+                <div *ngIf="!cargandoListado && totalRegistros === 0 && !enModoCliente" class="my-4">
                     <h4><i class="y-icon fa-solid fa-triangle-exclamation"></i> No hay empresas registradas</h4>
                 </div>
             </div>
